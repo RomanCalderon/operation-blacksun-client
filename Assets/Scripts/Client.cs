@@ -44,10 +44,11 @@ public class Client : MonoBehaviour
         Disconnect ();
     }
 
-    public void ConnectToServer ()
+    public void ConnectToServer ( string _ip )
     {
         InitializeClientData ();
 
+        ip = _ip;
         isConnected = true;
         tcp.Connect ();
     }
