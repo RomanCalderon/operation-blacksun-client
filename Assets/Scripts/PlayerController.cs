@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public Transform cameraTransform;
+
+    private void Update ()
+    {
+        if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+        {
+            ClientSend.PlayerShoot ( cameraTransform.forward );
+        }
+    }
+
     private void FixedUpdate ()
     {
         SendInputToServer ();
