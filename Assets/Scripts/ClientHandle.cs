@@ -17,6 +17,8 @@ public class ClientHandle : MonoBehaviour
         Client.instance.udp.Connect ( ( ( IPEndPoint ) Client.instance.tcp.socket.Client.LocalEndPoint ).Port );
     }
 
+    #region Player
+
     public static void SpawnPlayer ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
@@ -65,4 +67,6 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.players [ _id ].Respawn ();
     }
+
+    #endregion
 }
