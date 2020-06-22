@@ -33,8 +33,10 @@ public class ClientHandle : MonoBehaviour
     {
         int _id = _packet.ReadInt ();
         Vector3 _position = _packet.ReadVector3 ();
+        Vector3 oldPosition = GameManager.players [ _id ].transform.position;
 
-        GameManager.players [ _id ].transform.position = _position;
+        // Interpolate the players position
+        GameManager.players [ _id ].transform.position = Vector3.Lerp ( oldPosition, _position, Time.deltaTime * 32f );
     }
 
     public static void PlayerRotation ( Packet _packet )

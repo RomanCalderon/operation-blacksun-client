@@ -170,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_sun: {fileID: 124836734}
   m_moon: {fileID: 1786119325}
-  m_angleOffest: 59.99999
+  m_angleOffest: 60.52474
   m_overlapAngleOffset: 9.75
   m_isOverlaping: 0
 --- !u!1 &124836733
@@ -393,7 +393,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &189865486
 RectTransform:
   m_ObjectHideFlags: 0
@@ -623,7 +623,7 @@ RectTransform:
   m_Children:
   - {fileID: 845092917}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -755,7 +755,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &590782624
 GameObject:
@@ -1130,7 +1130,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1134027369
 GameObject:
@@ -1678,7 +1678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4826da946c29b854e8f150123940322d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ip: 127.0.0.1
+  ip: 192.168.0.17
   port: 26950
   myId: 0
 --- !u!4 &1664156214
@@ -1924,13 +1924,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786119324}
-  m_LocalRotation: {x: 0.35030603, y: 0.009075464, z: -0.21349151, w: 0.9119346}
+  m_LocalRotation: {x: 0.33383146, y: -0.057348475, z: -0.23843132, w: 0.91017485}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 101981528}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 40, y: -10, z: -30}
+  m_LocalEulerAnglesHint: {x: 35.475002, y: -18.885, z: -35.449}
 --- !u!114 &1786119326
 MonoBehaviour:
   m_ObjectHideFlags: 0
