@@ -35,6 +35,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_260C2CDC:
+        m_Texture: {fileID: 2800000, guid: ba9b6ac8a1be3914bac235ef410715c2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -72,10 +76,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_1B665208: 1
     - Vector1_26E05107: 50
     - Vector1_31E0B88A: 12.6
     - Vector1_43279BFD: 0.275
     - Vector1_7F7C0003: 10
+    - Vector1_9C6F7F65: 0.29
     - Vector1_A8467C72: 1
     - Vector1_D2911217: 0.275
     - Vector1_D7842704: 0.5
@@ -100,7 +106,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SunDisk: 2
-    - _SunMaskSize: 0.3
+    - _SunMaskSize: 0.5
     - _SunSize: 0.2
     - _SunSizeConvergence: 5
     - _Surface: 0
@@ -116,8 +122,9 @@ Material:
     - Color_9C9FC96C: {r: 0.002941177, g: 0.009191177, b: 0.0133578405, a: 1}
     - Color_C1862696: {r: 0, g: 0, b: 0, a: 0}
     - Color_D6FA7934: {r: 0.27448, g: 0.53355694, b: 0.73, a: 1}
-    - Color_DB250D85: {r: 1, g: 1, b: 1, a: 1}
+    - Color_DB250D85: {r: 1, g: 0.31510466, b: 0.3, a: 1}
     - Color_EB7900C2: {r: 0.7529412, g: 0.5756899, b: 0.1882353, a: 1}
+    - Vector2_48834F8: {r: -0.08, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

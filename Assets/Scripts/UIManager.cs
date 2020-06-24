@@ -28,12 +28,12 @@ public class UIManager : MonoBehaviour
     private void Start ()
     {
         usernameField.text = PlayerPrefs.GetString ( "Username" );
-        serverIPField.text = PlayerPrefs.GetString ( "ServerIP" );
+        //serverIPField.text = PlayerPrefs.GetString ( "ServerIP" );
     }
 
     public void ConnectToServer ()
     {
-        string serverIPAddress = serverIPField.text;
+        string serverIPAddress = Client.instance.ip;
         Match match = Regex.Match ( serverIPAddress, @"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b" );
         if ( match.Success )
         {
