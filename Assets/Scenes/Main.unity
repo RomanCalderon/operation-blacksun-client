@@ -14,8 +14,8 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.89411765, g: 0.88666666, b: 0.8494118, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.8784314, g: 0.51015466, b: 0.33643922, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.002
   m_LinearFogStart: 25
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_sun: {fileID: 124836734}
   m_moon: {fileID: 1786119325}
-  m_angleOffest: 41.658363
+  m_angleOffest: 20.743132
   m_overlapAngleOffset: 16.66
   m_isOverlaping: 0
 --- !u!1 &124836733
@@ -2177,14 +2177,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786119324}
-  m_LocalRotation: {x: 0.32905057, y: -0.40941438, z: -0.093292974, w: 0.84581447}
+  m_LocalRotation: {x: 0.3405181, y: -0.24909173, z: -0.032017976, w: 0.9060771}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 840771434}
   m_Father: {fileID: 101981528}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 28.701002, y: -59.270004, z: -29.150002}
+  m_LocalEulerAnglesHint: {x: 36.95, y: -36.308002, z: -16.552}
 --- !u!114 &1786119326
 MonoBehaviour:
   m_ObjectHideFlags: 0
