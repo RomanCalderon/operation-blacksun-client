@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: OffworldSkybox
-  m_Shader: {fileID: -6465566751694194690, guid: 9e781f5a59df3e64faccd4eb5240b654,
+  m_Shader: {fileID: -6465566751694194690, guid: 4b492b14cc4435a418d56fef89e221f5,
     type: 3}
   m_ShaderKeywords: _SUNDISK_HIGH_QUALITY
   m_LightmapFlags: 4
@@ -37,6 +37,10 @@ Material:
     m_TexEnvs:
     - Texture2D_260C2CDC:
         m_Texture: {fileID: 2800000, guid: ba9b6ac8a1be3914bac235ef410715c2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_B68262C1:
+        m_Texture: {fileID: 2800000, guid: 02b251a51c50200468c4ad3df0d7cb5a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -63,6 +67,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleCubemap_612EA476_Cube_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_CAF1D835_Texture_1:
         m_Texture: {fileID: 2800000, guid: 3085a8116a7f8274aafcd63a10b446b9, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -75,16 +83,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Triplanar_2345D174_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 02b251a51c50200468c4ad3df0d7cb5a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_1B665208: 1
     - Vector1_26E05107: 50
     - Vector1_31E0B88A: 12.6
     - Vector1_43279BFD: 0.275
+    - Vector1_7AF63932: 0.509
     - Vector1_7F7C0003: 10
     - Vector1_9C6F7F65: 0.29
     - Vector1_A8467C72: 1
+    - Vector1_B301E59A: 1
     - Vector1_D2911217: 0.275
     - Vector1_D7842704: 0.5
+    - Vector1_DA30A5F4: 1.85
     - _AlphaClip: 0
     - _AtmosphereThickness: 1
     - _Blend: 0
@@ -113,7 +128,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_35692FD5: {r: 1, g: 1, b: 1, a: 1}
+    - Color_35692FD5: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
     - Color_5F589DF6: {r: 0, g: 0.077167735, b: 0.41099998, a: 1}
     - Color_69F4DFC: {r: 0, g: 0, b: 0, a: 0}
     - Color_6E360E6A: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 1}
@@ -122,9 +137,11 @@ Material:
     - Color_9C9FC96C: {r: 0.002941177, g: 0.009191177, b: 0.0133578405, a: 1}
     - Color_C1862696: {r: 0, g: 0, b: 0, a: 0}
     - Color_D6FA7934: {r: 0.27448, g: 0.53355694, b: 0.73, a: 1}
-    - Color_DB250D85: {r: 1, g: 0.31510466, b: 0.3, a: 1}
+    - Color_DB250D85: {r: 1, g: 1, b: 1, a: 1}
     - Color_EB7900C2: {r: 0.7529412, g: 0.5756899, b: 0.1882353, a: 1}
     - Vector2_48834F8: {r: -0.08, g: 0, b: 0, a: 0}
+    - Vector2_6C2CE460: {r: 0, g: 0, b: 0, a: 0}
+    - Vector2_990FA924: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
