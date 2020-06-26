@@ -161,7 +161,7 @@ public class Client : MonoBehaviour
                       {
                           int _packetId = _packet.ReadInt ();
                           packetHandlers [ _packetId ] ( _packet ); // Call appropriate method to handle the packet
-                    }
+                      }
                   } );
 
                 _packetLength = 0; // Reset packet length
@@ -278,7 +278,7 @@ public class Client : MonoBehaviour
                   {
                       int _packetId = _packet.ReadInt ();
                       packetHandlers [ _packetId ] ( _packet ); // Call appropriate method to handle the packet
-                }
+                  }
               } );
         }
 
@@ -315,7 +315,10 @@ public class Client : MonoBehaviour
         {
             isConnected = false;
             tcp.socket.Close ();
-            udp.socket.Close ();
+            if ( udp.socket != null )
+            {
+                udp.socket.Close ();
+            }
 
             Debug.Log ( "Disconnected from server." );
         }
