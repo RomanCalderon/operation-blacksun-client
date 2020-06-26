@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,9 @@ public class EclipseHandler : MonoBehaviour
     private Transform m_sun = null;
     [SerializeField]
     private Transform m_moon = null;
+    private Quaternion m_moonTargetRotation;
+    [SerializeField]
+    private float m_moonRotationDelta = 10f;
     public float AngleOffset
     {
         get { return m_angleOffest; }
@@ -33,9 +37,23 @@ public class EclipseHandler : MonoBehaviour
     {
         if ( m_sun != null && m_moon != null )
         {
-            m_angleOffest = Quaternion.Angle ( m_sun.rotation, m_moon.rotation );
-        }
+            // Rotate the moon transform towards its target rotation
+            m_moon.rotation = Quaternion.RotateTowards ( m_moon.rotation, m_moonTargetRotation, m_moonRotationDelta );
 
-        m_isOverlaping = m_angleOffest < m_overlapAngleOffset;
+            // Get the new angle offset to check for eclipse
+            m_angleOffest = Quaternion.Angle ( m_sun.rotation, m_moon.rotation );
+            m_angleOffest -= m_moon.eulerAngles.z;
+            m_angleOffest = Mathf.Abs ( m_angleOffest );
+            m_isOverlaping = Mathf.Abs ( m_angleOffest ) < m_overlapAngleOffset;
+        }
+    }
+
+    /// <summary>
+    /// Sets the moon's target rotation.
+    /// </summary>
+    /// <param name="targetRotation">Target rotation value as Quaternion.</param>
+    public void SetMoonRotation ( Quaternion targetRotation )
+    {
+        m_moonTargetRotation = targetRotation;
     }
 }
