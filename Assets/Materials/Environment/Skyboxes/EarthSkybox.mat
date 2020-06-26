@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: EarthSkybox
-  m_Shader: {fileID: -6465566751694194690, guid: 9e781f5a59df3e64faccd4eb5240b654,
+  m_Shader: {fileID: -6465566751694194690, guid: 4b492b14cc4435a418d56fef89e221f5,
     type: 3}
   m_ShaderKeywords: _DOUBLESIDED_ON
   m_LightmapFlags: 1
@@ -38,6 +38,10 @@ Material:
     m_TexEnvs:
     - Texture2D_260C2CDC:
         m_Texture: {fileID: 2800000, guid: de672b7c50aebdd4c94f56cad23296f9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_B68262C1:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -81,6 +85,7 @@ Material:
     - Vector1_26E05107: 50
     - Vector1_31E0B88A: 6
     - Vector1_43279BFD: 0.2
+    - Vector1_7AF63932: 1
     - Vector1_7F7C0003: 10
     - Vector1_9C6F7F65: 0.22
     - Vector1_A8467C72: 1
@@ -153,6 +158,7 @@ Material:
     - Color_DB250D85: {r: 1, g: 1, b: 1, a: 1}
     - Color_EB7900C2: {r: 0.505435, g: 0.552574, b: 0.584, a: 1}
     - Vector2_48834F8: {r: -0.16, g: 0, b: 0, a: 0}
+    - Vector2_990FA924: {r: 0, g: 0, b: 0, a: 0}
     - Vector3_3271D2C0: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
