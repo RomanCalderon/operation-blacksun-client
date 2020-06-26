@@ -169,8 +169,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_sun: {fileID: 124836734}
   m_moon: {fileID: 1786119325}
-  m_angleOffest: 53.352688
-  m_overlapAngleOffset: 16.66
+  m_angleOffest: 22.66647
+  m_overlapAngleOffset: 10.19
   m_isOverlaping: 0
 --- !u!1 &124836733
 GameObject:
@@ -198,13 +198,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 124836733}
-  m_LocalRotation: {x: 0.3407186, y: -0.08189965, z: 0.029809028, w: 0.9361168}
+  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 101981528}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40, y: -10, z: 0}
+  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
 --- !u!114 &124836735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2177,14 +2177,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786119324}
-  m_LocalRotation: {x: 0.0087255, y: -0.29175156, z: 0.27120364, w: 0.9171988}
+  m_LocalRotation: {x: 0.041256852, y: -0.2326477, z: 0.30384484, w: 0.92295784}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 840771434}
   m_Father: {fileID: 101981528}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 10.035001, y: -32.595, z: 30.004002}
+  m_LocalEulerAnglesHint: {x: 12.564, y: -24.475, z: 33.708}
 --- !u!114 &1786119326
 MonoBehaviour:
   m_ObjectHideFlags: 0
