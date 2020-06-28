@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using UnityEngine;
 
@@ -28,10 +30,19 @@ public class ClientHandle : MonoBehaviour
         GameManager.instance.PlayerConnected ( _id, _username );
     }
 
+    public static void Ping ( Packet _packet )
+    {
+        int elapsedTime = _packet.ReadInt ();
+        string serverBounceTime = _packet.ReadString ();
+
+        DateTime serverTime = DateTime.ParseExact ( serverBounceTime, "o", CultureInfo.CurrentCulture );
+        int travelTimeSpan = DateTime.Now.Millisecond - serverTime.Millisecond;
+        int rtt = travelTimeSpan + elapsedTime;
+        Client.instance.UpdatePing ( rtt );
+    }
+
     public static void SpawnPlayer ( Packet _packet )
     {
-        Debug.Assert ( _packet != null );
-
         int _id = _packet.ReadInt ();
         Vector3 _position = _packet.ReadVector3 ();
         Quaternion _rotation = _packet.ReadQuaternion ();

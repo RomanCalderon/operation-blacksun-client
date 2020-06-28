@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class ClientSend : MonoBehaviour
@@ -23,6 +25,18 @@ public class ClientSend : MonoBehaviour
         {
             _packet.Write ( Client.instance.myId );
             _packet.Write ( UIManager.instance.usernameField.text );
+
+            SendTCPData ( _packet );
+        }
+    }
+
+    public static void Ping ()
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.ping ) )
+        {
+            string pingStartTime = DateTime.Now.ToString ( "o" );
+
+            _packet.Write ( pingStartTime );
 
             SendTCPData ( _packet );
         }

@@ -1,12 +1,13 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
-using System;
+using UnityEngine;
 
 public class Client : MonoBehaviour
 {
+    private const float PING_CHECK_INTERVAL = 1f;
+
     public static Client instance;
     public static int dataBufferSize = 4096;
 
@@ -19,6 +20,10 @@ public class Client : MonoBehaviour
     private bool isConnected = false;
     private delegate void PacketHandler ( Packet _packet );
     private static Dictionary<int, PacketHandler> packetHandlers;
+
+    // Ping
+    public float Ping { get; private set; } = 0f;
+    private float m_pingCheckTimer = 0f;
 
     private void Awake ()
     {
@@ -37,6 +42,11 @@ public class Client : MonoBehaviour
     {
         tcp = new TCP ();
         udp = new UDP ();
+    }
+
+    private void Update ()
+    {
+        GetPing ();
     }
 
     private void OnApplicationQuit ()
@@ -299,6 +309,7 @@ public class Client : MonoBehaviour
         {
             { (int)ServerPackets.welcome, ClientHandle.Welcome },
             { (int)ServerPackets.playerConnected, ClientHandle.ConnectPlayer },
+            { (int)ServerPackets.ping, ClientHandle.Ping },
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
             { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
@@ -308,6 +319,36 @@ public class Client : MonoBehaviour
         };
         Debug.Log ( "Initialized packets." );
     }
+
+    #region Ping
+
+    private void GetPing ()
+    {
+        if ( isConnected )
+        {
+            if ( m_pingCheckTimer > 0f )
+            {
+                m_pingCheckTimer -= Time.deltaTime;
+            }
+            else
+            {
+                m_pingCheckTimer = PING_CHECK_INTERVAL;
+                ClientSend.Ping ();
+            }
+        }
+    }
+
+    public void UpdatePing ( int newPing )
+    {
+        if ( newPing < 0 )
+        {
+            newPing += 1000;
+        }
+
+        Ping = newPing;
+    }
+
+    #endregion
 
     /// <summary>Disconnects from the server and stops all network traffic.</summary>
     private void Disconnect ()
