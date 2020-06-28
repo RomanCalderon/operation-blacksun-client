@@ -14,44 +14,71 @@ public class ClientHandle : MonoBehaviour
         Client.instance.myId = _myId;
         ClientSend.WelcomeReceived ();
 
+        // Now that we have the client's id, connect UDP
         Client.instance.udp.Connect ( ( ( IPEndPoint ) Client.instance.tcp.socket.Client.LocalEndPoint ).Port );
     }
 
     #region Player
 
-    public static void SpawnPlayer ( Packet _packet )
+    public static void ConnectPlayer ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
         string _username = _packet.ReadString ();
+
+        GameManager.instance.PlayerConnected ( _id, _username );
+    }
+
+    public static void SpawnPlayer ( Packet _packet )
+    {
+        Debug.Log ( "SpawnPlayer()" );
+        Debug.Assert ( _packet != null );
+
+        int _id = _packet.ReadInt ();
         Vector3 _position = _packet.ReadVector3 ();
         Quaternion _rotation = _packet.ReadQuaternion ();
 
-        GameManager.instance.SpawnPlayer ( _id, _username, _position, _rotation );
+        Debug.Log ( $"GameManager.instance.SpawnPlayer({_id})" );
+        GameManager.instance.SpawnPlayer ( _id, _position, _rotation );
     }
 
     public static void PlayerPosition ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
+        // Ignore if Player hasn't been assigned yet
+        if ( GameManager.players [ _id ].Player == null )
+        {
+            return;
+        }
+
         Vector3 _position = _packet.ReadVector3 ();
-        Vector3 oldPosition = GameManager.players [ _id ].transform.position;
+        Vector3 oldPosition = GameManager.players [ _id ].Player.transform.position;
 
         // Interpolate the players position
-        GameManager.players [ _id ].transform.position = Vector3.Lerp ( oldPosition, _position, Time.deltaTime * 32f );
+        GameManager.players [ _id ].Player.transform.position = Vector3.Lerp ( oldPosition, _position, Time.deltaTime * 32f );
     }
 
     public static void PlayerRotation ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
+        // Ignore if Player hasn't been assigned yet
+        if ( GameManager.players [ _id ].Player == null )
+        {
+            return;
+        }
+
         Quaternion _rotation = _packet.ReadQuaternion ();
 
-        GameManager.players [ _id ].transform.rotation = _rotation;
+        GameManager.players [ _id ].Player.transform.rotation = _rotation;
     }
 
     public static void PlayerDisconnected ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
 
-        Destroy ( GameManager.players [ _id ].gameObject );
+        if ( GameManager.players [ _id ].Player != null )
+        {
+            Destroy ( GameManager.players [ _id ].Player.gameObject );
+        }
         GameManager.players.Remove ( _id );
     }
 

@@ -269,7 +269,6 @@ GameObject:
   - component: {fileID: 773171847773302522}
   - component: {fileID: 3329739129886715966}
   - component: {fileID: 1379936794397954644}
-  - component: {fileID: 7754430587025490209}
   - component: {fileID: 1381514411089341094}
   m_Layer: 0
   m_Name: Main Camera
@@ -344,21 +343,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3489386374535929984}
   m_Enabled: 1
---- !u!114 &7754430587025490209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3489386374535929984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28e8432a97eafd64e920c1d06344f964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 2960896342404488282}
-  sensitivity: 200
-  clampAngle: 85
 --- !u!114 &1381514411089341094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,7 +384,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4819394724728440039}
-  - component: {fileID: 2960896342404488282}
+  - component: {fileID: 3190018344343389636}
   - component: {fileID: 5029605158582982013}
   m_Layer: 0
   m_Name: LocalPlayer
@@ -426,7 +410,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2960896342404488282
+--- !u!114 &3190018344343389636
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -435,7 +419,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4819394724728440032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d6b472a600d1ba49a584ce8014490ba, type: 3}
+  m_Script: {fileID: 11500000, guid: e0776741fad35d1489ce4c1546138473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
@@ -465,6 +449,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7988017996660963741}
+  - component: {fileID: 8139382710650044287}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -487,6 +472,21 @@ Transform:
   m_Father: {fileID: 4819394724728440039}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8139382710650044287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6148642581231768754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28e8432a97eafd64e920c1d06344f964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 3190018344343389636}
+  sensitivity: 200
+  clampAngle: 85
 --- !u!1 &9072390231895978861
 GameObject:
   m_ObjectHideFlags: 0

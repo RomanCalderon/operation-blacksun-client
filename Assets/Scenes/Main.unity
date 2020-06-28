@@ -547,7 +547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99c266c9e7d2e7145b10875ddf0dadf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMenu: {fileID: 845092916}
+  serverConnectView: {fileID: 845092916}
+  playerSpawnView: {fileID: 595646715}
   usernameField: {fileID: 1448958416}
   serverIPField: {fileID: 189865487}
 --- !u!114 &219806576
@@ -584,7 +585,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 2560, y: 1440}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -882,7 +883,7 @@ GameObject:
   - component: {fileID: 595646718}
   - component: {fileID: 595646717}
   m_Layer: 5
-  m_Name: Player Loadout Config UI
+  m_Name: Player Loadout Config View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1034,7 +1035,7 @@ GameObject:
   m_Component:
   - component: {fileID: 845092917}
   m_Layer: 5
-  m_Name: Connect UI
+  m_Name: Server Connect View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1383,7 +1384,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 920772512}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 219806575}
+        m_MethodName: SpawnPlayer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &920772512
 MonoBehaviour:
   m_ObjectHideFlags: 0

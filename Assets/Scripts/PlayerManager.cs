@@ -2,26 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager
 {
-    public int id;
-    public string username;
-    public float health;
-    public float maxHealth;
-    public GameObject model;
+    public int Id { get; private set; }
+    public string Username { get; private set; }
+    public Player Player { get; private set; }
 
-    public void Initialize ( int _id, string _username )
+
+    public PlayerManager ( int _id, string _username )
     {
-        id = _id;
-        username = _username;
-        health = maxHealth;
+        Id = _id;
+        Username = _username;
+
+        Player = null; // Player will be assigned when the player spawns into the scene
+    }
+
+    public void InitializePlayer ( Player _player )
+    {
+        Player = _player;
+        Player.Initialize ( Id, Username );
     }
 
     public void SetHealth ( float _health )
     {
-        health = _health;
+        if ( Player == null )
+        {
+            Debug.LogError ( "Player component is not assigned." );
+            return;
+        }
 
-        if ( health <= 0f )
+        Player.SetHealth ( _health );
+
+        if ( Player.Health <= 0f )
         {
             Die ();
         }
@@ -29,12 +41,23 @@ public class PlayerManager : MonoBehaviour
 
     public void Die ()
     {
-        model.SetActive ( false );
+        if ( Player == null )
+        {
+            Debug.LogError ( "Player component is not assigned." );
+            return;
+        }
+
+        Player.Die ();
     }
 
     public void Respawn ()
     {
-        model.SetActive ( true );
-        SetHealth ( maxHealth );
+        if ( Player == null )
+        {
+            Debug.LogError ( "Player component is not assigned." );
+            return;
+        }
+
+        Player.Respawn ();
     }
 }
