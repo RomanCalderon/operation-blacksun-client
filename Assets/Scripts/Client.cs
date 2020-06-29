@@ -105,6 +105,7 @@ public class Client : MonoBehaviour
         /// <param name="_packet">The packet to send.</param>
         public void SendData ( Packet _packet )
         {
+            Debug.Assert ( _packet != null );
             try
             {
                 if ( socket != null )
@@ -313,6 +314,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
             { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
+            { (int)ServerPackets.playerMovementVector, ClientHandle.PlayerMovementVector },
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
             { (int)ServerPackets.playerHealth, ClientHandle.PlayerHealth },
             { (int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned }

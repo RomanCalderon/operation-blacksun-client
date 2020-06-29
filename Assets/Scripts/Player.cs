@@ -2,37 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent ( typeof ( PlayerModelController ) )]
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private int id;
-    [SerializeField]
-    private string username;
+    private int m_id;
+    private string m_username;
 
     public float Health
     {
         get
         {
-            return health;
+            return m_health;
         }
     }
     [SerializeField]
-    private float health;
-    [SerializeField]
-    private float maxHealth = 100;
-    [SerializeField]
-    private GameObject model = null;
+    private float m_health;
+    private float m_maxHealth = 100;
+    private PlayerModelController m_modelController = null;
 
     private void Start ()
     {
-        Debug.Assert ( model != null );
+        m_modelController = GetComponent<PlayerModelController> ();
     }
 
     public void Initialize ( int _id, string _username )
     {
-        id = _id;
-        username = _username;
-        health = maxHealth;
+        m_id = _id;
+        m_username = _username;
+        m_health = m_maxHealth;
     }
 
     // Update is called once per frame
@@ -41,11 +38,16 @@ public class Player : MonoBehaviour
 
     }
 
+    public void SetMovementVector ( Vector2 movement )
+    {
+        m_modelController.SetMovementVector ( movement );
+    }
+
     public void SetHealth ( float _health )
     {
-        health = _health;
+        m_health = _health;
 
-        if ( health <= 0f )
+        if ( m_health <= 0f )
         {
             Die ();
         }
@@ -53,12 +55,17 @@ public class Player : MonoBehaviour
 
     public void Die ()
     {
-        model.SetActive ( false );
+        // FIXME: deal with model reappearing on respawn
+        // maybe instantiate a ragdoll when player dies
+        if ( Client.instance.myId != m_id )
+        {
+            m_modelController.HideModel ( true );
+        }
     }
 
     public void Respawn ()
     {
-        model.SetActive ( true );
-        SetHealth ( maxHealth );
+        m_modelController.HideModel ( false );
+        SetHealth ( m_maxHealth );
     }
 }

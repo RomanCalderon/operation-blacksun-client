@@ -39,6 +39,11 @@ public class PlayerManager
         }
     }
 
+    public void SetMovementVector ( Vector2 movement )
+    {
+        Player.SetMovementVector ( movement );
+    }
+
     public void Die ()
     {
         if ( Player == null )

@@ -80,6 +80,15 @@ public class ClientHandle : MonoBehaviour
         GameManager.players [ _id ].Player.transform.rotation = _rotation;
     }
 
+    public static void PlayerMovementVector ( Packet _packet )
+    {
+        int _id = _packet.ReadInt ();
+        float _playerMovementX = _packet.ReadFloat ();
+        float _playerMovementY = _packet.ReadFloat ();
+
+        GameManager.players [ _id ].SetMovementVector ( new Vector2 ( _playerMovementX, _playerMovementY ) );
+    }
+
     public static void PlayerDisconnected ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
