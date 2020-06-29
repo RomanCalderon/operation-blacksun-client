@@ -15,10 +15,10 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.74509805, g: 0.69803923, b: 0.7137255, a: 1}
+  m_FogColor: {r: 0.83699995, g: 0.82002205, b: 0.754137, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.002
-  m_LinearFogStart: 25
+  m_LinearFogStart: 10
   m_LinearFogEnd: 1000
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
