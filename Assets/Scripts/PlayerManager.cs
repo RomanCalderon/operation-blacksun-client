@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PlayerManager
 {
+    private const float MAX_HEALTH = 100;
+
     public int Id { get; private set; }
     public string Username { get; private set; }
     public Player Player { get; private set; }
-
+    public float Health { get; private set; }
 
     public PlayerManager ( int _id, string _username )
     {
@@ -21,6 +23,18 @@ public class PlayerManager
     {
         Player = _player;
         Player.Initialize ( Id, Username );
+        SetHealth ( MAX_HEALTH );
+    }
+
+    public void SetMovementVector ( Vector2 movement )
+    {
+        if ( Player == null )
+        {
+            Debug.LogError ( "Player component is not assigned." );
+            return;
+        }
+
+        Player.SetMovementVector ( movement );
     }
 
     public void SetHealth ( float _health )
@@ -31,20 +45,16 @@ public class PlayerManager
             return;
         }
 
-        Player.SetHealth ( _health );
+        Health = _health;
 
-        if ( Player.Health <= 0f )
+        if ( Health <= 0f )
         {
+            Health = 0f;
             Die ();
         }
     }
 
-    public void SetMovementVector ( Vector2 movement )
-    {
-        Player.SetMovementVector ( movement );
-    }
-
-    public void Die ()
+    private void Die ()
     {
         if ( Player == null )
         {
@@ -63,6 +73,7 @@ public class PlayerManager
             return;
         }
 
+        SetHealth ( MAX_HEALTH );
         Player.Respawn ();
     }
 }

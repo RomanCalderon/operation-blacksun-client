@@ -83,6 +83,12 @@ public class ClientHandle : MonoBehaviour
     public static void PlayerMovementVector ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
+        // Ignore if Player hasn't been assigned yet
+        if ( GameManager.players [ _id ].Player == null )
+        {
+            return;
+        }
+
         float _playerMovementX = _packet.ReadFloat ();
         float _playerMovementY = _packet.ReadFloat ();
 
