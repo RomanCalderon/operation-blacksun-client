@@ -16,7 +16,7 @@ public class PlayerModelController : MonoBehaviour
     // Start is called before the first frame update
     void Start ()
     {
-        Debug.Assert ( m_model != null );
+        Debug.Assert ( m_model != null, "Player model is null." );
     }
 
     private void FixedUpdate ()

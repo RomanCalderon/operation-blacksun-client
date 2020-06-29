@@ -27,6 +27,7 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt ();
         string _username = _packet.ReadString ();
 
+
         GameManager.instance.PlayerConnected ( _id, _username );
     }
 
@@ -53,23 +54,23 @@ public class ClientHandle : MonoBehaviour
     public static void PlayerPosition ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
-        // Ignore if Player hasn't been assigned yet
+
+        // Ignore if Player is null
         if ( GameManager.players [ _id ].Player == null )
         {
             return;
         }
 
-        Vector3 _position = _packet.ReadVector3 ();
-        Vector3 oldPosition = GameManager.players [ _id ].Player.transform.position;
-
         // Interpolate the players position
-        GameManager.players [ _id ].Player.transform.position = Vector3.Lerp ( oldPosition, _position, Time.deltaTime * 32f );
+        Vector3 oldPosition = GameManager.players [ _id ].Player.transform.position;
+        Vector3 newPosition = _packet.ReadVector3 ();
+        GameManager.players [ _id ].Player.transform.position = Vector3.Lerp ( oldPosition, newPosition, Time.deltaTime * 32f );
     }
 
     public static void PlayerRotation ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
-        // Ignore if Player hasn't been assigned yet
+        // Ignore if Player is null
         if ( GameManager.players [ _id ].Player == null )
         {
             return;
@@ -83,7 +84,7 @@ public class ClientHandle : MonoBehaviour
     public static void PlayerMovementVector ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
-        // Ignore if Player hasn't been assigned yet
+        // Ignore if Player is null
         if ( GameManager.players [ _id ].Player == null )
         {
             return;

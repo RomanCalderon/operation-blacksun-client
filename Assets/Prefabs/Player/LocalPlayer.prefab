@@ -609,6 +609,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0776741fad35d1489ce4c1546138473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_modelRagdoll: {fileID: 8122706225175627145, guid: f6478cc648e070248a5949024d2034ef,
+    type: 3}
 --- !u!114 &5029605158582982013
 MonoBehaviour:
   m_ObjectHideFlags: 0

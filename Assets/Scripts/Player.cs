@@ -7,12 +7,19 @@ public class Player : MonoBehaviour
 {
     private int m_id;
     private string m_username;
-
     private PlayerModelController m_modelController = null;
+
+    [SerializeField]
+    private GameObject m_modelRagdoll = null;
 
     private void Awake ()
     {
         m_modelController = GetComponent<PlayerModelController> ();
+    }
+
+    private void Start ()
+    {
+        Debug.Assert ( m_modelRagdoll != null, "Model ragdoll is null." );
     }
 
     public void Initialize ( int _id, string _username )
@@ -29,8 +36,9 @@ public class Player : MonoBehaviour
     public void Die ()
     {
         m_modelController.ShowModel ( false );
-        
-        // TODO: instantiate a ragdoll when player dies
+
+        // Spawn a ragdoll that represents the player's dead body
+        Instantiate ( m_modelRagdoll, transform.position, transform.rotation );
     }
 
     public void Respawn ()

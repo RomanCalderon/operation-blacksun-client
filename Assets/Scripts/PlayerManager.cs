@@ -30,7 +30,7 @@ public class PlayerManager
     {
         if ( Player == null )
         {
-            Debug.LogError ( "Player component is not assigned." );
+            Debug.LogError ( "Player is null." );
             return;
         }
 
@@ -41,7 +41,7 @@ public class PlayerManager
     {
         if ( Player == null )
         {
-            Debug.LogError ( "Player component is not assigned." );
+            Debug.LogError ( "Player is null." );
             return;
         }
 
@@ -49,7 +49,6 @@ public class PlayerManager
 
         if ( Health <= 0f )
         {
-            Health = 0f;
             Die ();
         }
     }
@@ -58,7 +57,7 @@ public class PlayerManager
     {
         if ( Player == null )
         {
-            Debug.LogError ( "Player component is not assigned." );
+            Debug.LogError ( "Player is null." );
             return;
         }
 
@@ -69,7 +68,7 @@ public class PlayerManager
     {
         if ( Player == null )
         {
-            Debug.LogError ( "Player component is not assigned." );
+            Debug.LogError ( "Player is null." );
             return;
         }
 

@@ -31,10 +31,9 @@ public class GameManager : MonoBehaviour
     /// <param name="_username">The player's username.</param>
     public void PlayerConnected ( int _id, string _username )
     {
-        Debug.Log ( $"[{_username}](ID: {_id}) connected." );
+        Debug.Log ( $"Player [{_username}][{_id}] has joined the server." );
         PlayerManager _playerManager = new PlayerManager ( _id, _username );
         players.Add ( _id, _playerManager );
-        Debug.Log ( $"players.Count is now {players.Count}" );
     }
 
     /// <summary>Spawns a player.</summary>
@@ -43,7 +42,6 @@ public class GameManager : MonoBehaviour
     /// <param name="_rotation">The player's starting rotation.</param>
     public void SpawnPlayer ( int _id, Vector3 _position, Quaternion _rotation )
     {
-        Debug.Log ( $"[{players [ _id ].Username}](ID: {_id}) spawned in." );
         GameObject _player;
         if ( _id == Client.instance.myId )
         {
