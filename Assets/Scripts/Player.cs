@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
 
     public void Die ()
     {
-        Debug.Log ($"Player [{m_username} (ID: {m_id}) Die() - hide model = true]");
         m_modelController.ShowModel ( false );
         
         // TODO: instantiate a ragdoll when player dies
@@ -36,7 +35,6 @@ public class Player : MonoBehaviour
 
     public void Respawn ()
     {
-        Debug.Log ($"Player [{m_username} (ID: {m_id}) Respawn() - hide model = false]");
         m_modelController.ShowModel ( true );
     }
 }
