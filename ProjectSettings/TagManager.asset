@@ -16,8 +16,8 @@ TagManager:
   - PostProcessing
   - LocalOcclusion
   - FPSCamera
-  - 
-  - 
+  - Ragdoll
+  - PlayerCollider
   - 
   - 
   - 

@@ -10,7 +10,9 @@ public class Player : MonoBehaviour
     private PlayerModelController m_modelController = null;
 
     [SerializeField]
-    private GameObject m_modelRagdoll = null;
+    private RagdollMasterJointController m_ragdollController = null;
+    [SerializeField]
+    private Transform m_ragdollParent = null;
 
     private void Awake ()
     {
@@ -19,7 +21,8 @@ public class Player : MonoBehaviour
 
     private void Start ()
     {
-        Debug.Assert ( m_modelRagdoll != null, "Model ragdoll is null." );
+        Debug.Assert ( m_ragdollController != null, "Ragdoll controller is null." );
+        Debug.Assert ( m_ragdollParent != null, "Ragdoll parent is null." );
     }
 
     public void Initialize ( int _id, string _username )
@@ -35,14 +38,22 @@ public class Player : MonoBehaviour
 
     public void Die ()
     {
-        m_modelController.ShowModel ( false );
+        // Enable the player ragdoll
+        m_ragdollController.transform.SetParent ( null );
+        m_ragdollController.EnableMeshRenderers ( true );
+        m_ragdollController.EnableFollowTarget ( false );
 
-        // Spawn a ragdoll that represents the player's dead body
-        Instantiate ( m_modelRagdoll, transform.position, transform.rotation );
+        m_modelController.ShowModel ( false );
     }
 
     public void Respawn ()
     {
         m_modelController.ShowModel ( true );
+
+        // Reset and disable the player ragdoll
+        m_ragdollController.transform.SetPositionAndRotation ( m_ragdollParent.position, m_ragdollParent.rotation );
+        m_ragdollController.transform.SetParent ( m_ragdollParent );
+        m_ragdollController.EnableMeshRenderers ( false );
+        m_ragdollController.EnableFollowTarget ( true );
     }
 }
