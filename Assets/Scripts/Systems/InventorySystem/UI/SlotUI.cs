@@ -1,20 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using InventorySystem;
-using InventorySystem.Presets;
+using UnityEngine.UI;
 
-public class InventoryManager : MonoBehaviour
+public class SlotUI : MonoBehaviour
 {
     [SerializeField]
-    private Inventory m_inventory = null;
-    [Header("Preset"), SerializeField]
-    private Preset m_inventoryPreset = null;
-
-    private void Awake ()
-    {
-        
-    }
+    private Image m_contentImage = null;
+    [SerializeField]
+    private Text m_contentText = null;
 
     // Start is called before the first frame update
     void Start()
@@ -27,4 +21,5 @@ public class InventoryManager : MonoBehaviour
     {
         
     }
+
 }

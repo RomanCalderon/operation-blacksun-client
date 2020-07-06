@@ -48,7 +48,15 @@ namespace InventorySystem
         public Inventory ()
         {
             m_rigSlots = new Slot [ Constants.INVENTORY_RIG_SIZE ];
+            for ( int i = 0; i < m_rigSlots.Length; i++ )
+            {
+                m_rigSlots [ i ] = new Slot ();
+            }
             m_backpackSlots = new Slot [ Constants.INVENTORY_BACKPACK_SIZE ];
+            for ( int i = 0; i < m_backpackSlots.Length; i++ )
+            {
+                m_backpackSlots [ i ] = new Slot ();
+            }
 
             m_primaryWeaponSlot = null;
             m_primaryBarrelSlot = null;
@@ -65,6 +73,8 @@ namespace InventorySystem
             OnValidate ();
         }
 
+        /* Saving preset implementation for now
+         * 
         public Inventory ( Preset preset )
         {
             if ( preset == null )
@@ -108,6 +118,7 @@ namespace InventorySystem
 
             OnValidate ();
         }
+        */
 
         #endregion
 
