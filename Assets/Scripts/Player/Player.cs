@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent ( typeof ( PlayerModelController ) )]
+[RequireComponent ( typeof ( InventoryManager ) )]
 public class Player : MonoBehaviour
 {
     private int m_id;
     private string m_username;
     private PlayerModelController m_modelController = null;
+    public InventoryManager InventoryManager { get; private set; }
 
     [SerializeField]
     private RagdollMasterJointController m_ragdollController = null;
@@ -17,6 +19,7 @@ public class Player : MonoBehaviour
     private void Awake ()
     {
         m_modelController = GetComponent<PlayerModelController> ();
+        InventoryManager = GetComponent<InventoryManager> ();
     }
 
     private void Start ()

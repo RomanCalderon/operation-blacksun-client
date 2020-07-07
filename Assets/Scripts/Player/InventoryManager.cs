@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using InventorySystem;
 using InventorySystem.Presets;
+using InventorySystem.PlayerItems;
 
 public class InventoryManager : MonoBehaviour
 {
     [SerializeField]
     private Inventory m_inventory = null;
-    [Header("Preset"), SerializeField]
-    private Preset m_inventoryPreset = null;
+    private PlayerItemDatabase m_playerItemDatabase = null;
 
     private void Awake ()
     {
-        
+        m_playerItemDatabase = Resources.Load<PlayerItemDatabase> ( "PlayerItemDatabase" );
+        Debug.Assert ( m_playerItemDatabase != null, "PlayerItemDatabase is null." );
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void SetSlot ( string slotId, string playerItemId, int quantity )
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if ( m_inventory == null )
+        {
+            return;
+        }
+        PlayerItem playerItem = m_playerItemDatabase.GetPlayerItem ( playerItemId );
+        m_inventory.SetSlot ( slotId, playerItem, quantity );
+        m_inventory.OnValidate ();
     }
 }

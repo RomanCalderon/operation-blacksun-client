@@ -24,6 +24,9 @@ public class PlayerManager
         Player = _player;
         Player.Initialize ( Id, Username );
         SetHealth ( MAX_HEALTH );
+
+        // Tell the server that this player has spawned
+        ClientSend.PlayerReady ();
     }
 
     public void SetMovementVector ( Vector2 movement )

@@ -53,6 +53,16 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void PlayerReady ()
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerReady ) )
+        {
+            _packet.Write ( Client.instance.myId );
+
+            SendTCPData ( _packet );
+        }
+    }
+
     public static void PlayerMovement ( bool [] _inputs )
     {
         using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerMovement ) )

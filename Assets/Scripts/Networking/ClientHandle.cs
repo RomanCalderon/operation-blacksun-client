@@ -122,5 +122,15 @@ public class ClientHandle : MonoBehaviour
         GameManager.players [ _id ].Respawn ();
     }
 
+    public static void PlayerUpdateInventorySlot ( Packet _packet )
+    {
+        int _playerId = _packet.ReadInt ();
+        string _slotId = _packet.ReadString ();
+        string _playerItemId = _packet.ReadString ();
+        int _quantity = _packet.ReadInt ();
+
+        GameManager.players [ _playerId ].Player.InventoryManager.SetSlot ( _slotId, _playerItemId, _quantity );
+    }
+
     #endregion
 }
