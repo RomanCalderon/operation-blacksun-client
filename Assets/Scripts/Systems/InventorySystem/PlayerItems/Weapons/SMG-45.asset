@@ -15,6 +15,7 @@ MonoBehaviour:
   Id: smg-45
   Name: SMG-45
   StackLimit: 1
+  Image: {fileID: 21300000, guid: 38334f7211e114c46b4a106662b5ad73, type: 3}
   WeaponType: 0
   WeaponClass: 1
   Caliber: 1

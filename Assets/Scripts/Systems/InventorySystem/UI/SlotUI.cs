@@ -33,14 +33,15 @@ public class SlotUI : MonoBehaviour
         {
             m_slotBackgroundImage.color = m_vacantColor;
             m_contentImage.enabled = false;
+            m_contentImage.sprite = null;
             m_contentNameText.text = string.Empty;
             m_contentStackSizeText.text = string.Empty;
         }
         else
         {
             m_slotBackgroundImage.color = m_occupiedColor;
-            // TODO: set content image to PlayerItem Image
-            m_contentImage = null;
+            m_contentImage.enabled = true;
+            m_contentImage.sprite = slot.PlayerItem.Image;
             m_contentNameText.text = slot.PlayerItem.Name;
             if ( slot.IsStackable )
             {

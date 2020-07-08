@@ -17,6 +17,8 @@ namespace InventorySystem.PlayerItems
         public string Name = string.Empty;
         [Tooltip ( "The maximum stacking capacity. 1 = no stacking." ), Range ( 1, 256 )]
         public int StackLimit = 1;
+        [Tooltip ( "Sprite graphic to display in UI elements." )]
+        public Sprite Image = null;
 
         #region Overrides
 
