@@ -727,6 +727,7 @@ MonoBehaviour:
     type: 3}
   playerPrefab: {fileID: 4819394724728440032, guid: bfaa0f11f426452499e4a100af49f241,
     type: 3}
+  m_mainCamera: {fileID: 1756062270}
 --- !u!4 &563369863
 Transform:
   m_ObjectHideFlags: 0
@@ -2723,7 +2724,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1756062270}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &1756062272
 Camera:
   m_ObjectHideFlags: 0

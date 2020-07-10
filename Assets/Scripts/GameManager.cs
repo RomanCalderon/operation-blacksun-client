@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
 
+    [SerializeField]
+    private GameObject m_mainCamera = null;
+
     private void Awake ()
     {
         if ( instance == null )
@@ -22,6 +25,8 @@ public class GameManager : MonoBehaviour
             Debug.Log ( "Instance already exists, destroying object!" );
             Destroy ( this );
         }
+
+        Debug.Assert ( m_mainCamera != null, "m_mainCamera is null." );
     }
 
     /// <summary>
@@ -53,5 +58,8 @@ public class GameManager : MonoBehaviour
         }
         // Initialize this PlayerManager with a username and Player component
         players [ _id ].InitializePlayer ( _player.GetComponent<Player> () );
+
+        // Disable the main camera
+        m_mainCamera.SetActive ( false );
     }
 }
