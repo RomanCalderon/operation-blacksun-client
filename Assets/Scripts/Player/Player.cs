@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
     private string m_username;
     private PlayerModelController m_modelController = null;
     public InventoryManager InventoryManager { get; private set; }
+    public WeaponsController WeaponsController { get; private set; }
+    [SerializeField]
+    private GameObject m_weaponsController = null;
 
     [SerializeField]
     private RagdollMasterJointController m_ragdollController = null;
@@ -20,6 +23,7 @@ public class Player : MonoBehaviour
     {
         m_modelController = GetComponent<PlayerModelController> ();
         InventoryManager = GetComponent<InventoryManager> ();
+        WeaponsController = m_weaponsController.GetComponent<WeaponsController> ();
     }
 
     private void Start ()
