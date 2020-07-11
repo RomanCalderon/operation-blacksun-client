@@ -3934,6 +3934,21 @@ PrefabInstance:
       propertyPath: Id
       value: rig-3
       objectReference: {fileID: 0}
+    - target: {fileID: 3537290716533192062, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 3537290716533192062, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 3537290716533192062, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 7784755190092618379, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
         type: 3}
       propertyPath: m_Name
@@ -8516,12 +8531,48 @@ PrefabInstance:
       propertyPath: Id
       value: rig-0
       objectReference: {fileID: 0}
+    - target: {fileID: 3898835645326355220, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 7784755190092618379, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
         type: 3}
       propertyPath: m_Name
       value: Rig Slot (0)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8920912632574220824, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8920912632574220824, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_EffectColor.a
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8920912632574220824, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_EffectDistance.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8920912632574220824, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_EffectDistance.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8920912632574220824, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_UseGraphicAlpha
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8950704143777703354, guid: fc4f5e4a34211f34ba70dd8009d8bd9b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8920912632574220824, guid: fc4f5e4a34211f34ba70dd8009d8bd9b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fc4f5e4a34211f34ba70dd8009d8bd9b, type: 3}
 --- !u!114 &9001354433055463147 stripped
 MonoBehaviour:

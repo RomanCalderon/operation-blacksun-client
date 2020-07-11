@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using InventorySystem;
 using InventorySystem.PlayerItems;
 using InventorySystem.Slots;

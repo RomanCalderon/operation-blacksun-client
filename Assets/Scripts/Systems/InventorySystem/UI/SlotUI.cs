@@ -1,18 +1,22 @@
-﻿using InventorySystem.Slots;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using InventorySystem.Slots;
 
-public class SlotUI : MonoBehaviour
+public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public string Id = string.Empty;
+    private Color m_normalColor = new Color();
     [SerializeField]
     private Color m_vacantColor = new Color ();
     [SerializeField]
     private Color m_occupiedColor = new Color ();
     [SerializeField]
-    private Image m_slotBackgroundImage = null;
+    private Color m_highlightColor = new Color ();
+    [SerializeField]
+    private Image m_slotImage = null;
     [SerializeField]
     private Image m_contentImage = null;
     [SerializeField]
@@ -31,7 +35,7 @@ public class SlotUI : MonoBehaviour
 
         if ( slot.IsEmpty () )
         {
-            m_slotBackgroundImage.color = m_vacantColor;
+            m_slotImage.color = m_normalColor = m_vacantColor;
             m_contentImage.enabled = false;
             m_contentImage.sprite = null;
             m_contentNameText.text = string.Empty;
@@ -39,7 +43,7 @@ public class SlotUI : MonoBehaviour
         }
         else
         {
-            m_slotBackgroundImage.color = m_occupiedColor;
+            m_slotImage.color = m_normalColor = m_occupiedColor;
             m_contentImage.enabled = true;
             m_contentImage.sprite = slot.PlayerItem.Image;
             m_contentNameText.text = slot.PlayerItem.Name;
@@ -52,5 +56,27 @@ public class SlotUI : MonoBehaviour
                 m_contentStackSizeText.text = string.Empty;
             }
         }
+    }
+
+    public void Highlight ( bool highlight )
+    {
+        if ( highlight )
+        {
+            m_slotImage.color = m_highlightColor;
+        }
+        else
+        {
+            m_slotImage.color = m_normalColor;
+        }
+    }
+
+    public void OnPointerEnter ( PointerEventData eventData )
+    {
+        m_slotImage.color = m_highlightColor;
+    }
+
+    public void OnPointerExit ( PointerEventData eventData )
+    {
+        m_slotImage.color = m_normalColor;
     }
 }
