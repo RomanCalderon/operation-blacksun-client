@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Instance;
+
     public Player player;
     public float sensitivity = 100f;
     public float clampAngle = 85f;
@@ -13,6 +15,11 @@ public class CameraController : MonoBehaviour
 
     private void Start ()
     {
+        if ( Instance == null )
+        {
+            Instance = this;
+        }
+
         verticalRotation = transform.localEulerAngles.x;
         horizontalRotation = player.transform.eulerAngles.y;
 
@@ -45,6 +52,11 @@ public class CameraController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler ( verticalRotation, 0f, 0f );
         player.transform.rotation = Quaternion.Euler ( 0f, horizontalRotation, 0f );
+    }
+
+    public void AddRecoil ( float recoilAmount = 1f )
+    {
+        verticalRotation -= recoilAmount;
     }
 
     private void ToggleCursorMode ()

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class WeaponsController : MonoBehaviour
 {
@@ -54,13 +55,11 @@ public class WeaponsController : MonoBehaviour
         if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && m_activeWeapon != Weapons.Primary )
         {
             OnSetTrigger?.Invoke ( "Holster" );
-            //OnSwitchWeapon?.Invoke ( SwitchWeapons );
         }
         // Weapon switching - Secondary
         if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && m_activeWeapon != Weapons.Secondary )
         {
             OnSetTrigger?.Invoke ( "Holster" );
-            //OnSwitchWeapon?.Invoke ( SwitchWeapons );
         }
 
         // Shooting
@@ -71,6 +70,8 @@ public class WeaponsController : MonoBehaviour
             // This will be changed
             OnSetTrigger?.Invoke ( "Shoot" );
             OnSetTrigger?.Invoke ( "BoltCharge" );
+            CameraShaker.Instance.ShakeOnce ( 0.5f, 6f, 0.01f, 0.16f );
+            CameraController.Instance.AddRecoil ( 0.75f );
         }
 
 
