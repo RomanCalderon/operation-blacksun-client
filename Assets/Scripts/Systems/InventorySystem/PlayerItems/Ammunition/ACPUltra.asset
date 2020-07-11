@@ -15,4 +15,5 @@ MonoBehaviour:
   Id: acp-ultra
   Name: ACP Ultra
   StackLimit: 256
+  Image: {fileID: 21300000, guid: f95cb7965fd091746b5f919bd8d5ab21, type: 3}
   Caliber: 1
