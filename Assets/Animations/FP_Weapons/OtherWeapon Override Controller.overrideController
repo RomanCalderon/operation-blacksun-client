@@ -8,4 +8,28 @@ AnimatorOverrideController:
   m_PrefabAsset: {fileID: 0}
   m_Name: OtherWeapon Override Controller
   m_Controller: {fileID: 9100000, guid: 1dd8e0dbc055aa5418f9d82a84ea8210, type: 2}
-  m_Clips: []
+  m_Clips:
+  - m_OriginalClip: {fileID: 1295528143132846641, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+    m_OverrideClip: {fileID: 1295528143132846641, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+  - m_OriginalClip: {fileID: 1961234210231735382, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+    m_OverrideClip: {fileID: 1961234210231735382, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+  - m_OriginalClip: {fileID: 5548347105518645340, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+    m_OverrideClip: {fileID: 5548347105518645340, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+  - m_OriginalClip: {fileID: 7824344441352737310, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+    m_OverrideClip: {fileID: 7824344441352737310, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+  - m_OriginalClip: {fileID: -1948527020901694663, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+    m_OverrideClip: {fileID: -1948527020901694663, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+  - m_OriginalClip: {fileID: -8800603647999722249, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}
+    m_OverrideClip: {fileID: -8800603647999722249, guid: 539aa105ed86c7b4db285f0c41442f4f,
+      type: 3}

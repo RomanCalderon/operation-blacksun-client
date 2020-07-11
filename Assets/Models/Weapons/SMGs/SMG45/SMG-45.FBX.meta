@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: lwrc-smg45
-    second: {fileID: 2100000, guid: 06c1e7e7e3ee45044ac793ffbafcccc4, type: 2}
+    second: {fileID: 2100000, guid: 6b61f011bdbc47d4cb887f9cc8b120f1, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
