@@ -23,7 +23,10 @@ public class MotionSway : MonoBehaviour
 
     private void Update ()
     {
-        UpdateSway ( Input.GetAxis ( "Mouse X" ), Input.GetAxis ( "Mouse Y" ) );
+        if ( !InventoryManager.Instance.IsDisplayed )
+        {
+            UpdateSway ( Input.GetAxis ( "Mouse X" ), Input.GetAxis ( "Mouse Y" ) );
+        }
     }
 
     public void UpdateSway ( float x, float y )

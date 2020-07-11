@@ -51,39 +51,36 @@ public class WeaponsController : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
-        // Weapon switching - Primary
-        if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && m_activeWeapon != Weapons.Primary )
-        {
-            OnSetTrigger?.Invoke ( "Holster" );
-        }
-        // Weapon switching - Secondary
-        if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && m_activeWeapon != Weapons.Secondary )
-        {
-            OnSetTrigger?.Invoke ( "Holster" );
-        }
 
         // Shooting
-        if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+        if ( !InventoryManager.Instance.IsDisplayed )
         {
-            ClientSend.PlayerShoot ( m_cameraTransform.forward );
+            // Weapon switching - Primary
+            if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && m_activeWeapon != Weapons.Primary )
+            {
+                OnSetTrigger?.Invoke ( "Holster" );
+            }
+            // Weapon switching - Secondary
+            if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && m_activeWeapon != Weapons.Secondary )
+            {
+                OnSetTrigger?.Invoke ( "Holster" );
+            }
+            // Shooting
+            if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+            {
+                ClientSend.PlayerShoot ( m_cameraTransform.forward );
 
-            // This will be changed
-            OnSetTrigger?.Invoke ( "Shoot" );
-            OnSetTrigger?.Invoke ( "BoltCharge" );
-            CameraShaker.Instance.ShakeOnce ( 0.5f, 6f, 0.01f, 0.16f );
-            CameraController.Instance.AddRecoil ( 0.75f );
+                // This will be changed
+                OnSetTrigger?.Invoke ( "Shoot" );
+                OnSetTrigger?.Invoke ( "BoltCharge" );
+                CameraShaker.Instance.ShakeOnce ( 0.5f, 6f, 0.01f, 0.16f );
+                CameraController.Instance.AddRecoil ( 0.75f );
+            }
+            if ( Input.GetKeyDown ( KeyCode.R ) )
+            {
+                OnSetTrigger?.Invoke ( "ReloadFull" );
+            }
         }
-
-
-        if ( Input.GetKeyDown ( KeyCode.R ) )
-        {
-            OnSetTrigger?.Invoke ( "ReloadFull" );
-        }
-        if ( Input.GetKeyDown ( KeyCode.H ) )
-        {
-            OnSetTrigger?.Invoke ( "Holster" );
-        }
-
         // TODO: send shoot logic to server and handle response somewhere here
     }
 

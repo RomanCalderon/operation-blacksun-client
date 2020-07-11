@@ -23,15 +23,11 @@ public class CameraController : MonoBehaviour
         verticalRotation = transform.localEulerAngles.x;
         horizontalRotation = player.transform.eulerAngles.y;
 
-        ToggleCursorMode ();
+        SetCursorMode ( CursorLockMode.Locked );
     }
 
     private void Update ()
     {
-        if ( Input.GetKeyDown ( KeyCode.Escape ) )
-        {
-            ToggleCursorMode ();
-        }
         if ( Cursor.lockState == CursorLockMode.Locked )
         {
             Look ();
@@ -59,17 +55,9 @@ public class CameraController : MonoBehaviour
         verticalRotation -= recoilAmount;
     }
 
-    private void ToggleCursorMode ()
+    public void SetCursorMode ( CursorLockMode lockMode )
     {
-        Cursor.visible = !Cursor.visible;
-
-        if ( Cursor.lockState == CursorLockMode.None )
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
+        Cursor.lockState = lockMode;
+        Cursor.visible = lockMode == CursorLockMode.None;
     }
 }
