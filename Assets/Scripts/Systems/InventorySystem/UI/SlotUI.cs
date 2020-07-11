@@ -58,18 +58,6 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    public void Highlight ( bool highlight )
-    {
-        if ( highlight )
-        {
-            m_slotImage.color = m_highlightColor;
-        }
-        else
-        {
-            m_slotImage.color = m_normalColor;
-        }
-    }
-
     public void OnPointerEnter ( PointerEventData eventData )
     {
         m_slotImage.color = m_highlightColor;

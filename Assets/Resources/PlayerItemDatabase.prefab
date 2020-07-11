@@ -71,3 +71,4 @@ MonoBehaviour:
   m_weaponsPlayerItems:
   - {fileID: 11400000, guid: 4c574b0b4a581d44a9449e88ddc9ecc7, type: 2}
   - {fileID: 11400000, guid: 61109460dffeeaf469dddce79743a4bd, type: 2}
+  - {fileID: 11400000, guid: 52584332347cc044e81d48363b8b88e3, type: 2}
