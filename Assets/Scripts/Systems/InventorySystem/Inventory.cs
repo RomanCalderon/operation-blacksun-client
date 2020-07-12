@@ -138,9 +138,15 @@ namespace InventorySystem
 
             if ( slot != null )
             {
-                return slot.Insert ( playerItem, quantity );
+                if ( playerItem == null ) // Empty slot
+                {
+                    slot.Clear ();
+                    return new InsertionResult ( slot, InsertionResult.Results.SUCCESS );
+                }
+                slot.Clear ();
+                return slot.Insert ( playerItem, quantity ); // Insert PlayerItem
             }
-            Debug.Assert ( slot != null, $"Slot [{slotId}] is null." );
+            Debug.LogWarning ( $"Slot [{slotId}] is null." );
             return new InsertionResult ( playerItem, InsertionResult.Results.INSERTION_FAILED );
         }
 

@@ -129,7 +129,8 @@ public class ClientHandle : MonoBehaviour
         string _playerItemId = _packet.ReadString ();
         int _quantity = _packet.ReadInt ();
 
-        GameManager.players [ _playerId ].Player.InventoryManager.SetSlot ( _slotId, _playerItemId, _quantity );
+        InventoryManager.Instance.UpdateSlot ( _slotId, _playerItemId, _quantity );
+        //GameManager.players [ _playerId ].Player.InventoryManager.SetSlot ( _slotId, _playerItemId, _quantity );
     }
 
     #endregion

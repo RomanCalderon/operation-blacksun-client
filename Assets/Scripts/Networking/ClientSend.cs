@@ -87,5 +87,17 @@ public class ClientSend : MonoBehaviour
             SendTCPData ( _packet );
         }
     }
+
+    public static void PlayerTransferSlotContents ( string fromSlotId, string toSlotId, int transferMode )
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerTransferSlotContents ) )
+        {
+            _packet.Write ( fromSlotId );
+            _packet.Write ( toSlotId );
+            _packet.Write ( transferMode );
+
+            SendTCPData ( _packet );
+        }
+    }
     #endregion
 }

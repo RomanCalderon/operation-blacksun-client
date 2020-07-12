@@ -1752,6 +1752,8 @@ MonoBehaviour:
   - {fileID: 2882330284670700907}
   - {fileID: 4441296062563765631}
   - {fileID: 6668476465392662563}
+  m_slotDragContentsPrefab: {fileID: 7224405236940392137, guid: 2d8f1228f8e9ee148b06d8bf8017a66b,
+    type: 3}
 --- !u!1 &5051012820835233971
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8468127656718389848}
   - component: {fileID: 8888401115269210396}
   - component: {fileID: 3794688899404471675}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Content Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,9 +87,9 @@ GameObject:
   - component: {fileID: 3537290716533192062}
   - component: {fileID: 2079723482117384432}
   - component: {fileID: 7899354696884358248}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Slot
-  m_TagString: Untagged
+  m_TagString: SlotUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 4370543414124620382}
   - component: {fileID: 8848930903034583541}
   - component: {fileID: 7372635306136221383}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Content Stack Size Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 214081304663985068}
   - component: {fileID: 6711143058441646770}
   - component: {fileID: 8950704143777703354}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Content Name Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

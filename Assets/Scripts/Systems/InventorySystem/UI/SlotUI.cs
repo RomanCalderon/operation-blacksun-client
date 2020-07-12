@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using InventorySystem.Slots;
+using System.Security.Permissions;
 
-public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     public string Id = string.Empty;
-    private Color m_normalColor = new Color();
+    public Slot Slot { get; private set; } = null;
+
+    private Color m_normalColor = Color.red;
     [SerializeField]
     private Color m_vacantColor = new Color ();
     [SerializeField]
@@ -24,15 +27,32 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField]
     private Text m_contentStackSizeText = null;
 
+    private void Awake ()
+    {
+        // Set the default colors
+        m_slotImage.color = m_normalColor = m_vacantColor;
+    }
 
     public void UpdateSlot ( Slot slot )
     {
+        // NRE is checked in InventoryManager
+
+        // Check if a slot reference is null
+        if ( Slot == null )
+        {
+            Slot = slot;
+        }
+
+        // Check for matching IDs
         if ( Id != slot.Id )
         {
-            Debug.LogError ( "Slot ids do not match." );
+            Debug.LogError ( "Slot IDs do not match." );
             return;
         }
 
+        DisplayContents ( true );
+
+        // Update slot ui
         if ( slot.IsEmpty () )
         {
             m_slotImage.color = m_normalColor = m_vacantColor;
@@ -58,6 +78,43 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
+    public void DisplayContents ( bool state )
+    {
+        m_contentImage.enabled = state;
+        m_contentNameText.enabled = state;
+        m_contentStackSizeText.enabled = state;
+    }
+
+    public void ChangeContents ( PointerEventData.InputButton button )
+    {
+        switch ( button )
+        {
+            case PointerEventData.InputButton.Left: // Moving whole slot
+                DisplayContents ( false ); // Hide all contents
+                break;
+            case PointerEventData.InputButton.Right: // Moving one item from slot
+                if ( Slot.IsStackable && Slot.StackSize > 1 )
+                {
+                    m_contentStackSizeText.text = $"{Slot.StackSize - 1}/{Slot.PlayerItem.StackLimit}"; // Display the stack size minus one
+                }
+                else
+                {
+                    DisplayContents ( false ); // Hide all contents
+                }
+                break;
+            case PointerEventData.InputButton.Middle: // Moving half the stack size
+                m_contentStackSizeText.text = $"{Mathf.CeilToInt ( Slot.StackSize / 2f )}/{Slot.PlayerItem.StackLimit}"; // Display half the stack size
+                break;
+            default:
+                break;
+        }
+    }
+
+    public Sprite GetContentImage ()
+    {
+        return m_contentImage.sprite;
+    }
+
     public void OnPointerEnter ( PointerEventData eventData )
     {
         m_slotImage.color = m_highlightColor;
@@ -66,5 +123,46 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerExit ( PointerEventData eventData )
     {
         m_slotImage.color = m_normalColor;
+    }
+
+    public void OnPointerDown ( PointerEventData eventData )
+    {
+        if ( Slot != null && !Slot.IsEmpty () )
+        {
+            InventoryManager.Instance.OnSlotSelected ( this, eventData );
+        }
+    }
+
+    public void OnBeginDrag ( PointerEventData eventData )
+    {
+        if ( Slot != null && !Slot.IsEmpty () )
+        {
+            InventoryManager.Instance.SlotBeginDrag ( eventData );
+        }
+    }
+
+    public void OnDrag ( PointerEventData eventData )
+    {
+        if ( Slot != null && !Slot.IsEmpty () )
+        {
+            InventoryManager.Instance.SlotDrag ( eventData.position );
+        }
+    }
+
+    public void OnEndDrag ( PointerEventData eventData )
+    {
+        if ( Slot != null && !Slot.IsEmpty () )
+        {
+            InventoryManager.Instance.SlotEndDrag ( eventData );
+        }
+    }
+
+    public void OnDrop ( PointerEventData eventData )
+    {
+        Debug.Assert ( Slot != null, "Slot is null." );
+        if ( Slot != null )
+        {
+            InventoryManager.Instance.SlotOnDrop ( Id, eventData );
+        }
     }
 }
