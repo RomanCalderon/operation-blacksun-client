@@ -126,7 +126,6 @@ public class InventoryManager : MonoBehaviour
         {
             return;
         }
-        Debug.Log ( $"User pressed [{eventData.button}] on slot [{slotUI.Id}]" );
         m_selectedSlotUI = slotUI;
     }
 
@@ -149,15 +148,12 @@ public class InventoryManager : MonoBehaviour
         switch ( eventData.button )
         {
             case PointerEventData.InputButton.Left: // Moving whole slot
-                Debug.Log ( "Slot begin LMB drag" );
                 contentDragAmount = m_selectedSlotUI.Slot.StackSize;
                 break;
             case PointerEventData.InputButton.Right: // Moving one item from slot
-                Debug.Log ( "Slot begin RMB drag" );
                 contentDragAmount = 1;
                 break;
             case PointerEventData.InputButton.Middle: // Moving half the stack size
-                Debug.Log ( "Slot begin MMB drag" );
                 contentDragAmount = Mathf.CeilToInt ( m_selectedSlotUI.Slot.StackSize / 2f );
                 break;
             default:
@@ -213,7 +209,6 @@ public class InventoryManager : MonoBehaviour
         // Check if the DRAG slot is the same as the DROP slot
         if ( m_selectedSlotUI.Id == droppedSlotId )
         {
-            Debug.Log ( "same slot drop" );
             // Reset SlotUI contents
             m_selectedSlotUI.DisplayContents ( true );
             m_selectedSlotUI.UpdateSlot ( m_selectedSlotUI.Slot );

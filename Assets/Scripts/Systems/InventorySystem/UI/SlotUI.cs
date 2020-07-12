@@ -103,7 +103,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
                 }
                 break;
             case PointerEventData.InputButton.Middle: // Moving half the stack size
-                m_contentStackSizeText.text = $"{Mathf.CeilToInt ( Slot.StackSize / 2f )}/{Slot.PlayerItem.StackLimit}"; // Display half the stack size
+                m_contentStackSizeText.text = $"{Mathf.FloorToInt ( Slot.StackSize / 2f )}/{Slot.PlayerItem.StackLimit}"; // Display half the stack size
                 break;
             default:
                 break;
