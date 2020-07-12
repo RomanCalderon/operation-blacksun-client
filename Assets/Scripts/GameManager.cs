@@ -51,6 +51,9 @@ public class GameManager : MonoBehaviour
         if ( _id == Client.instance.myId )
         {
             _player = Instantiate ( localPlayerPrefab, _position, _rotation );
+
+            // Disable the main camera
+            m_mainCamera.SetActive ( false );
         }
         else
         {
@@ -59,7 +62,5 @@ public class GameManager : MonoBehaviour
         // Initialize this PlayerManager with a username and Player component
         players [ _id ].InitializePlayer ( _player.GetComponent<Player> () );
 
-        // Disable the main camera
-        m_mainCamera.SetActive ( false );
     }
 }

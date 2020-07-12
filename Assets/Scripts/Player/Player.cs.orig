@@ -23,10 +23,14 @@ public class Player : MonoBehaviour
     {
         m_modelController = GetComponent<PlayerModelController> ();
         InventoryManager = GetComponent<InventoryManager> ();
+<<<<<<< HEAD
+        WeaponsController = m_weaponsController.GetComponent<WeaponsController> ();
+=======
         if ( Client.instance.myId == m_id )
         {
             WeaponsController = m_weaponsController.GetComponent<WeaponsController> ();
         }
+>>>>>>> master
     }
 
     private void Start ()
