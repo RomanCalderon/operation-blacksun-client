@@ -12,12 +12,14 @@ public class WeaponAnimatorController : MonoBehaviour
     {
         WeaponsController.OnSetTrigger += SetTrigger;
         WeaponsController.OnSetBool += SetBool;
+        WeaponsController.OnSetFloat += SetFloat;
     }
 
     private void OnDisable ()
     {
         WeaponsController.OnSetTrigger -= SetTrigger;
         WeaponsController.OnSetBool -= SetBool;
+        WeaponsController.OnSetFloat -= SetFloat;
     }
 
     // Start is called before the first frame update
@@ -41,6 +43,15 @@ public class WeaponAnimatorController : MonoBehaviour
             return;
         }
         m_animator.SetBool ( parameterName, value );
+    }
+
+    private void SetFloat ( string parameterName, float value )
+    {
+        if ( !m_animator.isInitialized || !AnimatorHasParameter ( parameterName ) )
+        {
+            return;
+        }
+        m_animator.SetFloat ( parameterName, value );
     }
 
     /// <summary>

@@ -6,6 +6,7 @@ public class WeaponStateBehaviour : StateMachineBehaviour
 {
     public delegate void StateHandler ( AnimatorStateInfo stateInfo, int layerIndex );
     public static StateHandler OnStateEntered;
+    public static StateHandler OnStateUpdated;
     public static StateHandler OnStateExited;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -15,13 +16,13 @@ public class WeaponStateBehaviour : StateMachineBehaviour
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateUpdate ( Animator animator, AnimatorStateInfo stateInfo, int layerIndex )
+    {
+        OnStateUpdated?.Invoke ( stateInfo, layerIndex );
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    override public void OnStateExit ( Animator animator, AnimatorStateInfo stateInfo, int layerIndex )
     {
         OnStateExited?.Invoke ( stateInfo, layerIndex );
     }
