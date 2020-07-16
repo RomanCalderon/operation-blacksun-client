@@ -9,22 +9,26 @@ public class AimListener : MonoBehaviour
 
     [SerializeField]
     private Transform m_ADSPoint = null;
+    private TransformAlignmentUtil m_asdTransformAlignment = null;
+    private FollowTransform m_adsFollowTransform = null;
     [SerializeField]
     private Transform m_model = null;
-    private Vector3 m_originalPosition;
-    private Quaternion m_originalRotation;
-    [SerializeField]
-    private Vector3 m_offset = new Vector3 ( 0, 0, 0.075f );
-    private Quaternion m_targetRotation;
-    private Vector3 m_targetPosition;
-    private Vector3 m_currVelocity;
+    private Vector3 m_originalPosition = Vector3.zero;
+    private Quaternion m_originalRotation = Quaternion.identity;
+    private Vector3 m_offset = Vector3.zero;
+    private Vector3 m_targetPosition = Vector3.zero;
+    private Vector3 m_currVelocity = Vector3.zero;
     [SerializeField]
     private float m_smoothTime = 5f;
 
     private void Awake ()
     {
+        m_adsFollowTransform = m_ADSPoint.GetComponent<FollowTransform> ();
+        m_asdTransformAlignment = m_ADSPoint.GetComponent<TransformAlignmentUtil> ();
+
         m_originalPosition = m_model.localPosition;
         m_originalRotation = m_model.localRotation;
+        m_offset.z = Vector3.Distance ( m_ADSPoint.position, transform.position );
     }
 
     private void OnEnable ()
@@ -40,6 +44,10 @@ public class AimListener : MonoBehaviour
     // Start is called before the first frame update
     void Start ()
     {
+        m_adsFollowTransform.enabled = false;
+        //m_adsFollowTransform.UpdatePositionalOffset ();
+        m_asdTransformAlignment.AlignPosition ();
+        m_adsFollowTransform.enabled = true;
         AimUpdate ( false );
     }
 
@@ -59,6 +67,7 @@ public class AimListener : MonoBehaviour
             m_model.RotateAround ( m_ADSPoint.position, m_ADSPoint.forward, -angle );
 
             // Position
+            //m_adsFollowTransform.UpdatePositionalOffset ();
             Vector3 adsDiff = ( transform.localPosition + m_offset ) - m_ADSPoint.localPosition;
             m_targetPosition = m_model.localPosition + adsDiff;
         }
@@ -72,7 +81,7 @@ public class AimListener : MonoBehaviour
 
     private void OnDrawGizmos ()
     {
-        Gizmos.color = new Color ( 1, 0, 0, 0.5f );
-        Gizmos.DrawSphere ( transform.position + m_offset, 0.005f );
+        Gizmos.color = new Color ( 1, 0, 0, 0.75f );
+        Gizmos.DrawSphere ( transform.position + m_offset, 0.001f );
     }
 }

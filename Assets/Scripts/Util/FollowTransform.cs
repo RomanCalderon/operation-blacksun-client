@@ -29,4 +29,9 @@ public class FollowTransform : MonoBehaviour
         transform.position = m_target.position + m_positionalOffset;
         transform.rotation = Quaternion.Euler ( m_target.eulerAngles + m_rotationalOffset );
     }
+
+    public void UpdatePositionalOffset ()
+    {
+        m_positionalOffset = transform.position - m_target.position;
+    }
 }
