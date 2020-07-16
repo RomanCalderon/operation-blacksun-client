@@ -59,10 +59,11 @@ public class AimListener : MonoBehaviour
         // Position
         m_model.localPosition = Vector3.SmoothDamp ( m_model.localPosition, m_targetPosition, ref m_currVelocity, m_smoothTime * Time.deltaTime );
 
-        if ( Input.GetKeyDown ( KeyCode.Mouse2 ) )
-        {
-            SetADSPointTarget ();
-        }
+        // debug
+        //if ( Input.GetKeyDown ( KeyCode.Mouse2 ) )
+        //{
+        //    SetADSPointTarget ();
+        //}
     }
 
     // TODO: Call this method when the active sight attachment changes
