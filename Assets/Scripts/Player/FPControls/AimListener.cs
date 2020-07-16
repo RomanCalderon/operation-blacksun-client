@@ -1,16 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.Video;
 
 public class AimListener : MonoBehaviour
 {
-    private bool m_aimState = false;
-
     [SerializeField]
     private Transform m_ADSPoint = null;
-    private TransformAlignmentUtil m_asdTransformAlignment = null;
+    [SerializeField]
+    private string m_ADSTargetTag = "ADSTarget";
+    private Transform m_currentADSTarget = null;
+    private TransformAlignmentUtil m_adsTransformAlignment = null;
     private FollowTransform m_adsFollowTransform = null;
+
     [SerializeField]
     private Transform m_model = null;
     private Vector3 m_originalPosition = Vector3.zero;
@@ -23,8 +26,9 @@ public class AimListener : MonoBehaviour
 
     private void Awake ()
     {
+        Debug.Assert ( m_ADSPoint != null, "Please assign an ADS Point." );
         m_adsFollowTransform = m_ADSPoint.GetComponent<FollowTransform> ();
-        m_asdTransformAlignment = m_ADSPoint.GetComponent<TransformAlignmentUtil> ();
+        m_adsTransformAlignment = m_ADSPoint.GetComponent<TransformAlignmentUtil> ();
 
         m_originalPosition = m_model.localPosition;
         m_originalRotation = m_model.localRotation;
@@ -34,6 +38,8 @@ public class AimListener : MonoBehaviour
     private void OnEnable ()
     {
         AimController.OnAimUpdated += AimUpdate;
+        
+        SetADSPointTarget ();
     }
 
     private void OnDisable ()
@@ -44,11 +50,7 @@ public class AimListener : MonoBehaviour
     // Start is called before the first frame update
     void Start ()
     {
-        m_adsFollowTransform.enabled = false;
-        //m_adsFollowTransform.UpdatePositionalOffset ();
-        m_asdTransformAlignment.AlignPosition ();
-        m_adsFollowTransform.enabled = true;
-        AimUpdate ( false );
+        SetADSPointTarget ();
     }
 
     // Update is called once per frame
@@ -56,6 +58,51 @@ public class AimListener : MonoBehaviour
     {
         // Position
         m_model.localPosition = Vector3.SmoothDamp ( m_model.localPosition, m_targetPosition, ref m_currVelocity, m_smoothTime * Time.deltaTime );
+
+        if ( Input.GetKeyDown ( KeyCode.Mouse2 ) )
+        {
+            SetADSPointTarget ();
+        }
+    }
+
+    // TODO: Call this method when the active sight attachment changes
+    private void SetADSPointTarget ()
+    {
+        Transform target = GameObject.FindWithTag ( m_ADSTargetTag ).transform;
+
+        if ( m_currentADSTarget == target )
+        {
+            return;
+        }
+        m_currentADSTarget = target;
+
+        if ( target != null )
+        {
+            m_adsFollowTransform.SetTarget ( target );
+            m_adsTransformAlignment.SetTarget ( target );
+            RealignADSPoint ();
+            AimUpdate ( AimController.AimState );
+        }
+        else
+        {
+            Debug.LogWarning ( $"Couldn't find an ADSTarget with tag [{m_ADSTargetTag}]" );
+        }
+    }
+
+    /// <summary>
+    /// Realigns the ADS-Point to its currently-assigned ADS-Target.
+    /// </summary>
+    private void RealignADSPoint ()
+    {
+        if ( m_ADSPoint == null )
+        {
+            Debug.LogWarning ( "m_ADSPoint is null." );
+            return;
+        }
+        m_adsFollowTransform.enabled = false;
+        m_adsTransformAlignment.AlignPosition ();
+        m_adsTransformAlignment.AlignRotation ();
+        m_adsFollowTransform.enabled = true;
     }
 
     private void AimUpdate ( bool aimState )
@@ -63,11 +110,10 @@ public class AimListener : MonoBehaviour
         if ( aimState )
         {
             // Rotation
-            float angle = Vector3.Angle ( m_ADSPoint.up, m_model.up );
+            float angle = Vector3.Angle ( m_ADSPoint.up, transform.up );
             m_model.RotateAround ( m_ADSPoint.position, m_ADSPoint.forward, -angle );
 
             // Position
-            //m_adsFollowTransform.UpdatePositionalOffset ();
             Vector3 adsDiff = ( transform.localPosition + m_offset ) - m_ADSPoint.localPosition;
             m_targetPosition = m_model.localPosition + adsDiff;
         }
@@ -76,7 +122,6 @@ public class AimListener : MonoBehaviour
             m_targetPosition = m_originalPosition;
             m_model.localRotation = m_originalRotation;
         }
-        m_aimState = aimState;
     }
 
     private void OnDrawGizmos ()

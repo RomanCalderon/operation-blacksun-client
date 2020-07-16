@@ -13,6 +13,11 @@ public class FollowTransform : MonoBehaviour
 
     private void OnEnable ()
     {
+        if ( m_target == null )
+        {
+            return;
+        }
+
         if ( m_keepOffset )
         {
             m_positionalOffset = transform.position - m_target.position;
@@ -26,8 +31,18 @@ public class FollowTransform : MonoBehaviour
 
     void LateUpdate ()
     {
+        if ( m_target == null )
+        {
+            return;
+        }
+
         transform.position = m_target.position + m_positionalOffset;
         transform.rotation = Quaternion.Euler ( m_target.eulerAngles + m_rotationalOffset );
+    }
+
+    public void SetTarget ( Transform target )
+    {
+        m_target = target;
     }
 
     public void UpdatePositionalOffset ()

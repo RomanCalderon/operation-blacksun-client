@@ -98,7 +98,7 @@ public class WeaponsController : MonoBehaviour
             }
 
             // Aiming
-            m_aimController.AimState = m_canAim && Input.GetKey ( KeyCode.Mouse1 );
+            AimController.AimState = m_canAim && Input.GetKey ( KeyCode.Mouse1 );
 
             // Reloading
             if ( Input.GetKeyDown ( KeyCode.R ) )
@@ -118,11 +118,11 @@ public class WeaponsController : MonoBehaviour
     /// <param name="layerIndex"></param>
     private void EnteredAnimatorState ( AnimatorStateInfo stateInfo, int layerIndex )
     {
-        if ( stateInfo.IsName ( "Shoot" ) && !m_aimController.AimState )
+        if ( stateInfo.IsName ( "Shoot" ) && !AimController.AimState )
         {
             m_canAim = false;
         }
-        if ( stateInfo.IsName ( "BoltCharge" ) && !m_aimController.AimState )
+        if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
         {
             m_canAim = false;
         }
@@ -147,11 +147,11 @@ public class WeaponsController : MonoBehaviour
     /// <param name="layerIndex"></param>
     private void UpdatedAnimatorState ( AnimatorStateInfo stateInfo, int layerIndex )
     {
-        if ( stateInfo.IsName ( "Shoot" ) && !m_aimController.AimState )
+        if ( stateInfo.IsName ( "Shoot" ) && !AimController.AimState )
         {
             m_canAim = false;
         }
-        if ( stateInfo.IsName ( "BoltCharge" ) && !m_aimController.AimState )
+        if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
         {
             m_canAim = false;
         }
@@ -228,7 +228,7 @@ public class WeaponsController : MonoBehaviour
 
     private void UpdateIdleSpeed ( bool aimState )
     {
-        float idleSpeed = aimState ? 0.15f : 1f;
+        float idleSpeed = aimState ? 0.3f : 1f;
         OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
     }
 

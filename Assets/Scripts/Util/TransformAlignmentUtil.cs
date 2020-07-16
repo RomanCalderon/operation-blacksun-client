@@ -7,6 +7,11 @@ public class TransformAlignmentUtil : MonoBehaviour
     [SerializeField]
     private Transform m_target = null;
 
+    public void SetTarget ( Transform target )
+    {
+        m_target = target;
+    }
+
     public void AlignPosition ()
     {
         if ( m_target == null )

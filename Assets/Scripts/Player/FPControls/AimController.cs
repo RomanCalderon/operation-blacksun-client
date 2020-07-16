@@ -9,8 +9,8 @@ public class AimController : MonoBehaviour
     public delegate void FOVHandler ( float fov );
     public static FOVHandler OnFOVUpdated;
 
-    private bool m_aimState = false;
-    public bool AimState
+    private static bool m_aimState = false;
+    public static bool AimState
     {
         get
         {
