@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7969630600095245970}
   - component: {fileID: 261069800830392857}
   - component: {fileID: 1518848834255431007}
+  - component: {fileID: 4073741633262319520}
   m_Layer: 10
   m_Name: Eveningstar
   m_TagString: Untagged
@@ -64,6 +65,19 @@ MonoBehaviour:
   m_ADSTargetTag: ADSTarget
   m_model: {fileID: 7712267026232218744}
   m_smoothTime: 4
+--- !u!114 &4073741633262319520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329489053642814874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_playerItem: {fileID: 11400000, guid: 52584332347cc044e81d48363b8b88e3, type: 2}
 --- !u!1 &1761634094973539450
 GameObject:
   m_ObjectHideFlags: 0

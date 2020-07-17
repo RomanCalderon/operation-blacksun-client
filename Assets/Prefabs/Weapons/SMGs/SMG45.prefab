@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 660991568163575068}
   - component: {fileID: 4480204906111265054}
   - component: {fileID: 7697869007835537660}
+  - component: {fileID: 564400004664568218}
   m_Layer: 10
   m_Name: SMG45
   m_TagString: Untagged
@@ -143,6 +144,19 @@ MonoBehaviour:
   m_ADSTargetTag: ADSTarget
   m_model: {fileID: 592065366497971634}
   m_smoothTime: 4
+--- !u!114 &564400004664568218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5614937678178868503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_playerItem: {fileID: 11400000, guid: 61109460dffeeaf469dddce79743a4bd, type: 2}
 --- !u!1 &6459283790390658447
 GameObject:
   m_ObjectHideFlags: 0

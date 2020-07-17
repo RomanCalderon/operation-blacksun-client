@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
+using InventorySystem.Slots;
+using System.Linq;
 
 [RequireComponent ( typeof ( AimController ) )]
 public class WeaponsController : MonoBehaviour
@@ -27,10 +29,14 @@ public class WeaponsController : MonoBehaviour
 
     [Header ( "Weapons" )]
     private Weapons m_activeWeapon = Weapons.Primary;
-    [SerializeField]
+    [Header ( "Primary" ), SerializeField]
     private GameObject m_primaryWeaponHolder = null;
     [SerializeField]
+    private List<PlayerItemInstance> m_primaryWeapons = new List<PlayerItemInstance> ();
+    [Header ( "Secondary" ), SerializeField]
     private GameObject m_secondaryWeaponHolder = null;
+    [SerializeField]
+    private List<PlayerItemInstance> m_secondaryWeapons = new List<PlayerItemInstance> ();
 
     private Coroutine m_weaponSwitchCoroutine = null;
 
@@ -39,19 +45,25 @@ public class WeaponsController : MonoBehaviour
 
     private void OnEnable ()
     {
+        InventoryManager.OnSlotUpdated += EquipWeapon;
+
         WeaponStateBehaviour.OnStateEntered += SwitchWeapons;
         WeaponStateBehaviour.OnStateEntered += EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated += UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited += ExitedAnimatorState;
+
         AimController.OnAimUpdated += UpdateIdleSpeed;
     }
 
     private void OnDisable ()
     {
+        InventoryManager.OnSlotUpdated -= EquipWeapon;
+
         WeaponStateBehaviour.OnStateEntered -= SwitchWeapons;
         WeaponStateBehaviour.OnStateEntered -= EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated -= UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited -= ExitedAnimatorState;
+
         AimController.OnAimUpdated -= UpdateIdleSpeed;
     }
 
@@ -232,5 +244,88 @@ public class WeaponsController : MonoBehaviour
         OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
     }
 
+    /// <summary>
+    /// Invoked when a slot has been updated in the Inventory.
+    /// If the updated slot is a weapon slot (primary/secondary),
+    /// then activate that object from the list.
+    /// </summary>
+    /// <param name="slotId"></param>
+    private void EquipWeapon ( string slotId )
+    {
+        if ( string.IsNullOrEmpty ( slotId ) )
+        {
+            Debug.LogWarning ( "slotId is null or empty." );
+            return;
+        }
 
+        if ( slotId == "primary-weapon" )
+        {
+            // Get the Slot
+            Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
+            if ( slot == null )
+            {
+                Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
+                return;
+            }
+
+            ResetWeapons ( Weapons.Primary );
+            PlayerItemInstance weapon = m_primaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
+            if ( weapon != null )
+            {
+                weapon.SetActive ( true );
+            }
+            else
+            {
+                Debug.LogWarning ( $"Primary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exists in the list." );
+            }
+        }
+        else if ( slotId == "secondary-weapon" )
+        {
+            // Get the Slot
+            Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
+            if ( slot == null )
+            {
+                Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
+                return;
+            }
+
+            ResetWeapons ( Weapons.Secondary );
+            PlayerItemInstance weapon = m_secondaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
+            if ( weapon != null )
+            {
+                weapon.SetActive ( true );
+            }
+            else
+            {
+                Debug.LogWarning ( $"Secondary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exists in the list." );
+            }
+        }
+    }
+
+    private void ResetWeapons ( Weapons weaponType )
+    {
+        switch ( weaponType )
+        {
+            case Weapons.Primary:
+                foreach ( PlayerItemInstance playerItemInstance in m_primaryWeapons )
+                {
+                    playerItemInstance.SetActive ( false );
+                }
+                break;
+            case Weapons.Secondary:
+                foreach ( PlayerItemInstance playerItemInstance in m_secondaryWeapons )
+                {
+                    playerItemInstance.SetActive ( false );
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ResetWeaponsAll ()
+    {
+        ResetWeapons ( Weapons.Primary );
+        ResetWeapons ( Weapons.Secondary );
+    }
 }

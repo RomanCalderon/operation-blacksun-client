@@ -11,9 +11,13 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance = null;
 
+    public delegate void SlotHandler ( string slotId );
+    public static SlotHandler OnSlotUpdated;
+
     public bool IsInteractable = true;
     public bool IsDisplayed { get; private set; } = false;
 
+    public Inventory Inventory { get { return m_inventory; } }
     [SerializeField]
     private Inventory m_inventory = null;
     private PlayerItemDatabase m_playerItemDatabase = null;
@@ -98,12 +102,9 @@ public class InventoryManager : MonoBehaviour
 
         PlayerItem playerItem = m_playerItemDatabase.GetPlayerItem ( playerItemId );
         InsertionResult result = m_inventory.SetSlot ( slotId, playerItem, quantity );
-        if ( result.Result == InsertionResult.Results.SUCCESS || result.Result == InsertionResult.Results.OVERFLOW )
-        {
-        }
-
+        
         // Update SlotUI
-        SlotUI slotUI = m_slotUI.FirstOrDefault ( s => s.Id == slotId/*result.Slot.Id*/ );
+        SlotUI slotUI = m_slotUI.FirstOrDefault ( s => s.Id == slotId );
         if ( slotUI == null )
         {
             Debug.LogError ( "SlotUI is null." );
@@ -111,6 +112,8 @@ public class InventoryManager : MonoBehaviour
         }
         slotUI.UpdateSlot ( slotUI.Slot );
         m_inventory.OnValidate ();
+
+        OnSlotUpdated?.Invoke ( slotId );
     }
 
     #region SlotUI Interactions
