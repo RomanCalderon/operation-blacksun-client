@@ -99,5 +99,16 @@ public class ClientSend : MonoBehaviour
             SendTCPData ( _packet );
         }
     }
+
+    public static void PlayerInventoryReduceItem ( string playerItemId, int reductionAmount )
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerInventoryReduceItem ) )
+        {
+            _packet.Write ( playerItemId );
+            _packet.Write ( reductionAmount );
+
+            SendTCPData ( _packet );
+        }
+    }
     #endregion
 }

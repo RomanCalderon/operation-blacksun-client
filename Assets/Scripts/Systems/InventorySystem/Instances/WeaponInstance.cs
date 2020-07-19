@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using EZCameraShake;
 using InventorySystem.PlayerItems;
 
@@ -12,6 +13,9 @@ public class WeaponInstance : PlayerItemInstance
     public int BulletCount { get; private set; } = 0;
 
     [Header ( "Audio" )]
+    [SerializeField]
+    private AudioMixerGroup m_mixerGroup = null;
+    [Space]
     [SerializeField]
     private AudioClip m_normalGunshotClip = null;
     [SerializeField]
@@ -146,7 +150,7 @@ public class WeaponInstance : PlayerItemInstance
                 BulletCount--;
 
                 // Play gunshot Audioclip
-                AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
+                AudioManager.PlaySound ( m_normalGunshotClip, m_mixerGroup, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
                 // Perform gunshot
                 ClientSend.PlayerShoot ( direction );
@@ -169,7 +173,7 @@ public class WeaponInstance : PlayerItemInstance
     {
         if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
         {
-            AudioManager.PlaySound ( m_dryFireClip, m_dryfireVolume, false );
+            AudioManager.PlaySound ( m_dryFireClip, m_mixerGroup, m_dryfireVolume, false );
         }
     }
 
@@ -190,11 +194,12 @@ public class WeaponInstance : PlayerItemInstance
         {
             return;
         }
-        // TODO: Implement this
-        //if (  ) // Out of compatible ammo in inventory
-        //{
-        //    return;
-        //}
+        string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
+        int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
+        if ( inventoryAmmoCount == 0 ) // Out of compatible ammo in inventory
+        {
+            return;
+        }
 
         // Set reloading flag
         m_isReloading = true;
@@ -235,23 +240,23 @@ public class WeaponInstance : PlayerItemInstance
     {
         if ( stateInfo.IsName ( "Draw" ) )
         {
-            AudioManager.PlaySound ( m_drawClip, m_drawVolume, false );
+            AudioManager.PlaySound ( m_drawClip, m_mixerGroup, m_drawVolume, false );
         }
         if ( stateInfo.IsName ( "BoltCharge" ) )
         {
-            AudioManager.PlaySound ( m_boltChargeClip, m_boltChargeVolume, false );
+            AudioManager.PlaySound ( m_boltChargeClip, m_mixerGroup, m_boltChargeVolume, false );
         }
         if ( stateInfo.IsName ( "ReloadPartial" ) )
         {
-            AudioManager.PlaySound ( m_partialReloadClip, m_partialReloadVolume, false );
+            AudioManager.PlaySound ( m_partialReloadClip, m_mixerGroup, m_partialReloadVolume, false );
         }
         if ( stateInfo.IsName ( "ReloadFull" ) )
         {
-            AudioManager.PlaySound ( m_fullReloadClip, m_fullReloadVolume, false );
+            AudioManager.PlaySound ( m_fullReloadClip, m_mixerGroup, m_fullReloadVolume, false );
         }
         if ( stateInfo.IsName ( "Holster" ) )
         {
-            AudioManager.PlaySound ( m_holsterClip, m_holsterVolume, false );
+            AudioManager.PlaySound ( m_holsterClip, m_mixerGroup, m_holsterVolume, false );
         }
     }
 
@@ -297,10 +302,17 @@ public class WeaponInstance : PlayerItemInstance
     {
         yield return new WaitForSeconds ( reloadTime );
 
-        // TODO: Only provide a minimum amount between the mags ammo
-        // capacity and the amount of compatible bullets in the player's inventory
-        // Example: BulletCount = Mathf.Min ( Magazine.AmmoCapacity, Inventory.ItemCount ( AmmoType ) );
-        BulletCount = Magazine.AmmoCapacity;
+        FinishReload ();
+    }
+
+    private void FinishReload ()
+    {
+        string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
+        int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
+        int refillAmount = Mathf.Min ( Magazine.AmmoCapacity, inventoryAmmoCount );
+        ClientSend.PlayerInventoryReduceItem ( ammoId, refillAmount - BulletCount );
+        BulletCount = refillAmount;
+        //BulletCount = Magazine.AmmoCapacity;
 
         // Reset reload flags
         m_isReloading = false;

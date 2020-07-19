@@ -20,7 +20,7 @@ public class InventoryManager : MonoBehaviour
     public Inventory Inventory { get { return m_inventory; } }
     [SerializeField]
     private Inventory m_inventory = null;
-    private PlayerItemDatabase m_playerItemDatabase = null;
+    public PlayerItemDatabase PlayerItemDatabase { get; private set; } = null;
 
     [Header ( "UI" ), SerializeField]
     private GameObject m_inventoryView = null;
@@ -47,9 +47,9 @@ public class InventoryManager : MonoBehaviour
         }
 
         m_inventory = new Inventory ();
-        m_playerItemDatabase = Resources.Load<PlayerItemDatabase> ( "PlayerItemDatabase" );
+        PlayerItemDatabase = Resources.Load<PlayerItemDatabase> ( "PlayerItemDatabase" );
         InitializeSlots ();
-        Debug.Assert ( m_playerItemDatabase != null, "PlayerItemDatabase is null." );
+        Debug.Assert ( PlayerItemDatabase != null, "PlayerItemDatabase is null." );
         Debug.Assert ( m_inventoryView != null, "m_inventoryView is null." );
         Debug.Assert ( m_slotDragContentsPrefab != null, "m_slotContentsPrefab is null." );
     }
@@ -87,6 +87,11 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public int GetItemCount ( string playerItemId )
+    {
+        return Inventory.GetItemCount ( playerItemId );
+    }
+
     /// <summary>
     /// Called from ClientHandle class.
     /// </summary>
@@ -100,7 +105,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        PlayerItem playerItem = !string.IsNullOrEmpty ( playerItemId ) ? m_playerItemDatabase.GetPlayerItem ( playerItemId ) : null;
+        PlayerItem playerItem = !string.IsNullOrEmpty ( playerItemId ) ? PlayerItemDatabase.GetPlayerItem ( playerItemId ) : null;
         InsertionResult result = m_inventory.SetSlot ( slotId, playerItem, quantity );
 
         // Update SlotUI

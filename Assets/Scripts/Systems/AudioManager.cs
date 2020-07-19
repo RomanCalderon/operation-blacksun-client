@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public static class AudioManager
 {
@@ -24,12 +25,13 @@ public static class AudioManager
         }
     }
 
-    public static void PlaySound ( AudioClip clip, float volume, bool loop )
+    public static void PlaySound ( AudioClip clip, AudioMixerGroup mixerGroup, float volume, bool loop )
     {
         GameObject soundGameObject = new GameObject ( $"Audio [{clip.name}]" );
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource> ();
         m_audioRegister.Add ( audioSource );
         audioSource.clip = clip;
+        audioSource.outputAudioMixerGroup = mixerGroup;
         audioSource.volume = volume;
         audioSource.loop = loop;
         audioSource.Play ();
@@ -39,13 +41,14 @@ public static class AudioManager
         }
     }
 
-    public static void PlaySound ( AudioClip clip, float volume, bool loop, float spatialBlend, Vector3 location )
+    public static void PlaySound ( AudioClip clip, AudioMixerGroup mixerGroup, float volume, bool loop, float spatialBlend, Vector3 location )
     {
         GameObject soundGameObject = new GameObject ( $"Audio [{clip.name}]" );
         soundGameObject.transform.position = location;
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource> ();
         m_audioRegister.Add ( audioSource );
         audioSource.clip = clip;
+        audioSource.outputAudioMixerGroup = mixerGroup;
         audioSource.volume = volume;
         audioSource.loop = loop;
         audioSource.spatialBlend = spatialBlend;

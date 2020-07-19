@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using InventorySystem.Presets;
 using InventorySystem.Slots;
 using InventorySystem.Slots.Results;
 using InventorySystem.PlayerItems;
+using System.Collections;
 
 namespace InventorySystem
 {
@@ -148,6 +150,30 @@ namespace InventorySystem
             }
             Debug.LogWarning ( $"Slot [{slotId}] is null." );
             return new InsertionResult ( playerItem, InsertionResult.Results.INSERTION_FAILED );
+        }
+
+        public int GetItemCount ( string playerItemId )
+        {
+            int count = 0;
+
+            // Rig slots
+            List<Slot> rigSlots = m_rigSlots.Where ( s => s.PlayerItem && s.PlayerItem.Id == playerItemId ).ToList();
+            foreach ( Slot slot in rigSlots )
+            {
+                count += slot.StackSize;
+            }
+            // Backpack slots
+            List<Slot> backpackSlots = m_backpackSlots.Where ( s => s.PlayerItem && s.PlayerItem.Id == playerItemId ).ToList();
+            foreach ( Slot slot in backpackSlots )
+            {
+                count += slot.StackSize;
+            }
+
+            // Weapon slots
+            count += m_primaryWeaponSlots.GetItemCount ( playerItemId );
+            count += m_secondaryWeaponSlots.GetItemCount ( playerItemId );
+
+            return count;
         }
 
         #region Rig
@@ -430,6 +456,34 @@ namespace InventorySystem
                     return StockSlot;
                 }
                 return null;
+            }
+
+            public int GetItemCount ( string playerItemId )
+            {
+                int count = 0;
+
+                if ( WeaponSlot.PlayerItem && WeaponSlot.PlayerItem.Id == playerItemId )
+                {
+                    count++;
+                }
+                if ( BarrelSlot.PlayerItem && BarrelSlot.PlayerItem.Id == playerItemId )
+                {
+                    count++;
+                }
+                if ( SightSlot.PlayerItem && SightSlot.PlayerItem.Id == playerItemId )
+                {
+                    count++;
+                }
+                if ( MagazineSlot.PlayerItem && MagazineSlot.PlayerItem.Id == playerItemId )
+                {
+                    count++;
+                }
+                if ( StockSlot.PlayerItem && StockSlot.PlayerItem.Id == playerItemId )
+                {
+                    count++;
+                }
+
+                return count;
             }
         }
 

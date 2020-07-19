@@ -44,4 +44,14 @@ public class PlayerItemDatabase : MonoBehaviour
         Debug.LogWarning ( $"Could not find PlayerItem with itemId [{itemId}]. Did you forget to add a reference to the database?" );
         return null;
     }
+
+    public string GetAmmoByCaliber ( Ammunition.Calibers caliber )
+    {
+        PlayerItem ammo = m_ammunitionPlayerItems.FirstOrDefault ( i => ( i as Ammunition ).Caliber == caliber );
+        if ( ammo != null )
+        {
+            return ammo.Id;
+        }
+        return null;
+    }
 }
