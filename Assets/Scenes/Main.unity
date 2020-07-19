@@ -10774,7 +10774,8 @@ AudioSource:
   m_GameObject: {fileID: 834150193}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 1823ffe76406058468f11dc63d66b663, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.3
@@ -10783,10 +10784,10 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 184
+  Priority: 256
   DopplerLevel: 1
   MinDistance: 10
-  MaxDistance: 300
+  MaxDistance: 400
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -16686,7 +16687,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1207431680}
-  m_LocalRotation: {x: 0, y: 0.049982876, z: 0, w: 0.9987501}
+  m_LocalRotation: {x: 0, y: 0.096366964, z: 0, w: 0.9953459}
   m_LocalPosition: {x: -191.1, y: 24.4, z: 179.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -16696,7 +16697,7 @@ Transform:
   - {fileID: 497072121}
   m_Father: {fileID: 0}
   m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 5.73, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 11.06, z: 0}
 --- !u!1 &1232254944
 GameObject:
   m_ObjectHideFlags: 0
