@@ -33,6 +33,11 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         m_slotImage.color = m_normalColor = m_vacantColor;
     }
 
+    void OnEnable ()
+    {
+        m_slotImage.color = m_normalColor;
+    }
+
     public void UpdateSlot ( Slot slot )
     {
         // NRE is checked in InventoryManager
