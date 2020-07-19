@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7969630600095245970}
   - component: {fileID: 261069800830392857}
   - component: {fileID: 1518848834255431007}
-  - component: {fileID: 4073741633262319520}
+  - component: {fileID: 6341285278479184828}
   m_Layer: 10
   m_Name: Eveningstar
   m_TagString: Untagged
@@ -64,8 +64,8 @@ MonoBehaviour:
   m_ADSPoint: {fileID: 5465936641632005110}
   m_ADSTargetTag: ADSTarget
   m_model: {fileID: 7712267026232218744}
-  m_smoothTime: 4
---- !u!114 &4073741633262319520
+  m_smoothTime: 8
+--- !u!114 &6341285278479184828
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,10 +74,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1329489053642814874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 57bfe402b97d60f4d8e996e6dbbef0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerItem: {fileID: 11400000, guid: 52584332347cc044e81d48363b8b88e3, type: 2}
+  m_normalGunshotClip: {fileID: 8300000, guid: 181313b81ca7d084fb6a2b584693c356, type: 3}
+  m_normalGunshotVolume: 0.65
+  m_normalSpatialBlend: 0.2
+  m_suppressedGunshotClip: {fileID: 0}
+  m_suppressedGunshotVolume: 0.6
+  m_suppressedSpatialBlend: 0.2
+  m_boltChargeClip: {fileID: 8300000, guid: 03dee386b4f5eac42bacd65bc7078360, type: 3}
+  m_boltChargeVolume: 0.75
+  m_partialReloadClip: {fileID: 8300000, guid: 8097a356965be8342bca34bf4237130d, type: 3}
+  m_partialReloadVolume: 0.75
+  m_fullReloadClip: {fileID: 8300000, guid: 299bfacc016a6ce4091e4c2829a11bcc, type: 3}
+  m_fullReloadVolume: 0.95
+  m_partialReloadTime: 0.5
+  m_fullReloadTime: 0.8
 --- !u!1 &1761634094973539450
 GameObject:
   m_ObjectHideFlags: 0

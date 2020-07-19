@@ -41,6 +41,7 @@ public class PlayerItemDatabase : MonoBehaviour
         {
             return m_weaponsPlayerItems.FirstOrDefault ( p => p.Id == itemId );
         }
+        Debug.LogWarning ( $"Could not find PlayerItem with itemId [{itemId}]. Did you forget to add a reference to the database?" );
         return null;
     }
 }

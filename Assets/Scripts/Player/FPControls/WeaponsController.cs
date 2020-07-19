@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EZCameraShake;
-using InventorySystem.Slots;
 using System.Linq;
+using InventorySystem.Slots;
+using InventorySystem.PlayerItems;
 
 [RequireComponent ( typeof ( AimController ) )]
 public class WeaponsController : MonoBehaviour
@@ -28,15 +28,18 @@ public class WeaponsController : MonoBehaviour
     private bool m_canAim = false;
 
     [Header ( "Weapons" )]
-    private Weapons m_activeWeapon = Weapons.Primary;
+    private Weapons m_activeWeaponType = Weapons.Primary;
+
     [Header ( "Primary" ), SerializeField]
     private GameObject m_primaryWeaponHolder = null;
     [SerializeField]
-    private List<PlayerItemInstance> m_primaryWeapons = new List<PlayerItemInstance> ();
+    private List<WeaponInstance> m_primaryWeapons = new List<WeaponInstance> ();
+    private WeaponInstance m_primaryEquipped = null;
     [Header ( "Secondary" ), SerializeField]
     private GameObject m_secondaryWeaponHolder = null;
     [SerializeField]
-    private List<PlayerItemInstance> m_secondaryWeapons = new List<PlayerItemInstance> ();
+    private List<WeaponInstance> m_secondaryWeapons = new List<WeaponInstance> ();
+    private WeaponInstance m_secondaryEquipped = null;
 
     private Coroutine m_weaponSwitchCoroutine = null;
 
@@ -46,6 +49,7 @@ public class WeaponsController : MonoBehaviour
     private void OnEnable ()
     {
         InventoryManager.OnSlotUpdated += EquipWeapon;
+        InventoryManager.OnSlotUpdated += EquipAttachment;
 
         WeaponStateBehaviour.OnStateEntered += SwitchWeapons;
         WeaponStateBehaviour.OnStateEntered += EnteredAnimatorState;
@@ -58,6 +62,7 @@ public class WeaponsController : MonoBehaviour
     private void OnDisable ()
     {
         InventoryManager.OnSlotUpdated -= EquipWeapon;
+        InventoryManager.OnSlotUpdated -= EquipAttachment;
 
         WeaponStateBehaviour.OnStateEntered -= SwitchWeapons;
         WeaponStateBehaviour.OnStateEntered -= EnteredAnimatorState;
@@ -78,7 +83,7 @@ public class WeaponsController : MonoBehaviour
         m_primaryWeaponHolder.SetActive ( true );
         m_secondaryWeaponHolder.SetActive ( false );
 
-        // This needs to update based on equipped sight parameters
+        // FIXME: This needs to update based on equipped sight parameters
         m_aimController.UpdateFOVParameters ( 30f );
     }
 
@@ -88,25 +93,19 @@ public class WeaponsController : MonoBehaviour
         if ( !InventoryManager.Instance.IsDisplayed )
         {
             // Weapon switching - Primary
-            if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && m_activeWeapon != Weapons.Primary )
+            if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && m_activeWeaponType != Weapons.Primary )
             {
                 OnSetTrigger?.Invoke ( "Holster" );
             }
             // Weapon switching - Secondary
-            if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && m_activeWeapon != Weapons.Secondary )
+            if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && m_activeWeaponType != Weapons.Secondary )
             {
                 OnSetTrigger?.Invoke ( "Holster" );
             }
             // Shooting
-            if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+            if ( Input.GetKey ( KeyCode.Mouse0 ) )
             {
-                ClientSend.PlayerShoot ( m_cameraTransform.forward );
-
-                // This will be changed
-                OnSetTrigger?.Invoke ( "Shoot" );
-                OnSetTrigger?.Invoke ( "BoltCharge" );
-                CameraShaker.Instance.ShakeOnce ( 0.5f, 6f, 0.01f, 0.16f );
-                CameraController.Instance.AddRecoil ( 0.75f );
+                GetActiveWeapon ().Shoot ( m_cameraTransform.forward );
             }
 
             // Aiming
@@ -115,7 +114,7 @@ public class WeaponsController : MonoBehaviour
             // Reloading
             if ( Input.GetKeyDown ( KeyCode.R ) )
             {
-                OnSetTrigger?.Invoke ( "ReloadFull" );
+                GetActiveWeapon ().Reload ();
             }
         }
         // TODO: send input to server and handle response somewhere here
@@ -200,6 +199,11 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
+    private WeaponInstance GetActiveWeapon ()
+    {
+        return m_activeWeaponType == Weapons.Primary ? m_primaryEquipped : m_secondaryEquipped;
+    }
+
     #region Weapon switching
 
     private void SwitchWeapons ( AnimatorStateInfo stateInfo, int layerIndex )
@@ -219,15 +223,15 @@ public class WeaponsController : MonoBehaviour
         yield return new WaitForSeconds ( delay );
 
         DisableWeapons ();
-        if ( m_activeWeapon == Weapons.Primary )
+        if ( m_activeWeaponType == Weapons.Primary )
         {
             m_secondaryWeaponHolder.SetActive ( true );
-            m_activeWeapon = Weapons.Secondary;
+            m_activeWeaponType = Weapons.Secondary;
         }
         else
         {
             m_primaryWeaponHolder.SetActive ( true );
-            m_activeWeapon = Weapons.Primary;
+            m_activeWeaponType = Weapons.Primary;
         }
     }
     private void DisableWeapons ()
@@ -244,6 +248,8 @@ public class WeaponsController : MonoBehaviour
         OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
     }
 
+    #region Weapon and Attachment Equipping
+
     /// <summary>
     /// Invoked when a slot has been updated in the Inventory.
     /// If the updated slot is a weapon slot (primary/secondary),
@@ -258,9 +264,10 @@ public class WeaponsController : MonoBehaviour
             return;
         }
 
+
         if ( slotId == "primary-weapon" )
         {
-            // Get the Slot
+            // Get the Slot from the Inventory
             Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
             if ( slot == null )
             {
@@ -268,20 +275,21 @@ public class WeaponsController : MonoBehaviour
                 return;
             }
 
-            ResetWeapons ( Weapons.Primary );
-            PlayerItemInstance weapon = m_primaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
+            WeaponInstance weapon = m_primaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
             if ( weapon != null )
             {
-                weapon.SetActive ( true );
+                ClearWeapon ( Weapons.Primary );
+                m_primaryEquipped = weapon;
+                m_primaryEquipped.SetActive ( true );
             }
             else
             {
-                Debug.LogWarning ( $"Primary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exists in the list." );
+                Debug.LogWarning ( $"Primary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exist in the list." );
             }
         }
         else if ( slotId == "secondary-weapon" )
         {
-            // Get the Slot
+            // Get the Slot from the Inventory
             Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
             if ( slot == null )
             {
@@ -289,34 +297,106 @@ public class WeaponsController : MonoBehaviour
                 return;
             }
 
-            ResetWeapons ( Weapons.Secondary );
-            PlayerItemInstance weapon = m_secondaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
+            WeaponInstance weapon = m_secondaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
             if ( weapon != null )
             {
-                weapon.SetActive ( true );
+                ClearWeapon ( Weapons.Secondary );
+                m_secondaryEquipped = weapon;
+                m_secondaryEquipped.SetActive ( true );
             }
             else
             {
-                Debug.LogWarning ( $"Secondary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exists in the list." );
+                Debug.LogWarning ( $"Secondary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exist in the list." );
             }
         }
     }
 
-    private void ResetWeapons ( Weapons weaponType )
+    private void EquipAttachment ( string slotId )
+    {
+        if ( string.IsNullOrEmpty ( slotId ) )
+        {
+            Debug.LogWarning ( "slotId is null or empty." );
+            return;
+        }
+
+
+        if ( slotId.Contains ( "primary" ) ) // Primary weapon attachment
+        {
+            // Get the Slot from the Inventory
+            Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
+            if ( slot == null )
+            {
+                Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
+                return;
+            }
+
+            // Activate the GameObject to call the method
+            //bool holderOriginalState = m_primaryWeaponHolder.activeSelf;
+            //m_primaryWeaponHolder.SetActive ( true );
+
+            if ( slotId.Contains ( "barrel" ) )
+            {
+                m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+            }
+            else if ( slotId.Contains ( "magazine" ) )
+            {
+                m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+            }
+            else if ( slotId.Contains ( "stock" ) )
+            {
+                m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+            }
+            //m_primaryWeaponHolder.SetActive ( holderOriginalState );
+        }
+        else if ( slotId.Contains ( "secondary" ) ) // Secondary weapon attachment
+        {
+            // Get the Slot from the Inventory
+            Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
+            if ( slot == null )
+            {
+                Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
+                return;
+            }
+
+            // Activate the GameObject to call the method
+            //bool originalState = m_secondaryWeaponHolder.activeSelf;
+            //m_secondaryWeaponHolder.SetActive ( true );
+            
+            if ( slotId.Contains ( "barrel" ) )
+            {
+                m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+            }
+            else if ( slotId.Contains ( "magazine" ) )
+            {
+                m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+            }
+            else if ( slotId.Contains ( "stock" ) )
+            {
+                m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+            }
+            //m_secondaryWeaponHolder.SetActive ( originalState );
+        }
+    }
+
+    #endregion
+
+    private void ClearWeapon ( Weapons weaponType )
     {
         switch ( weaponType )
         {
             case Weapons.Primary:
-                foreach ( PlayerItemInstance playerItemInstance in m_primaryWeapons )
+                if ( m_primaryEquipped != null )
                 {
-                    playerItemInstance.SetActive ( false );
+                    m_primaryEquipped.SetActive ( false );
                 }
+                m_primaryEquipped = null;
                 break;
             case Weapons.Secondary:
-                foreach ( PlayerItemInstance playerItemInstance in m_secondaryWeapons )
+                if ( m_secondaryEquipped != null )
                 {
-                    playerItemInstance.SetActive ( false );
+                    m_secondaryEquipped.SetActive ( false );
                 }
+                m_secondaryEquipped = null;
                 break;
             default:
                 break;
@@ -325,7 +405,7 @@ public class WeaponsController : MonoBehaviour
 
     private void ResetWeaponsAll ()
     {
-        ResetWeapons ( Weapons.Primary );
-        ResetWeapons ( Weapons.Secondary );
+        ClearWeapon ( Weapons.Primary );
+        ClearWeapon ( Weapons.Secondary );
     }
 }

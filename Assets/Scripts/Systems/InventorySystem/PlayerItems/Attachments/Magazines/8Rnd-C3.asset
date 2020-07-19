@@ -9,16 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7b58d9153b0d743894e79d0f2c288b, type: 3}
-  m_Name: SMG-45
+  m_Script: {fileID: 11500000, guid: 958620153157f5b4fb6d0efcb374bf3f, type: 3}
+  m_Name: 8Rnd-C3
   m_EditorClassIdentifier: 
-  Id: smg-45
-  Name: SMG-45
+  Id: 8-rnd-c3
+  Name: 8 Rnd C3
   StackLimit: 1
-  Image: {fileID: 21300000, guid: 38334f7211e114c46b4a106662b5ad73, type: 3}
-  WeaponType: 0
-  WeaponClass: 1
-  Caliber: 1
-  BaseDamage: 20
-  FireRate: 0.06
-  FireMode: 1
+  AmmoCapacity: 8
+  CompatibleAmmoCaliber: 6

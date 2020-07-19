@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 660991568163575068}
   - component: {fileID: 4480204906111265054}
   - component: {fileID: 7697869007835537660}
-  - component: {fileID: 564400004664568218}
+  - component: {fileID: 5015134670353747047}
   m_Layer: 10
   m_Name: SMG45
   m_TagString: Untagged
@@ -143,8 +143,8 @@ MonoBehaviour:
   m_ADSPoint: {fileID: 3446016039489569049}
   m_ADSTargetTag: ADSTarget
   m_model: {fileID: 592065366497971634}
-  m_smoothTime: 4
---- !u!114 &564400004664568218
+  m_smoothTime: 7
+--- !u!114 &5015134670353747047
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,10 +153,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 5614937678178868503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 57bfe402b97d60f4d8e996e6dbbef0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerItem: {fileID: 11400000, guid: 61109460dffeeaf469dddce79743a4bd, type: 2}
+  m_normalGunshotClip: {fileID: 8300000, guid: 671ca547874dccc479c4573bce73cecd, type: 3}
+  m_normalGunshotVolume: 0.65
+  m_normalSpatialBlend: 0.2
+  m_suppressedGunshotClip: {fileID: 8300000, guid: 2fd59dbd67d1e794fa71e61182fddb3b,
+    type: 3}
+  m_suppressedGunshotVolume: 0.75
+  m_suppressedSpatialBlend: 0.2
+  m_boltChargeClip: {fileID: 0}
+  m_boltChargeVolume: 0.75
+  m_partialReloadClip: {fileID: 8300000, guid: 6aa1a6b9e617fe943ab92ee4077ee564, type: 3}
+  m_partialReloadVolume: 0.75
+  m_fullReloadClip: {fileID: 8300000, guid: 8568a254d0d302e4fabb9ce01543dc01, type: 3}
+  m_fullReloadVolume: 0.75
+  m_partialReloadTime: 1.61
+  m_fullReloadTime: 2.86
 --- !u!1 &6459283790390658447
 GameObject:
   m_ObjectHideFlags: 0

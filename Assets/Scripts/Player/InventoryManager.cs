@@ -100,9 +100,9 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        PlayerItem playerItem = m_playerItemDatabase.GetPlayerItem ( playerItemId );
+        PlayerItem playerItem = !string.IsNullOrEmpty ( playerItemId ) ? m_playerItemDatabase.GetPlayerItem ( playerItemId ) : null;
         InsertionResult result = m_inventory.SetSlot ( slotId, playerItem, quantity );
-        
+
         // Update SlotUI
         SlotUI slotUI = m_slotUI.FirstOrDefault ( s => s.Id == slotId );
         if ( slotUI == null )

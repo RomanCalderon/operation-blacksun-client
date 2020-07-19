@@ -50,9 +50,10 @@ public class CameraController : MonoBehaviour
         player.transform.rotation = Quaternion.Euler ( 0f, horizontalRotation, 0f );
     }
 
-    public void AddRecoil ( float recoilAmount = 1f )
+    public void AddRecoil ( float verticalRecoil, float horizontalRecoil )
     {
-        verticalRotation -= recoilAmount;
+        verticalRotation -= verticalRecoil;
+        horizontalRotation -= horizontalRecoil;
     }
 
     public void SetCursorMode ( CursorLockMode lockMode )

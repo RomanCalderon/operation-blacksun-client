@@ -5,7 +5,7 @@ using InventorySystem.PlayerItems;
 
 public class PlayerItemInstance : MonoBehaviour
 {
-    public PlayerItem PlayerItem
+    public virtual PlayerItem PlayerItem
     {
         get
         {
@@ -13,7 +13,7 @@ public class PlayerItemInstance : MonoBehaviour
         }
     }
     [SerializeField]
-    private PlayerItem m_playerItem = null;
+    protected PlayerItem m_playerItem = null;
 
 
     // Start is called before the first frame update

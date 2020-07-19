@@ -491,12 +491,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_primaryWeaponHolder: {fileID: 1505376743937097583}
   m_primaryWeapons:
-  - {fileID: 4640488699753819828}
-  - {fileID: 5304231271855773367}
+  - {fileID: 155976014192085833}
+  - {fileID: 2960123962215944875}
   m_secondaryWeaponHolder: {fileID: 2631571760428559004}
   m_secondaryWeapons:
-  - {fileID: 5232724858340116031}
-  - {fileID: 3143397125292810394}
+  - {fileID: 779737576324260802}
+  - {fileID: 5410938842749625478}
   m_cameraTransform: {fileID: 773171847773302522}
 --- !u!114 &473517812540079974
 MonoBehaviour:
@@ -3193,16 +3193,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9e08addd2167744e9adf866910c1080, type: 3}
---- !u!114 &3143397125292810394 stripped
+--- !u!114 &5410938842749625478 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4073741633262319520, guid: d9e08addd2167744e9adf866910c1080,
+  m_CorrespondingSourceObject: {fileID: 6341285278479184828, guid: d9e08addd2167744e9adf866910c1080,
     type: 3}
   m_PrefabInstance: {fileID: 1375640132498888506}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 57bfe402b97d60f4d8e996e6dbbef0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &9047328848711823784 stripped
@@ -6004,16 +6004,16 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5166602057419376430}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4640488699753819828 stripped
+--- !u!114 &155976014192085833 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 564400004664568218, guid: c6a05475cc1ffd64699504451f311ae3,
+  m_CorrespondingSourceObject: {fileID: 5015134670353747047, guid: c6a05475cc1ffd64699504451f311ae3,
     type: 3}
   m_PrefabInstance: {fileID: 5166602057419376430}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 57bfe402b97d60f4d8e996e6dbbef0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &5665287979688776242 stripped
@@ -6380,16 +6380,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6a05475cc1ffd64699504451f311ae3, type: 3}
---- !u!114 &5232724858340116031 stripped
+--- !u!114 &779737576324260802 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 564400004664568218, guid: c6a05475cc1ffd64699504451f311ae3,
+  m_CorrespondingSourceObject: {fileID: 5015134670353747047, guid: c6a05475cc1ffd64699504451f311ae3,
     type: 3}
   m_PrefabInstance: {fileID: 5713793973428596645}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 57bfe402b97d60f4d8e996e6dbbef0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &5073068640162659001 stripped
@@ -6934,16 +6934,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9e08addd2167744e9adf866910c1080, type: 3}
---- !u!114 &5304231271855773367 stripped
+--- !u!114 &2960123962215944875 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4073741633262319520, guid: d9e08addd2167744e9adf866910c1080,
+  m_CorrespondingSourceObject: {fileID: 6341285278479184828, guid: d9e08addd2167744e9adf866910c1080,
     type: 3}
   m_PrefabInstance: {fileID: 8148344692907090199}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e63b9b0c153784180ec9ee1f9b79bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 57bfe402b97d60f4d8e996e6dbbef0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &2273592812180604805 stripped
