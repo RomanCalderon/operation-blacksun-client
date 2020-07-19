@@ -120,6 +120,70 @@ public class WeaponsController : MonoBehaviour
         // TODO: send input to server and handle response somewhere here
     }
 
+    /// <summary>
+    /// Uses <paramref name="weaponClass"/> and <paramref name="caliber"/>
+    /// to calculate a base recoil strength of a weapon.
+    /// </summary>
+    /// <returns>The base recoil strength of a weapon.</returns>
+    public static float CalculateRecoilStrength ( Weapon.WeaponClasses weaponClass, Ammunition.Calibers caliber, out float aspect )
+    {
+        float strength = 0f;
+        aspect = UnityEngine.Random.Range ( 0.45f, 0.55f );
+
+        switch ( weaponClass )
+        {
+            case Weapon.WeaponClasses.Rifle:
+                strength += 0.8f;
+                break;
+            case Weapon.WeaponClasses.SMG:
+                strength += 1.0f;
+                break;
+            case Weapon.WeaponClasses.Shotgun:
+                strength += 7.0f;
+                break;
+            case Weapon.WeaponClasses.Pistol:
+                strength += 1.2f;
+                break;
+            case Weapon.WeaponClasses.Sniper:
+                strength += 3.5f;
+                break;
+            default:
+                break;
+        }
+
+        switch ( caliber )
+        {
+            case Ammunition.Calibers.Wilson_9MM:
+                strength += UnityEngine.Random.Range ( 0.0f, 0.08f );
+                break;
+            case Ammunition.Calibers.ACP_Ultra:
+                strength += UnityEngine.Random.Range ( 0.0f, 0.1f );
+                break;
+            case Ammunition.Calibers.NATO_556:
+                strength += 0.0f;
+                break;
+            case Ammunition.Calibers.AAC:
+                strength += 0.3f;
+                break;
+            case Ammunition.Calibers.G12:
+                strength += UnityEngine.Random.Range ( 0.0f, 2.0f );
+                break;
+            case Ammunition.Calibers.Boar_75:
+                strength += UnityEngine.Random.Range ( 1.0f, 3.5f );
+                break;
+            case Ammunition.Calibers.C3:
+                strength += UnityEngine.Random.Range ( 0.0f, 0.1f );
+                break;
+            case Ammunition.Calibers.Vanquisher:
+                strength += 1.5f;
+                break;
+            default:
+                break;
+        }
+
+        return strength;
+    }
+
     #region AnimatorState handlers
 
     /// <summary>
@@ -311,6 +375,12 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Invoked when a slot has been updated in the Inventory.
+    /// If the updated slot is an attachment slot,
+    /// then equip that attachment to its corresponding weapon (primary/secondary).
+    /// </summary>
+    /// <param name="slotId"></param>
     private void EquipAttachment ( string slotId )
     {
         if ( string.IsNullOrEmpty ( slotId ) )
@@ -318,7 +388,6 @@ public class WeaponsController : MonoBehaviour
             Debug.LogWarning ( "slotId is null or empty." );
             return;
         }
-
 
         if ( slotId.Contains ( "primary" ) ) // Primary weapon attachment
         {
@@ -330,10 +399,7 @@ public class WeaponsController : MonoBehaviour
                 return;
             }
 
-            // Activate the GameObject to call the method
-            //bool holderOriginalState = m_primaryWeaponHolder.activeSelf;
-            //m_primaryWeaponHolder.SetActive ( true );
-
+            // Equip the attachment
             if ( slotId.Contains ( "barrel" ) )
             {
                 m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
@@ -346,7 +412,6 @@ public class WeaponsController : MonoBehaviour
             {
                 m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
             }
-            //m_primaryWeaponHolder.SetActive ( holderOriginalState );
         }
         else if ( slotId.Contains ( "secondary" ) ) // Secondary weapon attachment
         {
@@ -358,10 +423,7 @@ public class WeaponsController : MonoBehaviour
                 return;
             }
 
-            // Activate the GameObject to call the method
-            //bool originalState = m_secondaryWeaponHolder.activeSelf;
-            //m_secondaryWeaponHolder.SetActive ( true );
-            
+            // Equip the attachment
             if ( slotId.Contains ( "barrel" ) )
             {
                 m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
@@ -374,7 +436,6 @@ public class WeaponsController : MonoBehaviour
             {
                 m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
             }
-            //m_secondaryWeaponHolder.SetActive ( originalState );
         }
     }
 

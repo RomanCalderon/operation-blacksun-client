@@ -94,6 +94,8 @@ MonoBehaviour:
   m_fullReloadVolume: 1.15
   m_holsterClip: {fileID: 8300000, guid: 1e8345b745c19e94e9ef665cd183df2a, type: 3}
   m_holsterVolume: 0.75
+  m_dryFireClip: {fileID: 8300000, guid: b5d827d9f6454c84788c189ce96856f3, type: 3}
+  m_dryfireVolume: 0.35
   m_partialReloadTime: 0.93
   m_fullReloadTime: 4.96
 --- !u!1 &1761634094973539450

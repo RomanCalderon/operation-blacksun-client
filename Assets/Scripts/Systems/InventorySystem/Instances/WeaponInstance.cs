@@ -46,6 +46,11 @@ public class WeaponInstance : PlayerItemInstance
     private AudioClip m_holsterClip = null;
     [SerializeField]
     private float m_holsterVolume = 0.75f;
+    [Space]
+    [SerializeField]
+    private AudioClip m_dryFireClip = null;
+    [SerializeField]
+    private float m_dryfireVolume = 0.75f;
 
     [Header ( "Reloading" )]
     [SerializeField]
@@ -54,7 +59,6 @@ public class WeaponInstance : PlayerItemInstance
     private float m_fullReloadTime = 0.8f;
     private bool m_isReloading = false;
     private bool m_isFullReload = false;
-    private bool m_cancelReload = false;
     private Coroutine m_reloadCoroutine = null;
 
     private float m_fireCooldown = 0f;
@@ -147,14 +151,25 @@ public class WeaponInstance : PlayerItemInstance
                 // Perform gunshot
                 ClientSend.PlayerShoot ( direction );
                 WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
-                CameraShaker.Instance.ShakeOnce ( 0.1f, 6f, 0.01f, 0.16f );
-                CameraController.Instance.AddRecoil ( 0.35f, Random.Range ( -0.25f, 0.25f ) );
+                CameraRecoil ();
 
                 if ( BulletCount > 0 )
                 {
                     WeaponsController.OnSetTrigger?.Invoke ( "BoltCharge" );
                 }
             }
+            else
+            {
+                DryFire ();
+            }
+        }
+    }
+
+    private void DryFire ()
+    {
+        if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+        {
+            AudioManager.PlaySound ( m_dryFireClip, m_dryfireVolume, false );
         }
     }
 
@@ -198,6 +213,21 @@ public class WeaponInstance : PlayerItemInstance
             m_reloadCoroutine = StartCoroutine ( ReloadCoroutine ( m_partialReloadTime ) );
         }
     }
+
+    private void CameraRecoil ()
+    {
+        // Camera recoil
+        float recoilStrength = WeaponsController.CalculateRecoilStrength ( ( PlayerItem as Weapon ).WeaponClass, ( PlayerItem as Weapon ).Caliber, out float aspect );
+        if ( Stock != null ) // Use Stock to reduce recoil
+        {
+            recoilStrength *= 1f - Stock.RecoilReductionModifier;
+        }
+        CameraController.Instance.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
+
+        // Camera shake
+        CameraShaker.Instance.ShakeOnce ( 0.1f, 6f, 0.01f, 0.16f );
+    }
+
 
     #region WeaponStateBehaviour Listeners
 
