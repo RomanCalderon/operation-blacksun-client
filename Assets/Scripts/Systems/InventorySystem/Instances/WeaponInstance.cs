@@ -309,10 +309,10 @@ public class WeaponInstance : PlayerItemInstance
     {
         string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
         int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
-        int refillAmount = Mathf.Min ( Magazine.AmmoCapacity, inventoryAmmoCount );
-        ClientSend.PlayerInventoryReduceItem ( ammoId, refillAmount - BulletCount );
-        BulletCount = refillAmount;
-        //BulletCount = Magazine.AmmoCapacity;
+        int shotsFired = Magazine.AmmoCapacity - BulletCount;
+        int refillAmount = Mathf.Min ( shotsFired, inventoryAmmoCount );
+        ClientSend.PlayerInventoryReduceItem ( ammoId, shotsFired );
+        BulletCount += refillAmount;
 
         // Reset reload flags
         m_isReloading = false;
