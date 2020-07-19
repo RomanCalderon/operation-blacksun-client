@@ -84,14 +84,18 @@ MonoBehaviour:
   m_suppressedGunshotClip: {fileID: 0}
   m_suppressedGunshotVolume: 0.6
   m_suppressedSpatialBlend: 0.2
+  m_drawClip: {fileID: 8300000, guid: 2ab63c9fa418955439c5080bbfb41333, type: 3}
+  m_drawVolume: 0.75
   m_boltChargeClip: {fileID: 8300000, guid: 03dee386b4f5eac42bacd65bc7078360, type: 3}
   m_boltChargeVolume: 0.75
-  m_partialReloadClip: {fileID: 8300000, guid: 8097a356965be8342bca34bf4237130d, type: 3}
+  m_partialReloadClip: {fileID: 8300000, guid: 299bfacc016a6ce4091e4c2829a11bcc, type: 3}
   m_partialReloadVolume: 0.75
   m_fullReloadClip: {fileID: 8300000, guid: 299bfacc016a6ce4091e4c2829a11bcc, type: 3}
-  m_fullReloadVolume: 0.95
-  m_partialReloadTime: 0.5
-  m_fullReloadTime: 0.8
+  m_fullReloadVolume: 1.15
+  m_holsterClip: {fileID: 8300000, guid: 1e8345b745c19e94e9ef665cd183df2a, type: 3}
+  m_holsterVolume: 0.75
+  m_partialReloadTime: 0.93
+  m_fullReloadTime: 4.96
 --- !u!1 &1761634094973539450
 GameObject:
   m_ObjectHideFlags: 0

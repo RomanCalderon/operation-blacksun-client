@@ -159,17 +159,21 @@ MonoBehaviour:
   m_playerItem: {fileID: 11400000, guid: 61109460dffeeaf469dddce79743a4bd, type: 2}
   m_normalGunshotClip: {fileID: 8300000, guid: 671ca547874dccc479c4573bce73cecd, type: 3}
   m_normalGunshotVolume: 0.65
-  m_normalSpatialBlend: 0.2
+  m_normalSpatialBlend: 0.1
   m_suppressedGunshotClip: {fileID: 8300000, guid: 2fd59dbd67d1e794fa71e61182fddb3b,
     type: 3}
   m_suppressedGunshotVolume: 0.75
-  m_suppressedSpatialBlend: 0.2
+  m_suppressedSpatialBlend: 0.1
+  m_drawClip: {fileID: 8300000, guid: c5677055a383ff04d830a9339f800a3c, type: 3}
+  m_drawVolume: 0.6
   m_boltChargeClip: {fileID: 0}
   m_boltChargeVolume: 0.75
   m_partialReloadClip: {fileID: 8300000, guid: 6aa1a6b9e617fe943ab92ee4077ee564, type: 3}
-  m_partialReloadVolume: 0.75
+  m_partialReloadVolume: 0.7
   m_fullReloadClip: {fileID: 8300000, guid: 8568a254d0d302e4fabb9ce01543dc01, type: 3}
-  m_fullReloadVolume: 0.75
+  m_fullReloadVolume: 0.7
+  m_holsterClip: {fileID: 8300000, guid: 670342b882457d74eb70cfb72afc7523, type: 3}
+  m_holsterVolume: 0.4
   m_partialReloadTime: 1.61
   m_fullReloadTime: 2.86
 --- !u!1 &6459283790390658447

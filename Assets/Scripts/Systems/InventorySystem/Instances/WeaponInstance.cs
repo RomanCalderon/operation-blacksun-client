@@ -23,19 +23,29 @@ public class WeaponInstance : PlayerItemInstance
     private float m_suppressedGunshotVolume = 0.6f, m_suppressedSpatialBlend = 0.2f;
     [Space]
     [SerializeField]
+    private AudioClip m_drawClip = null;
+    [SerializeField]
+    private float m_drawVolume = 0.75f;
+    [Space]
+    [SerializeField]
     private AudioClip m_boltChargeClip = null;
     [SerializeField]
     private float m_boltChargeVolume = 0.75f;
+    [Space]
     [SerializeField]
     private AudioClip m_partialReloadClip = null;
     [SerializeField]
     private float m_partialReloadVolume = 0.75f;
+    [Space]
     [SerializeField]
     private AudioClip m_fullReloadClip = null;
     [SerializeField]
     private float m_fullReloadVolume = 0.75f;
-
-    private float m_fireCooldown = 0f;
+    [Space]
+    [SerializeField]
+    private AudioClip m_holsterClip = null;
+    [SerializeField]
+    private float m_holsterVolume = 0.75f;
 
     [Header ( "Reloading" )]
     [SerializeField]
@@ -46,6 +56,8 @@ public class WeaponInstance : PlayerItemInstance
     private bool m_isFullReload = false;
     private bool m_cancelReload = false;
     private Coroutine m_reloadCoroutine = null;
+
+    private float m_fireCooldown = 0f;
 
 
     private void OnEnable ()
@@ -191,6 +203,10 @@ public class WeaponInstance : PlayerItemInstance
 
     private void StartAudioClip ( AnimatorStateInfo stateInfo, int layerIndex )
     {
+        if ( stateInfo.IsName ( "Draw" ) )
+        {
+            AudioManager.PlaySound ( m_drawClip, m_drawVolume, false );
+        }
         if ( stateInfo.IsName ( "BoltCharge" ) )
         {
             AudioManager.PlaySound ( m_boltChargeClip, m_boltChargeVolume, false );
@@ -203,10 +219,18 @@ public class WeaponInstance : PlayerItemInstance
         {
             AudioManager.PlaySound ( m_fullReloadClip, m_fullReloadVolume, false );
         }
+        if ( stateInfo.IsName ( "Holster" ) )
+        {
+            AudioManager.PlaySound ( m_holsterClip, m_holsterVolume, false );
+        }
     }
 
     private void StopAudioClip ( AnimatorStateInfo stateInfo, int layerIndex )
     {
+        if ( stateInfo.IsName ( "Draw" ) )
+        {
+            AudioManager.Stop ( m_drawClip.name );
+        }
         if ( stateInfo.IsName ( "BoltCharge" ) )
         {
             AudioManager.Stop ( m_boltChargeClip.name );
@@ -218,6 +242,10 @@ public class WeaponInstance : PlayerItemInstance
         if ( stateInfo.IsName ( "ReloadFull" ) )
         {
             AudioManager.Stop ( m_fullReloadClip.name );
+        }
+        if ( stateInfo.IsName ( "Holster" ) )
+        {
+            AudioManager.Stop ( m_holsterClip.name );
         }
     }
 
