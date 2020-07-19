@@ -2,6 +2,7 @@
 using UnityEngine;
 using InventorySystem.PlayerItems;
 using InventorySystem.Slots.Results;
+using System.Collections;
 
 namespace InventorySystem.Slots
 {
@@ -130,7 +131,6 @@ namespace InventorySystem.Slots
                     {
                         PlayerItem = playerItem;
                     }
-
                     // Increase the slot stack volume by the new quantity
                     StackSize += quantity;
 
@@ -349,7 +349,7 @@ namespace InventorySystem.Slots.Results
         public Results Result { get; private set; }
         public int OverflowAmount { get; private set; }
 
-        
+
         public InsertionResult ( Results result = Results.INSERTION_FAILED )
         {
             Slot = null;
@@ -365,7 +365,7 @@ namespace InventorySystem.Slots.Results
             Result = result;
             OverflowAmount = 0;
         }
-        
+
         public InsertionResult ( PlayerItem playerItem, Results result = Results.INSERTION_FAILED )
         {
             Contents = playerItem;

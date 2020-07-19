@@ -104,29 +104,47 @@ public class WeaponInstance : PlayerItemInstance
         }
     }
 
+    #region Attachment Equipping/Unequipping
+
     /// <summary>
-    /// Invoked by WeaponsController.
+    /// Equips a Barrel to this WeaponInstance.
     /// </summary>
-    /// <param name="attachment"></param>
-    public void EquipAttachment ( Attachment attachment )
+    /// <param name="barrel">The Barrel to equip.</param>
+    public void EquipAttachment ( Barrel barrel )
     {
-        if ( attachment is Barrel barrel )
+        Barrel = barrel;
+    }
+
+    /// <summary>
+    /// Equips a Magazine to this WeaponInstance.
+    /// </summary>
+    /// <param name="magazine">The Magazine to equip.</param>
+    public void EquipAttachment ( Magazine magazine )
+    {
+        Magazine = magazine;
+
+        if ( Magazine == null )
         {
-            Barrel = barrel;
-            Debug.Log ( $"Weapon [{PlayerItem}] - Barrel [{Barrel}]" );
+            CancelReload ();
         }
-        else if ( attachment is Magazine magazine )
+        else if ( BulletCount == 0 )
         {
-            Magazine = magazine;
-            BulletCount = Magazine.AmmoCapacity;
-            Debug.Log ( $"Weapon [{PlayerItem}] - Magazine [{Magazine}]" );
-        }
-        else if ( attachment is Stock stock )
-        {
-            Stock = stock;
-            Debug.Log ( $"Weapon [{PlayerItem}] - Stock [{Stock}]" );
+            string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
+            int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
+            BulletCount = Mathf.Min ( Magazine.AmmoCapacity, inventoryAmmoCount );
         }
     }
+
+    /// <summary>
+    /// Equips a Stock to this WeaponInstance.
+    /// </summary>
+    /// <param name="stock">The Stock to equip.</param>
+    public void EquipAttachment ( Stock stock )
+    {
+        Stock = stock;
+    }
+
+    #endregion
 
     /// <summary>
     /// Fires a single round in a specified direction.
@@ -135,37 +153,44 @@ public class WeaponInstance : PlayerItemInstance
     /// <param name="direction">The direction the weapon is fired.</param>
     public void Shoot ( Vector3 direction )
     {
-        if ( m_fireCooldown <= 0f )
+        if ( Magazine == null )
         {
-            // Check bullet count
+            DryFire ();
+            return;
+        }
+        if ( m_fireCooldown > 0f )
+        {
+            return;
+        }
+
+        // Check bullet count
+        if ( BulletCount > 0 )
+        {
+            // Cancel the reload (if reloading)
+            CancelReload ();
+
+            // Reset fireCooldown
+            m_fireCooldown = ( PlayerItem as Weapon ).FireRate;
+
+            // Subtract one bullet from the magazine
+            BulletCount--;
+
+            // Play gunshot Audioclip
+            AudioManager.PlaySound ( m_normalGunshotClip, m_mixerGroup, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
+
+            // Perform gunshot
+            ClientSend.PlayerShoot ( direction );
+            WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
+            CameraRecoil ();
+
             if ( BulletCount > 0 )
             {
-                // Cancel the reload (if reloading)
-                CancelReload ();
-
-                // Reset fireCooldown
-                m_fireCooldown = ( PlayerItem as Weapon ).FireRate;
-
-                // Subtract one bullet from the magazine
-                BulletCount--;
-
-                // Play gunshot Audioclip
-                AudioManager.PlaySound ( m_normalGunshotClip, m_mixerGroup, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
-
-                // Perform gunshot
-                ClientSend.PlayerShoot ( direction );
-                WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
-                CameraRecoil ();
-
-                if ( BulletCount > 0 )
-                {
-                    WeaponsController.OnSetTrigger?.Invoke ( "BoltCharge" );
-                }
+                WeaponsController.OnSetTrigger?.Invoke ( "BoltCharge" );
             }
-            else
-            {
-                DryFire ();
-            }
+        }
+        else
+        {
+            DryFire ();
         }
     }
 
@@ -176,6 +201,8 @@ public class WeaponInstance : PlayerItemInstance
             AudioManager.PlaySound ( m_dryFireClip, m_mixerGroup, m_dryfireVolume, false );
         }
     }
+
+    #region Reloading
 
     /// <summary>
     /// Invoked by WeaponsController.
@@ -219,6 +246,53 @@ public class WeaponInstance : PlayerItemInstance
         }
     }
 
+    private IEnumerator ReloadCoroutine ( float reloadTime )
+    {
+        yield return new WaitForSeconds ( reloadTime );
+
+        FinishReload ();
+    }
+
+    private void FinishReload ()
+    {
+        string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
+        int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
+        int shotsFired = Magazine.AmmoCapacity - BulletCount;
+        int refillAmount = Mathf.Min ( shotsFired, inventoryAmmoCount );
+        ClientSend.PlayerInventoryReduceItem ( ammoId, shotsFired );
+        BulletCount += refillAmount;
+
+        // Reset reload flags
+        m_isReloading = false;
+        m_isFullReload = false;
+    }
+
+    private void CancelReload ()
+    {
+        if ( m_isReloading )
+        {
+            // Stop the reload animation
+            WeaponsController.OnSetTrigger?.Invoke ( "CancelReload" );
+
+            // Stop the reload coroutine
+            if ( m_reloadCoroutine != null )
+            {
+                StopCoroutine ( m_reloadCoroutine );
+                m_reloadCoroutine = null;
+            }
+
+            // Stop the reload audio clip
+            string clipName = m_isFullReload ? m_fullReloadClip.name : m_partialReloadClip.name;
+            AudioManager.Stop ( clipName );
+
+            // Reset reload flags
+            m_isReloading = false;
+            m_isFullReload = false;
+        }
+    }
+
+    #endregion
+
     private void CameraRecoil ()
     {
         // Camera recoil
@@ -232,7 +306,6 @@ public class WeaponInstance : PlayerItemInstance
         // Camera shake
         CameraShaker.Instance.ShakeOnce ( 0.1f, 6f, 0.01f, 0.16f );
     }
-
 
     #region WeaponStateBehaviour Listeners
 
@@ -289,47 +362,9 @@ public class WeaponInstance : PlayerItemInstance
         if ( stateInfo.IsName ( "Holster" ) )
         {
             CancelReload ();
-
-            // Stop the reload audio clip
-            string clipName = m_isFullReload ? m_fullReloadClip.name : m_partialReloadClip.name;
-            AudioManager.Stop ( clipName );
         }
     }
 
     #endregion
 
-    private IEnumerator ReloadCoroutine ( float reloadTime )
-    {
-        yield return new WaitForSeconds ( reloadTime );
-
-        FinishReload ();
-    }
-
-    private void FinishReload ()
-    {
-        string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
-        int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
-        int shotsFired = Magazine.AmmoCapacity - BulletCount;
-        int refillAmount = Mathf.Min ( shotsFired, inventoryAmmoCount );
-        ClientSend.PlayerInventoryReduceItem ( ammoId, shotsFired );
-        BulletCount += refillAmount;
-
-        // Reset reload flags
-        m_isReloading = false;
-        m_isFullReload = false;
-    }
-
-    private void CancelReload ()
-    {
-        if ( m_isReloading || m_reloadCoroutine != null )
-        {
-            // Stop the reload coroutine
-            StopCoroutine ( m_reloadCoroutine );
-            m_reloadCoroutine = null;
-
-            // Reset reload flags
-            m_isReloading = false;
-            m_isFullReload = false;
-        }
-    }
 }

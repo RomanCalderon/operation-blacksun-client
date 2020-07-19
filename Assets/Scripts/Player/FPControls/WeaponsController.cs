@@ -402,15 +402,15 @@ public class WeaponsController : MonoBehaviour
             // Equip the attachment
             if ( slotId.Contains ( "barrel" ) )
             {
-                m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+                m_primaryEquipped.EquipAttachment ( ( Barrel ) slot.PlayerItem );
             }
             else if ( slotId.Contains ( "magazine" ) )
             {
-                m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+                m_primaryEquipped.EquipAttachment ( ( Magazine ) slot.PlayerItem );
             }
             else if ( slotId.Contains ( "stock" ) )
             {
-                m_primaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+                m_primaryEquipped.EquipAttachment ( ( Stock ) slot.PlayerItem );
             }
         }
         else if ( slotId.Contains ( "secondary" ) ) // Secondary weapon attachment
@@ -426,15 +426,15 @@ public class WeaponsController : MonoBehaviour
             // Equip the attachment
             if ( slotId.Contains ( "barrel" ) )
             {
-                m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+                m_secondaryEquipped.EquipAttachment ( ( Barrel ) slot.PlayerItem );
             }
             else if ( slotId.Contains ( "magazine" ) )
             {
-                m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+                m_secondaryEquipped.EquipAttachment ( ( Magazine ) slot.PlayerItem );
             }
             else if ( slotId.Contains ( "stock" ) )
             {
-                m_secondaryEquipped.EquipAttachment ( ( Attachment ) slot.PlayerItem );
+                m_secondaryEquipped.EquipAttachment ( ( Stock ) slot.PlayerItem );
             }
         }
     }
