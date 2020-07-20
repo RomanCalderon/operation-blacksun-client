@@ -179,7 +179,8 @@ public class WeaponInstance : PlayerItemInstance
             AudioManager.PlaySound ( m_normalGunshotClip, m_mixerGroup, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
             // Perform gunshot
-            ClientSend.PlayerShoot ( direction );
+            float damage = ( PlayerItem as Weapon ).BaseDamage;
+            ClientSend.PlayerShoot ( direction, damage );
             WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
             CameraRecoil ();
 
