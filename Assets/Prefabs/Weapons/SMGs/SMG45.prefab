@@ -159,7 +159,7 @@ MonoBehaviour:
   m_playerItem: {fileID: 11400000, guid: 61109460dffeeaf469dddce79743a4bd, type: 2}
   m_mixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
     type: 2}
-  m_normalGunshotClip: {fileID: 8300000, guid: 671ca547874dccc479c4573bce73cecd, type: 3}
+  m_normalGunshotClip: gunshot-smg45-standard
   m_normalGunshotVolume: 0.65
   m_normalSpatialBlend: 0.1
   m_suppressedGunshotClip: {fileID: 8300000, guid: 2fd59dbd67d1e794fa71e61182fddb3b,

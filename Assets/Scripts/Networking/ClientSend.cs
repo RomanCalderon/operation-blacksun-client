@@ -78,12 +78,16 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void PlayerShoot ( Vector3 _facing, float _damage )
+    public static void PlayerShoot ( Vector3 _direction, float _damage, string _gunshotClip, float _gunshotVolume, float _minDistance, float _maxDistance )
     {
         using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerShoot ) )
         {
-            _packet.Write ( _facing );
+            _packet.Write ( _direction );
             _packet.Write ( _damage );
+            _packet.Write ( _gunshotClip );
+            _packet.Write ( _gunshotVolume );
+            _packet.Write ( _minDistance );
+            _packet.Write ( _maxDistance );
 
             SendTCPData ( _packet );
         }

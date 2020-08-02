@@ -5608,6 +5608,7 @@ GameObject:
   m_Component:
   - component: {fileID: 563369863}
   - component: {fileID: 563369862}
+  - component: {fileID: 563369864}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5646,6 +5647,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &563369864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563369861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5184cf8683da9354e922082e849a28ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_shootableObjectPools: []
+  m_hitObjectPools:
+  - ObjectName: Dirt
+    Tag: 0
+    Prefab: {fileID: 0}
+    Size: 0
+  - ObjectName: Metal
+    Tag: 1
+    Prefab: {fileID: 0}
+    Size: 0
+  - ObjectName: Concrete
+    Tag: 2
+    Prefab: {fileID: 0}
+    Size: 0
+  - ObjectName: Glass
+    Tag: 3
+    Prefab: {fileID: 0}
+    Size: 0
+  - ObjectName: Water
+    Tag: 4
+    Prefab: {fileID: 0}
+    Size: 0
+  - ObjectName: Debug
+    Tag: 5
+    Prefab: {fileID: 2901595472693626198, guid: c1bd6983814ecd342bd18398a7575ba0,
+      type: 3}
+    Size: 50
 --- !u!1 &589378600
 GameObject:
   m_ObjectHideFlags: 0
@@ -22173,7 +22213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4826da946c29b854e8f150123940322d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ip: 172.73.164.161
+  ip: 127.0.0.1
   port: 26951
   myId: 0
 --- !u!4 &1664156214

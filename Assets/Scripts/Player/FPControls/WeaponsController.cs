@@ -105,7 +105,7 @@ public class WeaponsController : MonoBehaviour
             // Shooting
             if ( Input.GetKey ( KeyCode.Mouse0 ) )
             {
-                GetActiveWeapon ().Shoot ( m_cameraTransform.forward );
+                GetActiveWeapon ().Shoot ( m_cameraTransform.position, m_cameraTransform.forward );
             }
 
             // Aiming

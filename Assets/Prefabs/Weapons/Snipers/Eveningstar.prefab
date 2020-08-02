@@ -79,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerItem: {fileID: 11400000, guid: 52584332347cc044e81d48363b8b88e3, type: 2}
   m_mixerGroup: {fileID: 0}
-  m_normalGunshotClip: {fileID: 8300000, guid: 181313b81ca7d084fb6a2b584693c356, type: 3}
+  m_normalGunshotClip: gunshot-eveningstar-standard
   m_normalGunshotVolume: 0.65
   m_normalSpatialBlend: 0.2
   m_suppressedGunshotClip: {fileID: 0}

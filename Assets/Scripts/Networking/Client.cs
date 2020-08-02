@@ -318,7 +318,9 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
             { (int)ServerPackets.playerHealth, ClientHandle.PlayerHealth },
             { (int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned },
-            { (int)ServerPackets.playerUpdateInventorySlot, ClientHandle.PlayerUpdateInventorySlot }
+            { (int)ServerPackets.playerUpdateInventorySlot, ClientHandle.PlayerUpdateInventorySlot },
+            { (int)ServerPackets.spawnHitObject, ClientHandle.SpawnHitObject },
+            { (int)ServerPackets.playAudioClip, ClientHandle.PlayAudioClip }
         };
         Debug.Log ( "Initialized packets." );
     }

@@ -12,4 +12,7 @@ public class Constants
     public const int SLOT_MAX_STACK_SIZE = 256;
 
     public const float PLAYER_RESPAWN_DELAY = 3.0f;
+
+    public const float GUNSHOT_MIN_DISTANCE = 10f;
+    public const float GUNSHOT_MAX_DISTANCE = 500f;
 }

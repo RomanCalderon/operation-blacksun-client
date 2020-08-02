@@ -12,12 +12,14 @@ public class WeaponInstance : PlayerItemInstance
     public Stock Stock { get; private set; } = null;
     public int BulletCount { get; private set; } = 0;
 
+    private CameraController m_cameraController = null;
+
     [Header ( "Audio" )]
     [SerializeField]
     private AudioMixerGroup m_mixerGroup = null;
     [Space]
     [SerializeField]
-    private AudioClip m_normalGunshotClip = null;
+    private string m_normalGunshotClip = null;
     [SerializeField]
     private float m_normalGunshotVolume = 0.65f, m_normalSpatialBlend = 0.2f;
     [Space]
@@ -88,7 +90,7 @@ public class WeaponInstance : PlayerItemInstance
     // Start is called before the first frame update
     void Start ()
     {
-
+        m_cameraController = CameraController.Instance;
     }
 
     // Update is called once per frame
@@ -151,7 +153,7 @@ public class WeaponInstance : PlayerItemInstance
     /// Invoked by WeaponsController.
     /// </summary>
     /// <param name="direction">The direction the weapon is fired.</param>
-    public void Shoot ( Vector3 direction )
+    public void Shoot ( Vector3 position, Vector3 direction )
     {
         if ( Magazine == null )
         {
@@ -176,11 +178,11 @@ public class WeaponInstance : PlayerItemInstance
             BulletCount--;
 
             // Play gunshot Audioclip
-            AudioManager.PlaySound ( m_normalGunshotClip, m_mixerGroup, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
+            AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
             // Perform gunshot
             float damage = ( PlayerItem as Weapon ).BaseDamage;
-            ClientSend.PlayerShoot ( direction, damage );
+            ClientSend.PlayerShoot ( direction, damage, m_normalGunshotClip, m_normalGunshotVolume, Constants.GUNSHOT_MIN_DISTANCE, Constants.GUNSHOT_MAX_DISTANCE );
             WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
             CameraRecoil ();
 
@@ -302,7 +304,7 @@ public class WeaponInstance : PlayerItemInstance
         {
             recoilStrength *= 1f - Stock.RecoilReductionModifier;
         }
-        CameraController.Instance.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
+        m_cameraController.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
 
         // Camera shake
         CameraShaker.Instance.ShakeOnce ( 0.1f, 6f, 0.01f, 0.16f );

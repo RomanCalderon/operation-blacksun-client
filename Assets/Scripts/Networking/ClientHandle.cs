@@ -132,5 +132,27 @@ public class ClientHandle : MonoBehaviour
         InventoryManager.Instance.UpdateSlot ( _slotId, _playerItemId, _quantity );
     }
 
+    public static void SpawnHitObject ( Packet _packet )
+    {
+        int _id = _packet.ReadInt ();
+        int _hitType = _packet.ReadInt ();
+        Vector3 _hitPosition = _packet.ReadVector3 ();
+        Vector3 _hitNormal = _packet.ReadVector3 ();
+
+        ShootableObjectsManager.Instance.SpawnFromPool ( ( ShootableObjectsManager.HitObjects ) _hitType, _hitPosition, _hitNormal );
+    }
+
+    public static void PlayAudioClip ( Packet _packet )
+    {
+        int _id = _packet.ReadInt ();
+        string _audioClipName = _packet.ReadString ();
+        float _volume = _packet.ReadFloat ();
+        Vector3 _location = _packet.ReadVector3 ();
+        float _minDistance = _packet.ReadFloat ();
+        float _maxDistance = _packet.ReadFloat ();
+
+        AudioManager.PlaySound ( _audioClipName, _volume, _location, _minDistance, _maxDistance );
+    }
+
     #endregion
 }

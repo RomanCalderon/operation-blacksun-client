@@ -26,12 +26,20 @@ public class GameAssets : MonoBehaviour
 
     public AudioClip GetAudioClip ( string name )
     {
-        return AudioClips.First ( c => c.Name == name ).AudioClip;
+        if ( string.IsNullOrEmpty ( name ) )
+        {
+            return null;
+        }
+        return AudioClips.FirstOrDefault ( c => c.Name == name ).AudioClip;
     }
 
     public AudioMixerGroup GetAudioMixerGroup ( string name )
     {
-        return AudioClips.First ( c => c.Name == name ).MixerGroup;
+        if ( string.IsNullOrEmpty ( name ) )
+        {
+            return null;
+        }
+        return AudioClips.FirstOrDefault ( c => c.Name == name ).MixerGroup;
     }
 }
 
