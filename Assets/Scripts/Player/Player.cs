@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
 {
     private int m_id;
     private string m_username;
+    [SerializeField]
+    private Camera m_playerCamera = null;
+    [SerializeField]
+    private Camera m_fpCamera = null;
     private PlayerModelController m_modelController = null;
     public InventoryManager InventoryManager { get; private set; }
     public WeaponsController WeaponsController { get; private set; }
@@ -16,6 +20,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private RagdollMasterJointController m_ragdollController = null;
+    [SerializeField]
+    private Camera m_ragdollCamera = null;
     [SerializeField]
     private Transform m_ragdollParent = null;
 
@@ -48,17 +54,29 @@ public class Player : MonoBehaviour
 
     public void Die ()
     {
+        m_modelController.ShowModel ( false );
+        if ( Client.instance.myId == m_id )
+        {
+            m_playerCamera.enabled = false;
+            m_fpCamera.enabled = false;
+            m_ragdollCamera.enabled = true;
+        }
+
         // Enable the player ragdoll
         m_ragdollController.transform.SetParent ( null );
         m_ragdollController.EnableMeshRenderers ( true );
         m_ragdollController.EnableFollowTarget ( false );
-
-        m_modelController.ShowModel ( false );
     }
 
     public void Respawn ()
     {
         m_modelController.ShowModel ( true );
+        if ( Client.instance.myId == m_id )
+        {
+            m_playerCamera.enabled = true;
+            m_fpCamera.enabled = true;
+            m_ragdollCamera.enabled = false;
+        }
 
         // Reset and disable the player ragdoll
         m_ragdollController.transform.SetPositionAndRotation ( m_ragdollParent.position, m_ragdollParent.rotation );
