@@ -5661,31 +5661,85 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_shootableObjectPools: []
   m_hitObjectPools:
-  - ObjectName: Dirt
+  - ObjectName: Asphalt
     Tag: 0
-    Prefab: {fileID: 0}
-    Size: 0
-  - ObjectName: Metal
-    Tag: 1
-    Prefab: {fileID: 0}
-    Size: 0
-  - ObjectName: Concrete
-    Tag: 2
-    Prefab: {fileID: 0}
-    Size: 0
-  - ObjectName: Glass
-    Tag: 3
-    Prefab: {fileID: 0}
-    Size: 0
-  - ObjectName: Water
-    Tag: 4
-    Prefab: {fileID: 0}
-    Size: 0
-  - ObjectName: Debug
-    Tag: 5
-    Prefab: {fileID: 2901595472693626198, guid: c1bd6983814ecd342bd18398a7575ba0,
+    Prefab: {fileID: 1245417074158469956, guid: d87bcf25ddc8ba64495acd31a64895c7,
       type: 3}
     Size: 50
+  - ObjectName: Bricks
+    Tag: 1
+    Prefab: {fileID: 1245417074158469956, guid: a97e8df82833bfe4fa18da692b508598,
+      type: 3}
+    Size: 50
+  - ObjectName: Concrete
+    Tag: 2
+    Prefab: {fileID: 1245417074158469956, guid: 4116cec408736b8408c7cea75253bb9b,
+      type: 3}
+    Size: 50
+  - ObjectName: Glass
+    Tag: 3
+    Prefab: {fileID: 6116272564290920067, guid: d58f136885f6e8a4ca2a8731c8bc258d,
+      type: 3}
+    Size: 50
+  - ObjectName: Ground
+    Tag: 4
+    Prefab: {fileID: 7258679735602562002, guid: 608cb554bb30cb746956424c326042ca,
+      type: 3}
+    Size: 100
+  - ObjectName: Metal1
+    Tag: 5
+    Prefab: {fileID: 7077355519987932895, guid: 579357df66620f747a0c8f99cabbd10e,
+      type: 3}
+    Size: 50
+  - ObjectName: Metal2
+    Tag: 6
+    Prefab: {fileID: 7077355519987932895, guid: 6d813d766b473a04680efdb264997f8d,
+      type: 3}
+    Size: 50
+  - ObjectName: Mud
+    Tag: 7
+    Prefab: {fileID: 5664013782547976124, guid: fa57485de29fa3241b0f322dad2d4191,
+      type: 3}
+    Size: 50
+  - ObjectName: Plywood
+    Tag: 8
+    Prefab: {fileID: 3061189629347133704, guid: 3178f3f3d1492df40a2395f79abf8b76,
+      type: 3}
+    Size: 50
+  - ObjectName: Rock
+    Tag: 9
+    Prefab: {fileID: 9025620440509115272, guid: 67ee14f1e2b7cbf44b97f7f8d26782bc,
+      type: 3}
+    Size: 50
+  - ObjectName: Sand
+    Tag: 10
+    Prefab: {fileID: 7258679735602562002, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+      type: 3}
+    Size: 50
+  - ObjectName: Skin
+    Tag: 11
+    Prefab: {fileID: 258580847482720398, guid: 907189bb1273a83499f4581146d101a5, type: 3}
+    Size: 10
+  - ObjectName: Tiles
+    Tag: 12
+    Prefab: {fileID: 1245417074158469956, guid: 2c66f6a618cf19248bd3252b2e20f49e,
+      type: 3}
+    Size: 50
+  - ObjectName: Water
+    Tag: 13
+    Prefab: {fileID: 5664013782547976124, guid: f6c9593ace7fede4ba0251e1010760b6,
+      type: 3}
+    Size: 50
+  - ObjectName: Wood
+    Tag: 14
+    Prefab: {fileID: 3061189629347133704, guid: a8e182c1811239647a9f16b1f40dd7f2,
+      type: 3}
+    Size: 50
+  - ObjectName: Debug
+    Tag: 15
+    Prefab: {fileID: 2901595472693626198, guid: c1bd6983814ecd342bd18398a7575ba0,
+      type: 3}
+    Size: 10
 --- !u!1 &589378600
 GameObject:
   m_ObjectHideFlags: 0
@@ -16424,6 +16478,80 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1009924097
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7077355519987932895, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_Name
+      value: Metal 1 Impact
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932895, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 16.425293
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -24.490143
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077355519987932896, guid: 579357df66620f747a0c8f99cabbd10e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 579357df66620f747a0c8f99cabbd10e, type: 3}
 --- !u!1001 &1023742659
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22584,6 +22712,85 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!1001 &1783709245
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7258679735183729054, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_UseCustomVertexStreams
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 16.920898
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -24.487183
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562001, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562002, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_Name
+      value: Sand Impact
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258679735602562002, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0b38c6dd9d60f37438e0cd2d5dbbe9ef, type: 3}
 --- !u!1 &1786119324
 GameObject:
   m_ObjectHideFlags: 0

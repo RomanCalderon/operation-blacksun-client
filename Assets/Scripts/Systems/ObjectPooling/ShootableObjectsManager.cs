@@ -32,11 +32,21 @@ public class ShootableObjectsManager : MonoBehaviour
 
     public enum HitObjects
     {
-        Dirt,
-        Metal,
+        Asphalt,
+        Bricks,
         Concrete,
         Glass,
+        Ground,
+        Metal1,
+        Metal2,
+        Mud,
+        Plywood,
+        Rock,
+        Sand,
+        Skin,
+        Tiles,
         Water,
+        Wood,
         Debug
     }
 
@@ -151,10 +161,10 @@ public class ShootableObjectsManager : MonoBehaviour
         GameObject objectToSpawn = m_hitObjectPool [ ( int ) tag ].Dequeue ();
         objectToSpawn.SetActive ( true );
         objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = Quaternion.Euler ( normal );
+        objectToSpawn.transform.rotation = Quaternion.LookRotation ( normal, Vector3.up );
 
-        IPooledObject pooledObject = objectToSpawn.GetComponent<IPooledObject> ();
-        if ( pooledObject != null )
+        IPooledObject[] pooledObjects = objectToSpawn.GetComponents<IPooledObject> ();
+        foreach ( IPooledObject pooledObject in pooledObjects )
         {
             pooledObject.OnObjectSpawn ();
         }
