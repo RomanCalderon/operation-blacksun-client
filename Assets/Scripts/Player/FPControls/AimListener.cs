@@ -38,7 +38,7 @@ public class AimListener : MonoBehaviour
     private void OnEnable ()
     {
         AimController.OnAimUpdated += AimUpdate;
-        
+
         SetADSPointTarget ();
     }
 
@@ -47,23 +47,17 @@ public class AimListener : MonoBehaviour
         AimController.OnAimUpdated -= AimUpdate;
     }
 
-    // Start is called before the first frame update
-    void Start ()
-    {
-        SetADSPointTarget ();
-    }
-
     // Update is called once per frame
     void Update ()
     {
         // Position
         m_model.localPosition = Vector3.SmoothDamp ( m_model.localPosition, m_targetPosition, ref m_currVelocity, m_smoothTime * Time.deltaTime );
 
-        // debug
-        //if ( Input.GetKeyDown ( KeyCode.Mouse2 ) )
-        //{
-        //    SetADSPointTarget ();
-        //}
+        // DEBUG
+        if ( Input.GetMouseButtonDown ( ( int ) MouseButton.MiddleMouse ) )
+        {
+            RealignADSPoint ();
+        }
     }
 
     // TODO: Call this method when the active sight attachment changes
@@ -110,6 +104,8 @@ public class AimListener : MonoBehaviour
     {
         if ( aimState )
         {
+            RealignADSPoint ();
+
             // Rotation
             float angle = Vector3.Angle ( m_ADSPoint.up, transform.up );
             m_model.RotateAround ( m_ADSPoint.position, m_ADSPoint.forward, -angle );

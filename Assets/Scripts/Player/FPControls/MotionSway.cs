@@ -5,16 +5,27 @@ using UnityEngine;
 public class MotionSway : MonoBehaviour
 {
     [Header ( "Values" )]
-    public float SwayAmountX = 0.02f;
+    public float SwayAmountX = 0.007f;
     public float SwayAmountY = 0.02f;
-    public float MaxSwayAmount = 0.03f;
-    public float SwaySmooth = 3.0f;
-    [Space ( 10.0f )]
-    public float SmoothRotation = 2.0f;
-    public float TiltAngle = 25;
+    public float MaxSwayAmount = 0.02f;
+    public float SwaySmooth = 8f;
+    [Space]
+    public float SmoothRotation = 3f;
+    public float TiltAngle = 1.5f;
 
-    [Header ( "Private Variables" )]
     private Vector3 def;
+    private bool m_isAiming = false;
+
+
+    private void OnEnable ()
+    {
+        AimController.OnAimUpdated += AimUpdated;
+    }
+
+    private void OnDisable ()
+    {
+        AimController.OnAimUpdated -= AimUpdated;
+    }
 
     private void Start ()
     {
@@ -27,12 +38,26 @@ public class MotionSway : MonoBehaviour
         {
             UpdateSway ( Input.GetAxis ( "Mouse X" ), Input.GetAxis ( "Mouse Y" ) );
         }
+        else
+        {
+            UpdateSway ( 0f, 0f );
+        }
     }
 
     public void UpdateSway ( float x, float y )
     {
-        float factorX = -x * SwayAmountX;
-        float factorY = -y * SwayAmountY;
+        float factorX = -x;
+        float factorY = -y;
+        if ( m_isAiming )
+        {
+            factorX *= SwayAmountX / 3f;
+            factorY *= SwayAmountY / 3f;
+        }
+        else
+        {
+            factorX *= SwayAmountX;
+            factorY *= SwayAmountY;
+        }
 
         factorX = Mathf.Clamp ( factorX, -MaxSwayAmount, MaxSwayAmount );
         factorY = Mathf.Clamp ( factorY, -MaxSwayAmount, MaxSwayAmount );
@@ -44,5 +69,10 @@ public class MotionSway : MonoBehaviour
         float tiltAroundX = y * TiltAngle;
         Quaternion target = Quaternion.Euler ( tiltAroundX, tiltAroundZ, 0 );
         transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, Time.deltaTime * SmoothRotation );
+    }
+
+    private void AimUpdated ( bool state )
+    {
+        m_isAiming = state;
     }
 }
