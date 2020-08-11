@@ -100,6 +100,11 @@ public class ShootableObjectsManager : MonoBehaviour
         // Shootable object pool
         foreach ( ShootableObjectPool pool in m_shootableObjectPools )
         {
+            if ( pool.Prefab == null )
+            {
+                continue;
+            }
+
             Queue<GameObject> objectPool = new Queue<GameObject> ();
             for ( int i = 0; i < pool.Size; i++ )
             {
@@ -113,6 +118,11 @@ public class ShootableObjectsManager : MonoBehaviour
         // Hit object pool
         foreach ( HitObjectsPool pool in m_hitObjectPools )
         {
+            if ( pool.Prefab == null )
+            {
+                continue;
+            }
+
             Queue<GameObject> objectPool = new Queue<GameObject> ();
             for ( int i = 0; i < pool.Size; i++ )
             {

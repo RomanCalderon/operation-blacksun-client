@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 8749326376814206013}
   - component: {fileID: 8749326376814206015}
   - component: {fileID: 8749326376814206014}
+  - component: {fileID: 128809962924473681}
   m_Layer: 10
   m_Name: Camera
   m_TagString: Untagged
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
+  m_RequiresDepthTextureOption: 1
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
@@ -169,6 +170,22 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &128809962924473681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8749326376814206012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5636d372f01d24b4d85eb0ab4a09b445, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stereoRenderingMode: 0
+  normalSmoothing: 0
+  forwardDepthNormals: 0
+  debugMode: 0
 --- !u!1001 &8749326377014812081
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -134,7 +134,6 @@ public class ClientHandle : MonoBehaviour
 
     public static void SpawnHitObject ( Packet _packet )
     {
-        int _id = _packet.ReadInt ();
         int _hitType = _packet.ReadInt ();
         Vector3 _hitPosition = _packet.ReadVector3 ();
         Vector3 _hitNormal = _packet.ReadVector3 ();
