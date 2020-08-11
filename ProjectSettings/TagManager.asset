@@ -6,6 +6,19 @@ TagManager:
   tags:
   - SlotUI
   - ADSTarget
+  - Asphalt
+  - Bricks
+  - Concrete
+  - Glass
+  - Ground
+  - Metal
+  - Mud
+  - Plywood
+  - Rock
+  - Sand
+  - Tiles
+  - Water
+  - Wood
   layers:
   - Default
   - TransparentFX
