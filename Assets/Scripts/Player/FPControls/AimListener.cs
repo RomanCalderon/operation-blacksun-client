@@ -48,16 +48,24 @@ public class AimListener : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update ()
+    private void Update ()
     {
         // Position
         m_model.localPosition = Vector3.SmoothDamp ( m_model.localPosition, m_targetPosition, ref m_currVelocity, m_smoothTime * Time.deltaTime );
+    }
 
-        // DEBUG
-        if ( Input.GetMouseButtonDown ( ( int ) MouseButton.MiddleMouse ) )
+    private void FixedUpdate ()
+    {
+        if ( AimController.AimState )
         {
-            RealignADSPoint ();
+            Vector3 adsDiff = ( transform.localPosition + m_offset ) - m_ADSPoint.localPosition;
+            m_targetPosition = m_model.localPosition + adsDiff;
         }
+    }
+
+    public Vector3 GetAimVector ()
+    {
+        return m_ADSPoint.forward;
     }
 
     // TODO: Call this method when the active sight attachment changes
@@ -107,7 +115,7 @@ public class AimListener : MonoBehaviour
             RealignADSPoint ();
 
             // Rotation
-            float angle = Vector3.Angle ( m_ADSPoint.up, transform.up );
+            float angle = Vector3.Angle ( m_ADSPoint.up, m_model.transform.up );
             m_model.RotateAround ( m_ADSPoint.position, m_ADSPoint.forward, -angle );
 
             // Position

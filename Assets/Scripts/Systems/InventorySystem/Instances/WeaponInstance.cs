@@ -13,6 +13,7 @@ public class WeaponInstance : PlayerItemInstance
     public int BulletCount { get; private set; } = 0;
 
     private CameraController m_cameraController = null;
+    private AimListener m_aimListener = null;
 
     [Header ( "Audio" )]
     [SerializeField]
@@ -91,6 +92,7 @@ public class WeaponInstance : PlayerItemInstance
     void Start ()
     {
         m_cameraController = CameraController.Instance;
+        m_aimListener = GetComponent<AimListener> ();
     }
 
     // Update is called once per frame
@@ -148,12 +150,14 @@ public class WeaponInstance : PlayerItemInstance
 
     #endregion
 
+    #region Shooting
+
     /// <summary>
     /// Fires a single round in a specified direction.
     /// Invoked by WeaponsController.
     /// </summary>
     /// <param name="direction">The direction the weapon is fired.</param>
-    public void Shoot ( Vector3 position, Vector3 direction )
+    public void Shoot ()
     {
         if ( Magazine == null )
         {
@@ -181,6 +185,7 @@ public class WeaponInstance : PlayerItemInstance
             AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
             // Perform gunshot
+            Vector3 direction = m_aimListener.GetAimVector ();
             float damage = ( PlayerItem as Weapon ).BaseDamage;
             ClientSend.PlayerShoot ( direction, damage, m_normalGunshotClip, m_normalGunshotVolume, Constants.GUNSHOT_MIN_DISTANCE, Constants.GUNSHOT_MAX_DISTANCE );
             WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
@@ -197,6 +202,20 @@ public class WeaponInstance : PlayerItemInstance
         }
     }
 
+    private void CameraRecoil ()
+    {
+        // Camera recoil
+        float recoilStrength = WeaponsController.CalculateRecoilStrength ( ( PlayerItem as Weapon ).WeaponClass, ( PlayerItem as Weapon ).Caliber, out float aspect );
+        if ( Stock != null ) // Use Stock to reduce recoil
+        {
+            recoilStrength *= 1f - Stock.RecoilReductionModifier;
+        }
+        m_cameraController.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
+
+        // Camera shake
+        CameraShaker.Instance.ShakeOnce ( 0.1f, 6f, 0.01f, 0.16f );
+    }
+
     private void DryFire ()
     {
         if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
@@ -204,6 +223,8 @@ public class WeaponInstance : PlayerItemInstance
             AudioManager.PlaySound ( m_dryFireClip, m_mixerGroup, m_dryfireVolume, false );
         }
     }
+
+    #endregion
 
     #region Reloading
 
@@ -295,20 +316,6 @@ public class WeaponInstance : PlayerItemInstance
     }
 
     #endregion
-
-    private void CameraRecoil ()
-    {
-        // Camera recoil
-        float recoilStrength = WeaponsController.CalculateRecoilStrength ( ( PlayerItem as Weapon ).WeaponClass, ( PlayerItem as Weapon ).Caliber, out float aspect );
-        if ( Stock != null ) // Use Stock to reduce recoil
-        {
-            recoilStrength *= 1f - Stock.RecoilReductionModifier;
-        }
-        m_cameraController.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
-
-        // Camera shake
-        CameraShaker.Instance.ShakeOnce ( 0.1f, 6f, 0.01f, 0.16f );
-    }
 
     #region WeaponStateBehaviour Listeners
 

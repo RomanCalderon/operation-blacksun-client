@@ -105,14 +105,14 @@ public class WeaponsController : MonoBehaviour
             // Shooting
             if ( Input.GetKey ( KeyCode.Mouse0 ) )
             {
-                GetActiveWeapon ().Shoot ( m_cameraTransform.position, m_cameraTransform.forward );
+                GetActiveWeapon ().Shoot ();
             }
 
             // Aiming
             AimController.AimState = m_canAim && Input.GetKey ( KeyCode.Mouse1 );
 
             // Reloading
-            if ( Input.GetKeyDown ( KeyCode.R ) )
+            if ( Input.GetKeyDown ( KeyCode.R ) && !AimController.AimState )
             {
                 GetActiveWeapon ().Reload ();
             }
@@ -133,19 +133,19 @@ public class WeaponsController : MonoBehaviour
         switch ( weaponClass )
         {
             case Weapon.WeaponClasses.Rifle:
-                strength += 0.8f;
+                strength += 0.4f;
                 break;
             case Weapon.WeaponClasses.SMG:
-                strength += 1.0f;
+                strength += 0.6f;
                 break;
             case Weapon.WeaponClasses.Shotgun:
-                strength += 7.0f;
+                strength += 5.0f;
                 break;
             case Weapon.WeaponClasses.Pistol:
-                strength += 1.2f;
+                strength += 0.3f;
                 break;
             case Weapon.WeaponClasses.Sniper:
-                strength += 3.5f;
+                strength += 2.0f;
                 break;
             default:
                 break;
@@ -308,7 +308,8 @@ public class WeaponsController : MonoBehaviour
 
     private void UpdateIdleSpeed ( bool aimState )
     {
-        float idleSpeed = aimState ? 0.3f : 1f;
+        float idleSpeed = aimState ? 0f : 1f;
+        OnSetTrigger?.Invoke ( "ResetIdle" );
         OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
     }
 
