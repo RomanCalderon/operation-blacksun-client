@@ -144,7 +144,7 @@ MonoBehaviour:
   m_adsTransformAlignment: {fileID: 1104110420454683933}
   m_adsFollowTransform: {fileID: 3775350194032981909}
   m_model: {fileID: 592065366497971634}
-  m_smoothTime: 7
+  m_smoothTime: 8.5
 --- !u!114 &5015134670353747047
 MonoBehaviour:
   m_ObjectHideFlags: 0

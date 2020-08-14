@@ -132,7 +132,7 @@ public class WeaponInstance : PlayerItemInstance
     {
         if ( m_aimController != null &&  Sight != null )
         {
-            float aimSpeed = 10f / Mathf.Sqrt ( Sight.SightZoomStrength );
+            float aimSpeed = 10f / ( Mathf.Sqrt ( Sight.SightZoomStrength ) * 0.5f );
             float aimZoomAmount = 72f / Sight.PlayerZoomModifier;
             m_aimController.UpdateAimSpeed ( aimSpeed );
             m_aimController.UpdateAimFOV ( aimZoomAmount );
