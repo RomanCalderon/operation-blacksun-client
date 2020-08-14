@@ -15,4 +15,5 @@ MonoBehaviour:
   Id: c3
   Name: C3
   StackLimit: 32
+  Image: {fileID: 21300000, guid: f8965103f5b2dba40afe52082435d80c, type: 3}
   Caliber: 6

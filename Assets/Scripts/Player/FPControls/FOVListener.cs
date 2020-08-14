@@ -7,21 +7,25 @@ using UnityEngine;
 public class FOVListener : MonoBehaviour
 {
     private Camera m_camera = null;
-
-    [SerializeField]
     private float m_smoothDamp = 6f;
     private float m_originalFOV, m_aimFOV, m_targetFOV = 0f;
 
+    [SerializeField]
+    private float m_FOVMultiplier = 1.0f;
+
+
     private void OnEnable ()
     {
-        AimController.OnFOVUpdated += UpdateAimFOV;
-        AimController.OnAimUpdated += AimUpdated;
+        AimController.OnAimStateUpdated += SetTargetFOV;
+        AimController.OnAimSpeedUpdated += SetAimSpeed;
+        AimController.OnTargetFOVUpdated += SetAimFOV;
     }
 
     private void OnDisable ()
     {
-        AimController.OnFOVUpdated -= UpdateAimFOV;
-        AimController.OnAimUpdated -= AimUpdated;
+        AimController.OnAimStateUpdated -= SetTargetFOV;
+        AimController.OnAimSpeedUpdated -= SetAimSpeed;
+        AimController.OnTargetFOVUpdated -= SetAimFOV;
     }
 
     private void Awake ()
@@ -35,13 +39,18 @@ public class FOVListener : MonoBehaviour
         m_camera.fieldOfView = Mathf.Lerp ( m_camera.fieldOfView, m_targetFOV, Time.deltaTime * m_smoothDamp );
     }
 
-    private void UpdateAimFOV ( float fov )
+    private void SetAimSpeed ( float aimSpeed )
     {
-        m_aimFOV = fov;
+        m_smoothDamp = aimSpeed;
     }
 
-    private void AimUpdated ( bool state )
+    private void SetAimFOV ( float fov )
     {
-        m_targetFOV = state ? m_aimFOV : m_originalFOV;
+        m_aimFOV = fov * m_FOVMultiplier;
+    }
+
+    private void SetTargetFOV ( bool aimState )
+    {
+        m_targetFOV = aimState ? m_aimFOV : m_originalFOV;
     }
 }

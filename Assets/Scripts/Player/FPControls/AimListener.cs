@@ -37,14 +37,14 @@ public class AimListener : MonoBehaviour
 
     private void OnEnable ()
     {
-        AimController.OnAimUpdated += AimUpdate;
+        AimController.OnAimStateUpdated += AimUpdate;
 
         SetADSPointTarget ();
     }
 
     private void OnDisable ()
     {
-        AimController.OnAimUpdated -= AimUpdate;
+        AimController.OnAimStateUpdated -= AimUpdate;
     }
 
     // Update is called once per frame

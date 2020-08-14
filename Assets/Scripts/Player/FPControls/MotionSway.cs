@@ -19,12 +19,12 @@ public class MotionSway : MonoBehaviour
 
     private void OnEnable ()
     {
-        AimController.OnAimUpdated += AimUpdated;
+        AimController.OnAimStateUpdated += AimUpdated;
     }
 
     private void OnDisable ()
     {
-        AimController.OnAimUpdated -= AimUpdated;
+        AimController.OnAimStateUpdated -= AimUpdated;
     }
 
     private void Start ()

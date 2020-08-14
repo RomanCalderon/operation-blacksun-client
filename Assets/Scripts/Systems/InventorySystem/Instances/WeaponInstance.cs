@@ -4,15 +4,23 @@ using UnityEngine;
 using UnityEngine.Audio;
 using EZCameraShake;
 using InventorySystem.PlayerItems;
+using System.CodeDom;
 
 public class WeaponInstance : PlayerItemInstance
 {
+    public delegate void AimSpeedHandler ( float aimSpeed );
+    public static AimSpeedHandler OnUpdatedAimSpeed;
+    public delegate void AimZoomHandler ( float zoomAmount );
+    public static AimZoomHandler OnUpdatedAimZoomAmount;
+
     public Barrel Barrel { get; private set; } = null;
     public Magazine Magazine { get; private set; } = null;
+    public Sight Sight { get; private set; } = null;
     public Stock Stock { get; private set; } = null;
     public int BulletCount { get; private set; } = 0;
 
     private CameraController m_cameraController = null;
+    private AimController m_aimController = null;
     private AimListener m_aimListener = null;
 
     [Header ( "Audio" )]
@@ -76,6 +84,9 @@ public class WeaponInstance : PlayerItemInstance
         WeaponStateBehaviour.OnStateEntered += StartAudioClip;
         WeaponStateBehaviour.OnStateExited += StopAudioClip;
         WeaponStateBehaviour.OnStateEntered += CancelReloadAnimation;
+
+        // Update aim speed and zoom amount
+        UpdateAimController ();
     }
 
     private void OnDisable ()
@@ -95,6 +106,11 @@ public class WeaponInstance : PlayerItemInstance
         m_aimListener = GetComponent<AimListener> ();
     }
 
+    public void Initialize ( AimController aimController )
+    {
+        m_aimController = aimController;
+    }
+
     // Update is called once per frame
     void Update ()
     {
@@ -105,6 +121,17 @@ public class WeaponInstance : PlayerItemInstance
         else
         {
             m_fireCooldown = 0f;
+        }
+    }
+
+    private void UpdateAimController ()
+    {
+        if ( Sight != null )
+        {
+            float aimSpeed = 10f / Mathf.Sqrt ( Sight.SightZoomStrength );
+            float aimZoomAmount = 72f / Sight.PlayerZoomModifier;
+            m_aimController.UpdateAimSpeed ( aimSpeed );
+            m_aimController.UpdateAimFOV ( aimZoomAmount );
         }
     }
 
@@ -137,6 +164,16 @@ public class WeaponInstance : PlayerItemInstance
             int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
             BulletCount = Mathf.Min ( Magazine.AmmoCapacity, inventoryAmmoCount );
         }
+    }
+
+    public void EquipAttachment ( Sight sight )
+    {
+        Sight = sight;
+
+        // TODO: Update AttachmentController
+
+        // Update aim speed and zoom amount
+        UpdateAimController ();
     }
 
     /// <summary>
@@ -213,7 +250,7 @@ public class WeaponInstance : PlayerItemInstance
         m_cameraController.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
 
         // Camera shake
-        CameraShaker.Instance.ShakeOnce ( 0.1f, 6f, 0.01f, 0.16f );
+        CameraShaker.Instance.ShakeOnce ( recoilStrength * 0.045f, 4f, 0.01f, 0.16f );
     }
 
     private void DryFire ()

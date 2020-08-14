@@ -15,5 +15,6 @@ MonoBehaviour:
   Id: 8-rnd-c3
   Name: 8 Rnd C3
   StackLimit: 1
+  Image: {fileID: 21300000, guid: 8f1ad122606dd054ba2ce133971209cc, type: 3}
   AmmoCapacity: 8
   CompatibleAmmoCaliber: 6

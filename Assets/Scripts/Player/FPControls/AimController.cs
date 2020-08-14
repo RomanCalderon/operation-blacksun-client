@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class AimController : MonoBehaviour
 {
-    public delegate void AimHandler ( bool state );
-    public static AimHandler OnAimUpdated;
+    public delegate void AimStateHandler ( bool state );
+    public static AimStateHandler OnAimStateUpdated;
+    public delegate void AimSpeedHandler ( float aimSpeed );
+    public static AimSpeedHandler OnAimSpeedUpdated;
     public delegate void FOVHandler ( float fov );
-    public static FOVHandler OnFOVUpdated;
+    public static FOVHandler OnTargetFOVUpdated;
 
     private static bool m_aimState = false;
     public static bool AimState
@@ -20,13 +22,18 @@ public class AimController : MonoBehaviour
         {
             if ( value != m_aimState )
             {
-                OnAimUpdated?.Invoke ( m_aimState = value );
+                OnAimStateUpdated?.Invoke ( m_aimState = value );
             }
         }
     }
 
-    public void UpdateFOVParameters ( float aimFOV )
+    public void UpdateAimSpeed ( float aimSpeed )
     {
-        OnFOVUpdated?.Invoke ( aimFOV );
+        OnAimSpeedUpdated?.Invoke ( aimSpeed );
+    }
+
+    public void UpdateAimFOV ( float aimFOV )
+    {
+        OnTargetFOVUpdated?.Invoke ( aimFOV );
     }
 }

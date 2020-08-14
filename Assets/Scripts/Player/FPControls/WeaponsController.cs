@@ -48,6 +48,8 @@ public class WeaponsController : MonoBehaviour
 
     private void OnEnable ()
     {
+        AimController.OnAimStateUpdated += UpdateIdleSpeed;
+
         InventoryManager.OnSlotUpdated += EquipWeapon;
         InventoryManager.OnSlotUpdated += EquipAttachment;
 
@@ -55,12 +57,12 @@ public class WeaponsController : MonoBehaviour
         WeaponStateBehaviour.OnStateEntered += EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated += UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited += ExitedAnimatorState;
-
-        AimController.OnAimUpdated += UpdateIdleSpeed;
     }
 
     private void OnDisable ()
     {
+        AimController.OnAimStateUpdated -= UpdateIdleSpeed;
+
         InventoryManager.OnSlotUpdated -= EquipWeapon;
         InventoryManager.OnSlotUpdated -= EquipAttachment;
 
@@ -68,8 +70,6 @@ public class WeaponsController : MonoBehaviour
         WeaponStateBehaviour.OnStateEntered -= EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated -= UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited -= ExitedAnimatorState;
-
-        AimController.OnAimUpdated -= UpdateIdleSpeed;
     }
 
     private void Awake ()
@@ -82,9 +82,6 @@ public class WeaponsController : MonoBehaviour
     {
         m_primaryWeaponHolder.SetActive ( true );
         m_secondaryWeaponHolder.SetActive ( false );
-
-        // FIXME: This needs to update based on equipped sight parameters
-        m_aimController.UpdateFOVParameters ( 30f );
     }
 
     // Update is called once per frame
@@ -112,12 +109,11 @@ public class WeaponsController : MonoBehaviour
             AimController.AimState = m_canAim && Input.GetKey ( KeyCode.Mouse1 );
 
             // Reloading
-            if ( Input.GetKeyDown ( KeyCode.R ) && !AimController.AimState )
+            if ( Input.GetKeyDown ( KeyCode.R ) )
             {
                 GetActiveWeapon ().Reload ();
             }
         }
-        // TODO: send input to server and handle response somewhere here
     }
 
     /// <summary>
@@ -309,7 +305,10 @@ public class WeaponsController : MonoBehaviour
     private void UpdateIdleSpeed ( bool aimState )
     {
         float idleSpeed = aimState ? 0f : 1f;
-        OnSetTrigger?.Invoke ( "ResetIdle" );
+        if ( aimState )
+        {
+            OnSetTrigger?.Invoke ( "ResetIdle" );
+        }
         OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
     }
 
@@ -329,7 +328,6 @@ public class WeaponsController : MonoBehaviour
             return;
         }
 
-
         if ( slotId == "primary-weapon" )
         {
             // Get the Slot from the Inventory
@@ -346,6 +344,7 @@ public class WeaponsController : MonoBehaviour
                 ClearWeapon ( Weapons.Primary );
                 m_primaryEquipped = weapon;
                 m_primaryEquipped.SetActive ( true );
+                m_primaryEquipped.Initialize ( m_aimController );
             }
             else
             {
@@ -368,6 +367,7 @@ public class WeaponsController : MonoBehaviour
                 ClearWeapon ( Weapons.Secondary );
                 m_secondaryEquipped = weapon;
                 m_secondaryEquipped.SetActive ( true );
+                m_secondaryEquipped.Initialize ( m_aimController );
             }
             else
             {
@@ -409,6 +409,10 @@ public class WeaponsController : MonoBehaviour
             {
                 m_primaryEquipped.EquipAttachment ( ( Magazine ) slot.PlayerItem );
             }
+            else if ( slotId.Contains ( "sight" ) )
+            {
+                m_primaryEquipped.EquipAttachment ( ( Sight ) slot.PlayerItem );
+            }
             else if ( slotId.Contains ( "stock" ) )
             {
                 m_primaryEquipped.EquipAttachment ( ( Stock ) slot.PlayerItem );
@@ -432,6 +436,10 @@ public class WeaponsController : MonoBehaviour
             else if ( slotId.Contains ( "magazine" ) )
             {
                 m_secondaryEquipped.EquipAttachment ( ( Magazine ) slot.PlayerItem );
+            }
+            else if ( slotId.Contains ( "sight" ) )
+            {
+                m_secondaryEquipped.EquipAttachment ( ( Sight ) slot.PlayerItem );
             }
             else if ( slotId.Contains ( "stock" ) )
             {

@@ -15,5 +15,6 @@ MonoBehaviour:
   Id: acog
   Name: ACOG
   StackLimit: 1
+  Image: {fileID: 0}
   SightZoomStrength: 3
   PlayerZoomModifier: 1.5
