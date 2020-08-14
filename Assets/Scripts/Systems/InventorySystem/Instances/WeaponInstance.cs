@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using EZCameraShake;
 using InventorySystem.PlayerItems;
-using System.CodeDom;
+
 
 public class WeaponInstance : PlayerItemInstance
 {
@@ -12,15 +12,19 @@ public class WeaponInstance : PlayerItemInstance
     public static AimSpeedHandler OnUpdatedAimSpeed;
     public delegate void AimZoomHandler ( float zoomAmount );
     public static AimZoomHandler OnUpdatedAimZoomAmount;
-
+    
     public Barrel Barrel { get; private set; } = null;
     public Magazine Magazine { get; private set; } = null;
     public Sight Sight { get; private set; } = null;
     public Stock Stock { get; private set; } = null;
+    [SerializeField]
+    private AttachmentsController m_attachmentsController = null;
+
     public int BulletCount { get; private set; } = 0;
 
     private CameraController m_cameraController = null;
     private AimController m_aimController = null;
+    [SerializeField]
     private AimListener m_aimListener = null;
 
     [Header ( "Audio" )]
@@ -84,7 +88,7 @@ public class WeaponInstance : PlayerItemInstance
         WeaponStateBehaviour.OnStateEntered += StartAudioClip;
         WeaponStateBehaviour.OnStateExited += StopAudioClip;
         WeaponStateBehaviour.OnStateEntered += CancelReloadAnimation;
-
+        
         // Update aim speed and zoom amount
         UpdateAimController ();
     }
@@ -103,12 +107,12 @@ public class WeaponInstance : PlayerItemInstance
     void Start ()
     {
         m_cameraController = CameraController.Instance;
-        m_aimListener = GetComponent<AimListener> ();
     }
 
     public void Initialize ( AimController aimController )
     {
         m_aimController = aimController;
+        UpdateAimController ();
     }
 
     // Update is called once per frame
@@ -126,7 +130,7 @@ public class WeaponInstance : PlayerItemInstance
 
     private void UpdateAimController ()
     {
-        if ( Sight != null )
+        if ( m_aimController != null &&  Sight != null )
         {
             float aimSpeed = 10f / Mathf.Sqrt ( Sight.SightZoomStrength );
             float aimZoomAmount = 72f / Sight.PlayerZoomModifier;
@@ -144,6 +148,9 @@ public class WeaponInstance : PlayerItemInstance
     public void EquipAttachment ( Barrel barrel )
     {
         Barrel = barrel;
+
+        // Update attachment instance
+        m_attachmentsController.UpdateAttachment ( Barrel );
     }
 
     /// <summary>
@@ -153,6 +160,9 @@ public class WeaponInstance : PlayerItemInstance
     public void EquipAttachment ( Magazine magazine )
     {
         Magazine = magazine;
+
+        // Update attachment instance
+        m_attachmentsController.UpdateAttachment ( Magazine );
 
         if ( Magazine == null )
         {
@@ -170,7 +180,11 @@ public class WeaponInstance : PlayerItemInstance
     {
         Sight = sight;
 
-        // TODO: Update AttachmentController
+        // Update attachment instance
+        m_attachmentsController.UpdateAttachment ( Sight );
+
+        // Update ADS point
+        m_aimListener.UpdateADSPointTarget ();
 
         // Update aim speed and zoom amount
         UpdateAimController ();
@@ -183,6 +197,9 @@ public class WeaponInstance : PlayerItemInstance
     public void EquipAttachment ( Stock stock )
     {
         Stock = stock;
+
+        // Update attachment instance
+        m_attachmentsController.UpdateAttachment ( Stock );
     }
 
     #endregion

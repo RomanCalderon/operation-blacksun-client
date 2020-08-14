@@ -141,6 +141,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ADSPoint: {fileID: 3446016039489569049}
   m_ADSTargetTag: ADSTarget
+  m_adsTransformAlignment: {fileID: 1104110420454683933}
+  m_adsFollowTransform: {fileID: 3775350194032981909}
   m_model: {fileID: 592065366497971634}
   m_smoothTime: 7
 --- !u!114 &5015134670353747047
@@ -156,6 +158,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerItem: {fileID: 11400000, guid: 61109460dffeeaf469dddce79743a4bd, type: 2}
+  m_attachmentsController: {fileID: 1085850511057566399}
+  m_aimListener: {fileID: 7697869007835537660}
   m_mixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
     type: 2}
   m_normalGunshotClip: gunshot-smg45-standard
@@ -782,6 +786,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8210124915266786324}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1085850511057566399 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9142745218134355627, guid: c549e94f2b8255347adc5e871ad1ccb4,
+    type: 3}
+  m_PrefabInstance: {fileID: 8210124915266786324}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ecafc833f75554c9a8c4264ba86627, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &208776009350622073 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8292676882373558125, guid: c549e94f2b8255347adc5e871ad1ccb4,

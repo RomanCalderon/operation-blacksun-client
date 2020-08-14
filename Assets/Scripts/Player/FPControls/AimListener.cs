@@ -11,7 +11,9 @@ public class AimListener : MonoBehaviour
     [SerializeField]
     private string m_ADSTargetTag = "ADSTarget";
     private Transform m_currentADSTarget = null;
+    [SerializeField]
     private TransformAlignmentUtil m_adsTransformAlignment = null;
+    [SerializeField]
     private FollowTransform m_adsFollowTransform = null;
 
     [SerializeField]
@@ -27,8 +29,6 @@ public class AimListener : MonoBehaviour
     private void Awake ()
     {
         Debug.Assert ( m_ADSPoint != null, "Please assign an ADS Point." );
-        m_adsFollowTransform = m_ADSPoint.GetComponent<FollowTransform> ();
-        m_adsTransformAlignment = m_ADSPoint.GetComponent<TransformAlignmentUtil> ();
 
         m_originalPosition = m_model.localPosition;
         m_originalRotation = m_model.localRotation;
@@ -39,7 +39,7 @@ public class AimListener : MonoBehaviour
     {
         AimController.OnAimStateUpdated += AimUpdate;
 
-        SetADSPointTarget ();
+        UpdateADSPointTarget ();
     }
 
     private void OnDisable ()
@@ -68,21 +68,27 @@ public class AimListener : MonoBehaviour
         return m_ADSPoint.forward;
     }
 
-    // TODO: Call this method when the active sight attachment changes
-    private void SetADSPointTarget ()
+    public void UpdateADSPointTarget ()
     {
-        Transform target = GameObject.FindWithTag ( m_ADSTargetTag ).transform;
+        GameObject target = GameObject.FindWithTag ( m_ADSTargetTag );
+
+        // TODO: Instead, the weapons' iron sights should be
+        // the default stand-in when there is no sight attachment
+        if ( target == null )
+        {
+            return;
+        }
 
         if ( m_currentADSTarget == target )
         {
             return;
         }
-        m_currentADSTarget = target;
+        m_currentADSTarget = target.transform;
 
         if ( target != null )
         {
-            m_adsFollowTransform.SetTarget ( target );
-            m_adsTransformAlignment.SetTarget ( target );
+            m_adsFollowTransform.SetTarget ( target.transform );
+            m_adsTransformAlignment.SetTarget ( target.transform );
             RealignADSPoint ();
             AimUpdate ( AimController.AimState );
         }

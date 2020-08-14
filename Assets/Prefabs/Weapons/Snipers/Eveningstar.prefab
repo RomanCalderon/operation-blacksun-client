@@ -63,6 +63,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ADSPoint: {fileID: 5465936641632005110}
   m_ADSTargetTag: ADSTarget
+  m_adsTransformAlignment: {fileID: 8263415487807364533}
+  m_adsFollowTransform: {fileID: 4592822442774382401}
   m_model: {fileID: 7712267026232218744}
   m_smoothTime: 8
 --- !u!114 &6341285278479184828
@@ -78,6 +80,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerItem: {fileID: 11400000, guid: 52584332347cc044e81d48363b8b88e3, type: 2}
+  m_attachmentsController: {fileID: 4953837433228433101}
+  m_aimListener: {fileID: 1518848834255431007}
   m_mixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
     type: 2}
   m_normalGunshotClip: gunshot-eveningstar-standard
@@ -886,3 +890,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4205832859452291174}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4953837433228433101 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9142745218134355627, guid: c549e94f2b8255347adc5e871ad1ccb4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4205832859452291174}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ecafc833f75554c9a8c4264ba86627, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
