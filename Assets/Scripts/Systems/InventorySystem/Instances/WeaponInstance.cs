@@ -138,7 +138,6 @@ public class WeaponInstance : PlayerItemInstance
             m_aimController.UpdateAimSpeed ( aimSpeed );
             m_aimController.UpdateAimFOV ( aimZoomAmount );
         }
-        //m_aimListener.RealignADSPoint ();
     }
 
     #region Attachment Equipping/Unequipping

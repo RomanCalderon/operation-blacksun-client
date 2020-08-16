@@ -29,12 +29,12 @@ public class WeaponsController : MonoBehaviour
 
     private int m_activeHotbarIndex = 0;
 
-    private Weapons m_activeWeaponType = Weapons.Primary;
+    public Weapons ActiveWeaponSlot { get; private set; } = Weapons.Primary;
     public WeaponInstance ActiveWeapon
     {
         get
         {
-            return m_activeWeaponType == Weapons.Primary ? m_primaryEquipped : m_secondaryEquipped;
+            return ActiveWeaponSlot == Weapons.Primary ? m_primaryEquipped : m_secondaryEquipped;
         }
     }
 
@@ -99,7 +99,7 @@ public class WeaponsController : MonoBehaviour
         if ( !InventoryManager.Instance.IsDisplayed )
         {
             // Weapon switching - Primary
-            if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && m_activeWeaponType != Weapons.Primary )
+            if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && ActiveWeaponSlot != Weapons.Primary )
             {
                 if ( m_activeHotbarIndex == 1 ) // Switching from secondary weapon
                 {
@@ -114,7 +114,7 @@ public class WeaponsController : MonoBehaviour
                 }
             }
             // Weapon switching - Secondary
-            if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && m_activeWeaponType != Weapons.Secondary )
+            if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && ActiveWeaponSlot != Weapons.Secondary )
             {
                 if ( m_activeHotbarIndex == 0 ) // Switching from primary weapon
                 {
@@ -311,7 +311,7 @@ public class WeaponsController : MonoBehaviour
 
     private IEnumerator SwitchWeaponsDelay ( float delay )
     {
-        Weapons activeWeapon = m_activeWeaponType;
+        Weapons activeWeapon = ActiveWeaponSlot;
         yield return new WaitForSeconds ( delay );
 
         ActivateWeapon ( activeWeapon == Weapons.Primary ? Weapons.Secondary : Weapons.Primary );
@@ -321,7 +321,7 @@ public class WeaponsController : MonoBehaviour
     {
         DisableWeapons ();
 
-        m_activeWeaponType = weapon;
+        ActiveWeaponSlot = weapon;
         m_activeHotbarIndex = ( int ) weapon;
 
         if ( weapon == Weapons.Primary )
@@ -423,6 +423,12 @@ public class WeaponsController : MonoBehaviour
             {
                 Debug.LogWarning ( $"Secondary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exist in the list." );
             }
+        }
+
+        // Update AimController based on active weapon
+        if ( ActiveWeapon != null )
+        {
+            ActiveWeapon.UpdateAimController ();
         }
     }
 
