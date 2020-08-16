@@ -27,9 +27,18 @@ public class WeaponsController : MonoBehaviour
     private AimController m_aimController = null;
     private bool m_canAim = false;
 
-    [Header ( "Weapons" )]
-    private Weapons m_activeWeaponType = Weapons.Primary;
+    private int m_activeHotbarIndex = 0;
 
+    private Weapons m_activeWeaponType = Weapons.Primary;
+    public WeaponInstance ActiveWeapon
+    {
+        get
+        {
+            return m_activeWeaponType == Weapons.Primary ? m_primaryEquipped : m_secondaryEquipped;
+        }
+    }
+
+    [Space]
     [Header ( "Primary" ), SerializeField]
     private GameObject m_primaryWeaponHolder = null;
     [SerializeField]
@@ -92,17 +101,41 @@ public class WeaponsController : MonoBehaviour
             // Weapon switching - Primary
             if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && m_activeWeaponType != Weapons.Primary )
             {
-                OnSetTrigger?.Invoke ( "Holster" );
+                if ( m_activeHotbarIndex == 1 ) // Switching from secondary weapon
+                {
+                    if ( m_secondaryEquipped != null ) // Play weapon holster animation to switch
+                    {
+                        OnSetTrigger?.Invoke ( "Holster" );
+                    }
+                    else
+                    {
+                        ActivateWeapon ( Weapons.Primary );
+                    }
+                }
             }
             // Weapon switching - Secondary
             if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && m_activeWeaponType != Weapons.Secondary )
             {
-                OnSetTrigger?.Invoke ( "Holster" );
+                if ( m_activeHotbarIndex == 0 ) // Switching from primary weapon
+                {
+                    if ( m_primaryEquipped != null ) // Play weapon holster animation to switch
+                    {
+                        OnSetTrigger?.Invoke ( "Holster" );
+                    }
+                    else
+                    {
+                        ActivateWeapon ( Weapons.Secondary );
+                    }
+                }
             }
+
             // Shooting
             if ( Input.GetKey ( KeyCode.Mouse0 ) )
             {
-                GetActiveWeapon ().Shoot ();
+                if ( ActiveWeapon != null )
+                {
+                    ActiveWeapon.Shoot ();
+                }
             }
 
             // Aiming
@@ -111,7 +144,10 @@ public class WeaponsController : MonoBehaviour
             // Reloading
             if ( Input.GetKeyDown ( KeyCode.R ) )
             {
-                GetActiveWeapon ().Reload ();
+                if ( ActiveWeapon != null )
+                {
+                    ActiveWeapon.Reload ();
+                }
             }
         }
     }
@@ -259,11 +295,6 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
-    private WeaponInstance GetActiveWeapon ()
-    {
-        return m_activeWeaponType == Weapons.Primary ? m_primaryEquipped : m_secondaryEquipped;
-    }
-
     #region Weapon switching
 
     private void SwitchWeapons ( AnimatorStateInfo stateInfo, int layerIndex )
@@ -280,20 +311,29 @@ public class WeaponsController : MonoBehaviour
 
     private IEnumerator SwitchWeaponsDelay ( float delay )
     {
+        Weapons activeWeapon = m_activeWeaponType;
         yield return new WaitForSeconds ( delay );
 
+        ActivateWeapon ( activeWeapon == Weapons.Primary ? Weapons.Secondary : Weapons.Primary );
+    }
+
+    private void ActivateWeapon ( Weapons weapon )
+    {
         DisableWeapons ();
-        if ( m_activeWeaponType == Weapons.Primary )
-        {
-            m_secondaryWeaponHolder.SetActive ( true );
-            m_activeWeaponType = Weapons.Secondary;
-        }
-        else
+
+        m_activeWeaponType = weapon;
+        m_activeHotbarIndex = ( int ) weapon;
+
+        if ( weapon == Weapons.Primary )
         {
             m_primaryWeaponHolder.SetActive ( true );
-            m_activeWeaponType = Weapons.Primary;
+        }
+        else if ( weapon == Weapons.Secondary )
+        {
+            m_secondaryWeaponHolder.SetActive ( true );
         }
     }
+
     private void DisableWeapons ()
     {
         m_primaryWeaponHolder.SetActive ( false );
@@ -337,6 +377,11 @@ public class WeaponsController : MonoBehaviour
                 Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
                 return;
             }
+            if ( slot.PlayerItem == null ) // No weapon
+            {
+                ClearWeapon ( Weapons.Primary );
+                return;
+            }
 
             WeaponInstance weapon = m_primaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
             if ( weapon != null )
@@ -358,6 +403,11 @@ public class WeaponsController : MonoBehaviour
             if ( slot == null )
             {
                 Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
+                return;
+            }
+            if ( slot.PlayerItem == null ) // No weapon
+            {
+                ClearWeapon ( Weapons.Secondary );
                 return;
             }
 
@@ -399,6 +449,10 @@ public class WeaponsController : MonoBehaviour
                 Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
                 return;
             }
+            if ( m_primaryEquipped == null )
+            {
+                return;
+            }
 
             // Equip the attachment
             if ( slotId.Contains ( "barrel" ) )
@@ -425,6 +479,10 @@ public class WeaponsController : MonoBehaviour
             if ( slot == null )
             {
                 Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
+                return;
+            }
+            if ( m_secondaryEquipped == null )
+            {
                 return;
             }
 

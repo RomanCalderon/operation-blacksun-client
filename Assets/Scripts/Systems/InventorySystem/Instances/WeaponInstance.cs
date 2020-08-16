@@ -12,7 +12,7 @@ public class WeaponInstance : PlayerItemInstance
     public static AimSpeedHandler OnUpdatedAimSpeed;
     public delegate void AimZoomHandler ( float zoomAmount );
     public static AimZoomHandler OnUpdatedAimZoomAmount;
-    
+
     public Barrel Barrel { get; private set; } = null;
     public Magazine Magazine { get; private set; } = null;
     public Sight Sight { get; private set; } = null;
@@ -88,7 +88,7 @@ public class WeaponInstance : PlayerItemInstance
         WeaponStateBehaviour.OnStateEntered += StartAudioClip;
         WeaponStateBehaviour.OnStateExited += StopAudioClip;
         WeaponStateBehaviour.OnStateEntered += CancelReloadAnimation;
-        
+
         // Update aim speed and zoom amount
         UpdateAimController ();
     }
@@ -112,6 +112,7 @@ public class WeaponInstance : PlayerItemInstance
     public void Initialize ( AimController aimController )
     {
         m_aimController = aimController;
+        UpdateAttachments ();
         UpdateAimController ();
     }
 
@@ -128,18 +129,27 @@ public class WeaponInstance : PlayerItemInstance
         }
     }
 
-    private void UpdateAimController ()
+    public void UpdateAimController ()
     {
-        if ( m_aimController != null &&  Sight != null )
+        if ( m_aimController != null && Sight != null )
         {
             float aimSpeed = 10f / ( Mathf.Sqrt ( Sight.SightZoomStrength ) * 0.5f );
             float aimZoomAmount = 72f / Sight.PlayerZoomModifier;
             m_aimController.UpdateAimSpeed ( aimSpeed );
             m_aimController.UpdateAimFOV ( aimZoomAmount );
         }
+        //m_aimListener.RealignADSPoint ();
     }
 
     #region Attachment Equipping/Unequipping
+
+    public void UpdateAttachments ()
+    {
+        m_attachmentsController.UpdateAttachment ( Barrel );
+        m_attachmentsController.UpdateAttachment ( Magazine );
+        m_attachmentsController.UpdateAttachment ( Sight );
+        m_attachmentsController.UpdateAttachment ( Stock );
+    }
 
     /// <summary>
     /// Equips a Barrel to this WeaponInstance.
@@ -179,6 +189,7 @@ public class WeaponInstance : PlayerItemInstance
     public void EquipAttachment ( Sight sight )
     {
         Sight = sight;
+        Debug.Log ($"Weapon [{PlayerItem}] - Sight equipped [{Sight}]");
 
         // Update attachment instance
         m_attachmentsController.UpdateAttachment ( Sight );

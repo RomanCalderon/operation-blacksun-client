@@ -101,7 +101,7 @@ public class AimListener : MonoBehaviour
     /// <summary>
     /// Realigns the ADS-Point to its currently-assigned ADS-Target.
     /// </summary>
-    private void RealignADSPoint ()
+    public void RealignADSPoint ()
     {
         if ( m_ADSPoint == null )
         {
@@ -112,6 +112,7 @@ public class AimListener : MonoBehaviour
         m_adsTransformAlignment.AlignPosition ();
         m_adsTransformAlignment.AlignRotation ();
         m_adsFollowTransform.enabled = true;
+        m_offset.z = Vector3.Distance ( m_ADSPoint.position, transform.position );
     }
 
     private void AimUpdate ( bool aimState )
