@@ -68,6 +68,9 @@ public class InventoryManager : MonoBehaviour
                 // Toggle display mode
                 IsDisplayed = !IsDisplayed;
 
+                // Set CanAim based on display
+                AimController.CanAim = !IsDisplayed;
+
                 // Show/hide inventory
                 m_inventoryView.SetActive ( IsDisplayed );
 

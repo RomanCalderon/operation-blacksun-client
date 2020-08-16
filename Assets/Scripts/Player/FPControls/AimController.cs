@@ -11,7 +11,23 @@ public class AimController : MonoBehaviour
     public delegate void FOVHandler ( float fov );
     public static FOVHandler OnTargetFOVUpdated;
 
-    private static bool m_aimState = false;
+    public static bool CanAim
+    {
+        get
+        {
+            return m_canAim;
+        }
+        set
+        {
+            if ( value == false && m_aimState == true )
+            {
+                AimState = false;
+            }
+            m_canAim = value;
+        }
+    }
+    private static bool m_canAim = true;
+
     public static bool AimState
     {
         get
@@ -20,12 +36,13 @@ public class AimController : MonoBehaviour
         }
         set
         {
-            if ( value != m_aimState )
+            if ( value != m_aimState && CanAim )
             {
                 OnAimStateUpdated?.Invoke ( m_aimState = value );
             }
         }
     }
+    private static bool m_aimState = false;
 
     public void UpdateAimSpeed ( float aimSpeed )
     {

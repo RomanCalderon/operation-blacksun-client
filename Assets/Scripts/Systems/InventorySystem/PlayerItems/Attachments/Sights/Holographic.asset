@@ -15,5 +15,6 @@ MonoBehaviour:
   Id: holographic
   Name: Holographic
   StackLimit: 1
+  Image: {fileID: 0}
   SightZoomStrength: 1
-  PlayerZoomModifier: 1.5
+  PlayerZoomModifier: 1.25

@@ -25,7 +25,6 @@ public class WeaponsController : MonoBehaviour
     public static WeaponSwitchHandler OnSwitchWeapon;
 
     private AimController m_aimController = null;
-    private bool m_canAim = false;
 
     private int m_activeHotbarIndex = 0;
 
@@ -139,7 +138,7 @@ public class WeaponsController : MonoBehaviour
             }
 
             // Aiming
-            AimController.AimState = m_canAim && Input.GetKey ( KeyCode.Mouse1 );
+            AimController.AimState = AimController.CanAim && Input.GetKey ( KeyCode.Mouse1 );
 
             // Reloading
             if ( Input.GetKeyDown ( KeyCode.R ) )
@@ -227,23 +226,23 @@ public class WeaponsController : MonoBehaviour
     {
         if ( stateInfo.IsName ( "Shoot" ) && !AimController.AimState )
         {
-            m_canAim = false;
+            AimController.CanAim = false;
         }
         if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
         {
-            m_canAim = false;
+            AimController.CanAim = false;
         }
         if ( stateInfo.IsName ( "ReloadPartial" ) )
         {
-            m_canAim = false;
+            AimController.CanAim = false;
         }
         if ( stateInfo.IsName ( "ReloadFull" ) )
         {
-            m_canAim = false;
+            AimController.CanAim = false;
         }
         if ( stateInfo.IsName ( "Holster" ) )
         {
-            m_canAim = false;
+            AimController.CanAim = false;
         }
     }
 
@@ -256,11 +255,11 @@ public class WeaponsController : MonoBehaviour
     {
         if ( stateInfo.IsName ( "Shoot" ) && !AimController.AimState )
         {
-            m_canAim = false;
+            AimController.CanAim = false;
         }
         if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
         {
-            m_canAim = false;
+            AimController.CanAim = false;
         }
     }
 
@@ -273,23 +272,23 @@ public class WeaponsController : MonoBehaviour
     {
         if ( stateInfo.IsName ( "Draw" ) )
         {
-            m_canAim = true;
+            AimController.CanAim = true;
         }
         if ( stateInfo.IsName ( "Shoot" ) )
         {
-            m_canAim = true;
+            AimController.CanAim = true;
         }
         if ( stateInfo.IsName ( "BoltCharge" ) )
         {
-            m_canAim = true;
+            AimController.CanAim = true;
         }
         if ( stateInfo.IsName ( "ReloadPartial" ) )
         {
-            m_canAim = true;
+            AimController.CanAim = true;
         }
         if ( stateInfo.IsName ( "ReloadFull" ) )
         {
-            m_canAim = true;
+            AimController.CanAim = true;
         }
     }
 

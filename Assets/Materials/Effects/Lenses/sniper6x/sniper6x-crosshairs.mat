@@ -81,7 +81,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
-    - _TexScale: 115
+    - _TexScale: 112
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
