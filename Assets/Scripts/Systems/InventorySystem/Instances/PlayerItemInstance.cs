@@ -15,19 +15,6 @@ public class PlayerItemInstance : MonoBehaviour
     [SerializeField]
     protected PlayerItem m_playerItem = null;
 
-
-    // Start is called before the first frame update
-    void Start ()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update ()
-    {
-
-    }
-
     public void SetActive ( bool value )
     {
         gameObject.SetActive ( value );

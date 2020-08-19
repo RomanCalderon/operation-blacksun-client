@@ -27,11 +27,6 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     [SerializeField]
     private Text m_contentStackSizeText = null;
 
-    private void Awake ()
-    {
-        // Set the default colors
-        m_slotImage.color = m_normalColor = m_vacantColor;
-    }
 
     void OnEnable ()
     {
@@ -60,7 +55,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         // Update slot ui
         if ( slot.IsEmpty () )
         {
-            m_slotImage.color = m_normalColor = m_vacantColor;
+            SetSlotColor ( m_vacantColor );
             m_contentImage.enabled = false;
             m_contentImage.sprite = null;
             m_contentNameText.text = string.Empty;
@@ -68,7 +63,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         }
         else
         {
-            m_slotImage.color = m_normalColor = m_occupiedColor;
+            SetSlotColor ( m_occupiedColor );
             m_contentImage.enabled = true;
             m_contentImage.sprite = slot.PlayerItem.Image;
             m_contentNameText.text = slot.PlayerItem.Name;
@@ -169,5 +164,10 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             InventoryManager.Instance.SlotOnDrop ( Id, eventData );
         }
+    }
+
+    private void SetSlotColor ( Color newColor )
+    {
+        m_slotImage.color = m_normalColor = newColor;
     }
 }
