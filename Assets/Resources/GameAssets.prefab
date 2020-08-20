@@ -60,3 +60,11 @@ MonoBehaviour:
     AudioClip: {fileID: 8300000, guid: 181313b81ca7d084fb6a2b584693c356, type: 3}
     MixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
       type: 2}
+  - Name: gunshot-zero1-standard
+    AudioClip: {fileID: 8300000, guid: db9282dbb9cf8e248b9cad9e2940a763, type: 3}
+    MixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
+      type: 2}
+  - Name: gunshot-zero1-suppressed
+    AudioClip: {fileID: 8300000, guid: f932708169ca4cf40b6eaed7e08a69ba, type: 3}
+    MixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
+      type: 2}
