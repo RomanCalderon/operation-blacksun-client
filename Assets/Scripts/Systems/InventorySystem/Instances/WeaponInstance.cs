@@ -17,15 +17,21 @@ public class WeaponInstance : PlayerItemInstance
     public Magazine Magazine { get; private set; } = null;
     public Sight Sight { get; private set; } = null;
     public Stock Stock { get; private set; } = null;
+
+    [Space]
+    [SerializeField]
+    private int m_ironsightIndex = 0;
     [SerializeField]
     private AttachmentsController m_attachmentsController = null;
-
-    public int BulletCount { get; private set; } = 0;
 
     private CameraController m_cameraController = null;
     private AimController m_aimController = null;
     [SerializeField]
     private AimListener m_aimListener = null;
+
+    public int BulletCount { get; private set; } = 0;
+
+    #region Audio Properties
 
     [Header ( "Audio" )]
     [SerializeField]
@@ -71,6 +77,8 @@ public class WeaponInstance : PlayerItemInstance
     [SerializeField]
     private float m_dryfireVolume = 0.75f;
 
+    #endregion
+
     [Header ( "Reloading" )]
     [SerializeField]
     private float m_partialReloadTime = 0.5f;
@@ -107,6 +115,7 @@ public class WeaponInstance : PlayerItemInstance
     void Start ()
     {
         m_cameraController = CameraController.Instance;
+        m_attachmentsController.Initialize ( m_ironsightIndex );
     }
 
     public void Initialize ( AimController aimController )
@@ -188,7 +197,7 @@ public class WeaponInstance : PlayerItemInstance
     public void EquipAttachment ( Sight sight )
     {
         Sight = sight;
-        Debug.Log ($"Weapon [{PlayerItem}] - Sight equipped [{Sight}]");
+        Debug.Log ( $"Weapon [{PlayerItem}] - Sight equipped [{Sight}]" );
 
         // Update attachment instance
         m_attachmentsController.UpdateAttachment ( Sight );

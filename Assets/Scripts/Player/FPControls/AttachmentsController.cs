@@ -37,11 +37,20 @@ public class AttachmentsController : MonoBehaviour
     [SerializeField]
     private AttachmentItem [] m_stocks = null;
 
+    [Space]
+    [SerializeField]
+    private AttachmentItem [] m_ironsights = null;
+    private int m_ironsightIndex = 0;
 
-    // Start is called before the first frame update
-    void Start ()
+
+    public void Initialize ( int ironsightIndex = 0 )
     {
-
+        if ( ironsightIndex < 0 || ironsightIndex >= m_ironsights.Length )
+        {
+            Debug.LogError ( $"ironsight index [{ironsightIndex}] is out of range." );
+            return;
+        }
+        m_ironsightIndex = ironsightIndex;
     }
 
     public void UpdateAttachment ( Barrel barrel )
@@ -71,6 +80,11 @@ public class AttachmentsController : MonoBehaviour
         if ( sight != null )
         {
             ActivateAttachment ( sight );
+        }
+        else
+        {
+            // Use ironsights
+            m_ironsights [ m_ironsightIndex ].Instance.SetActive ( true );
         }
     }
 
@@ -167,6 +181,14 @@ public class AttachmentsController : MonoBehaviour
             if ( attachmentItem.Instance != null )
             {
                 attachmentItem.Instance.SetActive ( false );
+            }
+        }
+
+        foreach ( AttachmentItem ironsight in m_ironsights )
+        {
+            if ( ironsight.Instance != null )
+            {
+                ironsight.Instance.SetActive ( false );
             }
         }
     }
