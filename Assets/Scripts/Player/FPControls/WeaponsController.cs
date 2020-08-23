@@ -129,11 +129,24 @@ public class WeaponsController : MonoBehaviour
             }
 
             // Shooting
-            if ( Input.GetKey ( KeyCode.Mouse0 ) )
+            if ( ActiveWeapon != null )
             {
-                if ( ActiveWeapon != null )
+                switch ( ( ActiveWeapon.PlayerItem as Weapon ).FireMode )
                 {
-                    ActiveWeapon.Shoot ();
+                    case Weapon.FireModes.SemiAuto:
+                        if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+                        {
+                            ActiveWeapon.Shoot ();
+                        }
+                        break;
+                    case Weapon.FireModes.FullAuto:
+                        if ( Input.GetKey ( KeyCode.Mouse0 ) )
+                        {
+                            ActiveWeapon.Shoot ();
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -344,7 +357,7 @@ public class WeaponsController : MonoBehaviour
     private void UpdateIdleSpeed ( bool aimState )
     {
         float idleSpeed = aimState ? 0f : 1f;
-        if ( aimState )
+        if ( aimState && ActiveWeapon.BulletCount > 0 )
         {
             OnSetTrigger?.Invoke ( "ResetIdle" );
         }

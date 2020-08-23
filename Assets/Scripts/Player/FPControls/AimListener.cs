@@ -72,8 +72,6 @@ public class AimListener : MonoBehaviour
     {
         GameObject target = GameObject.FindWithTag ( m_ADSTargetTag );
 
-        // TODO: Instead, the weapons' iron sights should be
-        // the default stand-in when there is no sight attachment
         if ( target == null )
         {
             return;

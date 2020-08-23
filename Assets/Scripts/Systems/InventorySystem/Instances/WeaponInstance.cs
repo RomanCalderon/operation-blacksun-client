@@ -261,7 +261,17 @@ public class WeaponInstance : PlayerItemInstance
             Vector3 direction = m_aimListener.GetAimVector ();
             float damage = ( PlayerItem as Weapon ).BaseDamage;
             ClientSend.PlayerShoot ( direction, damage, m_normalGunshotClip, m_normalGunshotVolume, Constants.GUNSHOT_MIN_DISTANCE, Constants.GUNSHOT_MAX_DISTANCE );
-            WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
+            
+            // Play animation
+            if ( BulletCount == 0 )
+            {
+                WeaponsController.OnSetTrigger?.Invoke ( "ShootFinal" );
+            }
+            else
+            {
+                WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
+            }
+
             CameraRecoil ();
 
             if ( BulletCount > 0 )

@@ -3238,6 +3238,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1518848834255431007, guid: d9e08addd2167744e9adf866910c1080,
+        type: 3}
+      propertyPath: m_camera
+      value: 
+      objectReference: {fileID: 5593716657401951964}
     - target: {fileID: 7969630600095245970, guid: d9e08addd2167744e9adf866910c1080,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6054,6 +6059,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7697869007835537660, guid: c6a05475cc1ffd64699504451f311ae3,
+        type: 3}
+      propertyPath: m_camera
+      value: 
+      objectReference: {fileID: 5593716657401951964}
     - target: {fileID: 8629589738426995132, guid: c6a05475cc1ffd64699504451f311ae3,
         type: 3}
       propertyPath: m_IsActive
@@ -6445,6 +6455,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7697869007835537660, guid: c6a05475cc1ffd64699504451f311ae3,
+        type: 3}
+      propertyPath: m_camera
+      value: 
+      objectReference: {fileID: 5593716657401951964}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6a05475cc1ffd64699504451f311ae3, type: 3}
 --- !u!114 &779737576324260802 stripped
@@ -6989,6 +7004,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6745171762665134328, guid: c7196e0838740544a8205af1dd4c5a24,
+        type: 3}
+      propertyPath: m_camera
+      value: 
+      objectReference: {fileID: 5593716657401951964}
     - target: {fileID: 8837116872549655827, guid: c7196e0838740544a8205af1dd4c5a24,
         type: 3}
       propertyPath: m_Name
@@ -7081,6 +7101,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6745171762665134328, guid: c7196e0838740544a8205af1dd4c5a24,
+        type: 3}
+      propertyPath: m_camera
+      value: 
+      objectReference: {fileID: 5593716657401951964}
     - target: {fileID: 8837116872549655827, guid: c7196e0838740544a8205af1dd4c5a24,
         type: 3}
       propertyPath: m_Name
@@ -7128,6 +7153,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1518848834255431007, guid: d9e08addd2167744e9adf866910c1080,
+        type: 3}
+      propertyPath: m_camera
+      value: 
+      objectReference: {fileID: 5593716657401951964}
     - target: {fileID: 3908954339800166651, guid: d9e08addd2167744e9adf866910c1080,
         type: 3}
       propertyPath: m_IsActive
