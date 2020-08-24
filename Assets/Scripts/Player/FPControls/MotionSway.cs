@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MotionSway : MonoBehaviour
 {
+    private const float SWAY_REDUCTION_FACTOR = 16f;
+
     [Header ( "Values" )]
     public float SwayAmountX = 0.007f;
     public float SwayAmountY = 0.02f;
@@ -48,25 +50,30 @@ public class MotionSway : MonoBehaviour
     {
         float factorX = -x;
         float factorY = -y;
+        float tiltAroundZ = -x * TiltAngle;
+        float tiltAroundX = y * TiltAngle * 2f;
+
+        factorX *= SwayAmountX;
+        factorY *= SwayAmountY;
+
         if ( m_isAiming )
         {
-            factorX *= SwayAmountX / 3f;
-            factorY *= SwayAmountY / 3f;
+            factorX = Mathf.Clamp ( factorX / SWAY_REDUCTION_FACTOR, -MaxSwayAmount / SWAY_REDUCTION_FACTOR, MaxSwayAmount / SWAY_REDUCTION_FACTOR );
+            factorY = Mathf.Clamp ( factorY / SWAY_REDUCTION_FACTOR, -MaxSwayAmount / SWAY_REDUCTION_FACTOR, MaxSwayAmount / SWAY_REDUCTION_FACTOR );
+            tiltAroundZ /= SWAY_REDUCTION_FACTOR;
+            tiltAroundX /= SWAY_REDUCTION_FACTOR;
         }
         else
         {
-            factorX *= SwayAmountX;
-            factorY *= SwayAmountY;
+            factorX = Mathf.Clamp ( factorX, -MaxSwayAmount, MaxSwayAmount );
+            factorY = Mathf.Clamp ( factorY, -MaxSwayAmount, MaxSwayAmount );
         }
 
-        factorX = Mathf.Clamp ( factorX, -MaxSwayAmount, MaxSwayAmount );
-        factorY = Mathf.Clamp ( factorY, -MaxSwayAmount, MaxSwayAmount );
-
+        // Position
         Vector3 final = new Vector3 ( def.x + factorX, def.y + factorY, def.z );
         transform.localPosition = Vector3.Lerp ( transform.localPosition, final, Time.deltaTime * SwaySmooth );
 
-        float tiltAroundZ = -x * TiltAngle;
-        float tiltAroundX = y * TiltAngle;
+        // Rotation
         Quaternion target = Quaternion.Euler ( tiltAroundX, tiltAroundZ, 0 );
         transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, Time.deltaTime * SmoothRotation );
     }

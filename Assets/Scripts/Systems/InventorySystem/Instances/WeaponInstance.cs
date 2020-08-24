@@ -270,14 +270,9 @@ public class WeaponInstance : PlayerItemInstance
             else
             {
                 WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
-            }
-
-            CameraRecoil ();
-
-            if ( BulletCount > 0 )
-            {
                 WeaponsController.OnSetTrigger?.Invoke ( "BoltCharge" );
             }
+            CameraRecoil ();
         }
         else
         {
