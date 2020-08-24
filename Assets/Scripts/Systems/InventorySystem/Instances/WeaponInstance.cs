@@ -232,6 +232,11 @@ public class WeaponInstance : PlayerItemInstance
     /// <param name="direction">The direction the weapon is fired.</param>
     public void Shoot ()
     {
+        if ( m_isReloading && !m_isFullReload )
+        {
+            CancelReload ();
+            return;
+        }
         if ( Magazine == null )
         {
             DryFire ();
@@ -245,9 +250,6 @@ public class WeaponInstance : PlayerItemInstance
         // Check bullet count
         if ( BulletCount > 0 )
         {
-            // Cancel the reload (if reloading)
-            CancelReload ();
-
             // Reset fireCooldown
             m_fireCooldown = ( PlayerItem as Weapon ).FireRate;
 
@@ -261,7 +263,7 @@ public class WeaponInstance : PlayerItemInstance
             Vector3 direction = m_aimListener.GetAimVector ();
             float damage = ( PlayerItem as Weapon ).BaseDamage;
             ClientSend.PlayerShoot ( direction, damage, m_normalGunshotClip, m_normalGunshotVolume, Constants.GUNSHOT_MIN_DISTANCE, Constants.GUNSHOT_MAX_DISTANCE );
-            
+
             // Play animation
             if ( BulletCount == 0 )
             {
@@ -357,6 +359,11 @@ public class WeaponInstance : PlayerItemInstance
 
     private void FinishReload ()
     {
+        if ( !m_isReloading )
+        {
+            return;
+        }
+
         string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
         int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
         int shotsFired = Magazine.AmmoCapacity - BulletCount;
@@ -371,26 +378,23 @@ public class WeaponInstance : PlayerItemInstance
 
     private void CancelReload ()
     {
-        if ( m_isReloading )
+        // Stop the reload animation
+        WeaponsController.OnSetTrigger?.Invoke ( "CancelReload" );
+
+        // Stop the reload coroutine
+        if ( m_reloadCoroutine != null )
         {
-            // Stop the reload animation
-            WeaponsController.OnSetTrigger?.Invoke ( "CancelReload" );
-
-            // Stop the reload coroutine
-            if ( m_reloadCoroutine != null )
-            {
-                StopCoroutine ( m_reloadCoroutine );
-                m_reloadCoroutine = null;
-            }
-
-            // Stop the reload audio clip
-            string clipName = m_isFullReload ? m_fullReloadClip.name : m_partialReloadClip.name;
-            AudioManager.Stop ( clipName );
-
-            // Reset reload flags
-            m_isReloading = false;
-            m_isFullReload = false;
+            StopCoroutine ( m_reloadCoroutine );
+            m_reloadCoroutine = null;
         }
+
+        // Stop the reload audio clip
+        string clipName = m_isFullReload ? m_fullReloadClip.name : m_partialReloadClip.name;
+        AudioManager.Stop ( clipName );
+
+        // Reset reload flags
+        m_isReloading = false;
+        m_isFullReload = false;
     }
 
     #endregion
