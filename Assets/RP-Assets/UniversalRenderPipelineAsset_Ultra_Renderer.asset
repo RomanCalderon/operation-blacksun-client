@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UniversalRenderPipelineAsset_Ultra_Renderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 11400000, guid: 4dcbad1983687bd4ebd0881c2e27158a, type: 2}
+  - {fileID: 11400000, guid: 510ffe33266baec488fb19da83fddd83, type: 2}
   m_RendererFeatureMap: 40f3ad0000000000
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
