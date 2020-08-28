@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour
             Input.GetKey(KeyCode.D),            // [3] Right
             Input.GetKey(KeyCode.LeftShift),    // [4] Run
             Input.GetKey(KeyCode.Space),        // [5] Jump
-            Input.GetKey(KeyCode.C),            // [6] Crouch
-            Input.GetKey(KeyCode.LeftControl)   // [7] Slide
+            Input.GetKey(KeyCode.C),            // [6] Toggle Crouch
+            Input.GetKey(KeyCode.LeftControl)   // [7] Hold Crouch
         };
 
         ClientSend.PlayerMovement ( _inputs );

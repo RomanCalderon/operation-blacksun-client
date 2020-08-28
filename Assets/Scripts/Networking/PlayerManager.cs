@@ -29,15 +29,16 @@ public class PlayerManager
         ClientSend.PlayerReady ();
     }
 
-    public void SetMovementVector ( Vector2 movement )
+    public void SetMovementValues ( Vector2 movement, bool run, bool crouch )
     {
         if ( Player == null )
         {
             Debug.LogError ( "Player is null." );
             return;
         }
-
         Player.SetMovementVector ( movement );
+        Player.SetRun ( run );
+        Player.SetCrouch ( crouch );
     }
 
     public void SetHealth ( float _health )

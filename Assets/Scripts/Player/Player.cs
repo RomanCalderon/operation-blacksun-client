@@ -12,12 +12,12 @@ public class Player : MonoBehaviour
     private Camera m_playerCamera = null;
     [SerializeField]
     private Camera m_fpCamera = null;
-    private PlayerModelController m_modelController = null;
     public InventoryManager InventoryManager { get; private set; }
     public WeaponsController WeaponsController { get; private set; }
     [SerializeField]
     private GameObject m_weaponsController = null;
 
+    private PlayerModelController m_modelController = null;
     [SerializeField]
     private RagdollMasterJointController m_ragdollController = null;
     [SerializeField]
@@ -50,6 +50,16 @@ public class Player : MonoBehaviour
     public void SetMovementVector ( Vector2 movement )
     {
         m_modelController.SetMovementVector ( movement );
+    }
+
+    public void SetRun ( bool value )
+    {
+        m_modelController.SetRun ( value );
+    }
+
+    public void SetCrouch ( bool value )
+    {
+        m_modelController.SetCrouch ( value );
     }
 
     public void Die ()

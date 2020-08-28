@@ -11,6 +11,15 @@ public class CameraController : MonoBehaviour
 
     [SerializeField]
     private float m_clampAngle = 85f;
+    [SerializeField]
+    private Vector3 m_crouchTarget = new Vector3 ( 0, -0.5f, 0 );
+    [SerializeField]
+    private float m_crouchSpeed = 3f;
+    private Vector3 m_headPositionTarget;
+    private float m_crouchHeadTiltAmount = 0.5f;
+    private float m_headTilt = 0f;
+    private float m_headTiltTarget = 0f;
+    private Vector3 m_headOffset;
 
     private float m_sensitivity;
     private float m_normalSensitivity;
@@ -41,6 +50,8 @@ public class CameraController : MonoBehaviour
         m_verticalRotation = transform.localEulerAngles.x;
         m_horizontalRotation = player.transform.eulerAngles.y;
 
+        m_headOffset = transform.localPosition;
+
         SetCursorMode ( CursorLockMode.Locked );
     }
 
@@ -58,25 +69,30 @@ public class CameraController : MonoBehaviour
 
     private void Update ()
     {
+        float deltaTime = Time.deltaTime;
+
         if ( Cursor.lockState == CursorLockMode.Locked )
         {
-            Look ();
+            Look ( deltaTime );
         }
 
-        Debug.DrawRay ( transform.position, transform.forward * 2, Color.red );
+        // Update head crouch
+        SetCrouch ( Input.GetKey ( KeyCode.C ) ); // TODO: Switch to KeybindManager
+        transform.localPosition = Vector3.MoveTowards ( transform.localPosition, m_headPositionTarget + m_headOffset, deltaTime * m_crouchSpeed );
     }
 
-    private void Look ()
+    private void Look ( float deltaTime )
     {
         float mouseVertical = -Input.GetAxis ( "Mouse Y" );
         float mouseHorizontal = Input.GetAxis ( "Mouse X" );
 
-        m_verticalRotation += mouseVertical * m_sensitivity * Time.deltaTime;
-        m_horizontalRotation += mouseHorizontal * m_sensitivity * Time.deltaTime;
+        m_verticalRotation += mouseVertical * m_sensitivity * deltaTime;
+        m_horizontalRotation += mouseHorizontal * m_sensitivity * deltaTime;
 
         m_verticalRotation = Mathf.Clamp ( m_verticalRotation, -m_clampAngle, m_clampAngle );
 
-        transform.localRotation = Quaternion.Euler ( m_verticalRotation, 0f, 0f );
+        m_headTilt = Mathf.Lerp ( m_headTilt, m_headTiltTarget, deltaTime * 16f );
+        transform.localRotation = Quaternion.Euler ( m_verticalRotation - m_headTilt, 0f, 0f );
         player.transform.rotation = Quaternion.Euler ( 0f, m_horizontalRotation, 0f );
     }
 
@@ -84,6 +100,20 @@ public class CameraController : MonoBehaviour
     {
         m_verticalRotation -= verticalRecoil;
         m_horizontalRotation -= horizontalRecoil;
+    }
+
+    private void SetCrouch ( bool value )
+    {
+        if ( value )
+        {
+            m_headPositionTarget = m_crouchTarget;
+            m_headTiltTarget = m_crouchHeadTiltAmount;
+        }
+        else
+        {
+            m_headPositionTarget = Vector3.zero;
+            m_headTiltTarget = 0f;
+        }
     }
 
     /// <summary>

@@ -1645,6 +1645,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerCamera: {fileID: 3329739129886715966}
   m_fpCamera: {fileID: 1268968172197500034}
+  m_cameraController: {fileID: 8139382710650044287}
   m_weaponsController: {fileID: 3033693415505987585}
   m_ragdollController: {fileID: 5942597368512786685}
   m_ragdollCamera: {fileID: 1031835884482852213}
@@ -1946,6 +1947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 3190018344343389636}
   m_clampAngle: 85
+  m_crouchTarget: {x: 0, y: -0.5, z: 0}
 --- !u!1 &6383739058801298871
 GameObject:
   m_ObjectHideFlags: 0

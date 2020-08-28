@@ -92,8 +92,10 @@ public class ClientHandle : MonoBehaviour
 
         float _playerMovementX = _packet.ReadFloat ();
         float _playerMovementY = _packet.ReadFloat ();
+        bool _playerRun = _packet.ReadBool ();
+        bool _playerCrouch = _packet.ReadBool ();
 
-        GameManager.players [ _id ].SetMovementVector ( new Vector2 ( _playerMovementX, _playerMovementY ) );
+        GameManager.players [ _id ].SetMovementValues ( new Vector2 ( _playerMovementX, _playerMovementY ), _playerRun, _playerCrouch );
     }
 
     public static void PlayerDisconnected ( Packet _packet )
