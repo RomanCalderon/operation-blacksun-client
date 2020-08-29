@@ -17,6 +17,7 @@ public class PlayerModelController : MonoBehaviour
     private float m_movementSpeed = 0f;
     private bool m_running = false;
     private bool m_crouching = false;
+    private bool m_prone = false;
 
     // Start is called before the first frame update
     void Start ()
@@ -48,6 +49,9 @@ public class PlayerModelController : MonoBehaviour
 
             // Crouching
             m_animator.SetBool ( "IsCrouching", m_crouching );
+            
+            // Crouching
+            m_animator.SetBool ( "IsProning", m_prone );
         }
     }
 
@@ -72,5 +76,10 @@ public class PlayerModelController : MonoBehaviour
     public void SetCrouch ( bool value )
     {
         m_crouching = value;
+    }
+
+    public void SetProne ( bool value )
+    {
+        m_prone = value;
     }
 }

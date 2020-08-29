@@ -92,7 +92,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0776741fad35d1489ce4c1546138473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerCamera: {fileID: 0}
+  m_fpCamera: {fileID: 0}
+  m_weaponsController: {fileID: 0}
+  m_cameraController: {fileID: 0}
   m_ragdollController: {fileID: 4537672301568104187}
+  m_ragdollCamera: {fileID: 0}
   m_ragdollParent: {fileID: 9033164965578197798}
 --- !u!114 &7868740214820277074
 MonoBehaviour:
@@ -172,6 +177,41 @@ PrefabInstance:
       propertyPath: m_targetJoint
       value: 
       objectReference: {fileID: 1266264706194825378}
+    - target: {fileID: 2579537319618223936, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.13095035
+      objectReference: {fileID: 0}
+    - target: {fileID: 2749451868220722443, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.000000033993274
+      objectReference: {fileID: 0}
+    - target: {fileID: 2749451868220722443, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.24497613
+      objectReference: {fileID: 0}
+    - target: {fileID: 2749451868220722443, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0.000000018626451
+      objectReference: {fileID: 0}
+    - target: {fileID: 2783350080909596166, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.2230875
+      objectReference: {fileID: 0}
+    - target: {fileID: 2783350080909596166, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.26861185
+      objectReference: {fileID: 0}
+    - target: {fileID: 2783350080909596166, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: -0.0063708983
+      objectReference: {fileID: 0}
     - target: {fileID: 2820302606428819506, guid: f6478cc648e070248a5949024d2034ef,
         type: 3}
       propertyPath: m_targetJoint
@@ -192,6 +232,51 @@ PrefabInstance:
       propertyPath: m_targetJoint
       value: 
       objectReference: {fileID: 2882236860950578722}
+    - target: {fileID: 4017915306978567482, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.22308682
+      objectReference: {fileID: 0}
+    - target: {fileID: 4027816754519275639, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.0000131828165
+      objectReference: {fileID: 0}
+    - target: {fileID: 4027816754519275639, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: -0.023818204
+      objectReference: {fileID: 0}
+    - target: {fileID: 4071988413265644719, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.0000000027939677
+      objectReference: {fileID: 0}
+    - target: {fileID: 4071988413265644719, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.45935398
+      objectReference: {fileID: 0}
+    - target: {fileID: 4071988413265644719, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4470529032230786556, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 4.166447e-12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4470529032230786556, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.38492486
+      objectReference: {fileID: 0}
+    - target: {fileID: 4470529032230786556, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0.04144882
+      objectReference: {fileID: 0}
     - target: {fileID: 5107925983372277658, guid: f6478cc648e070248a5949024d2034ef,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -257,10 +342,40 @@ PrefabInstance:
       propertyPath: m_targetJoint
       value: 
       objectReference: {fileID: 2695404761891639973}
+    - target: {fileID: 6739819607025143951, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: -0.002486529
+      objectReference: {fileID: 0}
     - target: {fileID: 8122706225175627145, guid: f6478cc648e070248a5949024d2034ef,
         type: 3}
       propertyPath: m_Name
       value: Character_Assault_Ragdoll
+      objectReference: {fileID: 0}
+    - target: {fileID: 8591071695057731808, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.000000020023435
+      objectReference: {fileID: 0}
+    - target: {fileID: 8591071695057731808, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: -0.00000012665987
+      objectReference: {fileID: 0}
+    - target: {fileID: 8847762901036838499, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.0000000027939677
+      objectReference: {fileID: 0}
+    - target: {fileID: 8847762901036838499, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.45907378
+      objectReference: {fileID: 0}
+    - target: {fileID: 8847762901036838499, guid: f6478cc648e070248a5949024d2034ef,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0.0000000018626451
       objectReference: {fileID: 0}
     - target: {fileID: 8974007991637466282, guid: f6478cc648e070248a5949024d2034ef,
         type: 3}
@@ -334,7 +449,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 5b672715c7a3e8649b1bf4d6e539037a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 5b672715c7a3e8649b1bf4d6e539037a,
         type: 3}

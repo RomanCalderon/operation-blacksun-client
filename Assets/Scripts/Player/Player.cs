@@ -16,7 +16,8 @@ public class Player : MonoBehaviour
     public WeaponsController WeaponsController { get; private set; }
     [SerializeField]
     private GameObject m_weaponsController = null;
-
+    [SerializeField]
+    private CameraController m_cameraController = null;
     private PlayerModelController m_modelController = null;
     [SerializeField]
     private RagdollMasterJointController m_ragdollController = null;
@@ -45,6 +46,11 @@ public class Player : MonoBehaviour
     {
         m_id = _id;
         m_username = _username;
+
+        if ( Client.instance.myId == m_id )
+        {
+            m_cameraController.CanControl ( true );
+        }
     }
 
     public void SetMovementVector ( Vector2 movement )
@@ -62,12 +68,18 @@ public class Player : MonoBehaviour
         m_modelController.SetCrouch ( value );
     }
 
+    public void SetProne ( bool value )
+    {
+        m_modelController.SetProne ( value );
+    }
+
     public void Die ()
     {
         m_modelController.ShowModel ( false );
         if ( Client.instance.myId == m_id )
         {
             m_playerCamera.enabled = false;
+            m_cameraController.CanControl ( false );
             m_fpCamera.enabled = false;
             m_ragdollCamera.enabled = true;
         }
@@ -84,6 +96,7 @@ public class Player : MonoBehaviour
         if ( Client.instance.myId == m_id )
         {
             m_playerCamera.enabled = true;
+            m_cameraController.CanControl ( true );
             m_fpCamera.enabled = true;
             m_ragdollCamera.enabled = false;
         }

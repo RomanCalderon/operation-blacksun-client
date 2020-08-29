@@ -9,10 +9,12 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Player player;
 
+    private bool m_canControl = false;
+
     [SerializeField]
     private float m_clampAngle = 85f;
-    [SerializeField]
     private Vector3 m_crouchTarget = new Vector3 ( 0, -0.5f, 0 );
+    private Vector3 m_proneTarget = new Vector3 ( 0, -1.5f, 0 );
     [SerializeField]
     private float m_crouchSpeed = 3f;
     private Vector3 m_headPositionTarget;
@@ -45,17 +47,20 @@ public class CameraController : MonoBehaviour
             Instance = this;
         }
 
-        InitializeSensitivity ();
-
-        m_verticalRotation = transform.localEulerAngles.x;
-        m_horizontalRotation = player.transform.eulerAngles.y;
-
         m_headOffset = transform.localPosition;
 
-        SetCursorMode ( CursorLockMode.Locked );
+        Initialize ();
     }
 
-    private void InitializeSensitivity ()
+    public void CanControl ( bool value )
+    {
+        m_canControl = value;
+
+        // Reinitialize PlayerController inputs
+        PlayerController.Initialize ();
+    }
+
+    private void Initialize ()
     {
         // Set Sens
         // TODO: Set sens from settings
@@ -65,19 +70,29 @@ public class CameraController : MonoBehaviour
         // TODO: Set aim sens from settings
         m_aimSensitivity = 50f;
 
+        // Set rotations
+        m_verticalRotation = transform.localEulerAngles.x;
+        m_horizontalRotation = player.transform.eulerAngles.y;
+
+        // Lock cursor
+        SetCursorMode ( CursorLockMode.Locked );
+        
+        CanControl ( true );
     }
 
     private void Update ()
     {
         float deltaTime = Time.deltaTime;
 
-        if ( Cursor.lockState == CursorLockMode.Locked )
+        if ( Cursor.lockState == CursorLockMode.Locked && m_canControl )
         {
             Look ( deltaTime );
         }
 
-        // Update head crouch
-        SetCrouch ( Input.GetKey ( KeyCode.C ) ); // TODO: Switch to KeybindManager
+        // Update head crouch/prone positioning
+        bool crouchInput = PlayerController.CrouchInput;
+        bool proneInput = PlayerController.ProneInput;
+        SetCrouchProne ( crouchInput, proneInput );
         transform.localPosition = Vector3.MoveTowards ( transform.localPosition, m_headPositionTarget + m_headOffset, deltaTime * m_crouchSpeed );
     }
 
@@ -102,14 +117,26 @@ public class CameraController : MonoBehaviour
         m_horizontalRotation -= horizontalRecoil;
     }
 
-    private void SetCrouch ( bool value )
+    private void SetCrouchProne ( bool crouch, bool prone )
     {
-        if ( value )
+        if ( !m_canControl )
+        {
+            crouch = false;
+            prone = false;
+            return;
+        }
+
+        if ( crouch ) // Crouch
         {
             m_headPositionTarget = m_crouchTarget;
             m_headTiltTarget = m_crouchHeadTiltAmount;
         }
-        else
+        else if ( prone ) // Prone
+        {
+            m_headPositionTarget = m_proneTarget;
+            m_headTiltTarget = m_crouchHeadTiltAmount;
+        }
+        else // Standing
         {
             m_headPositionTarget = Vector3.zero;
             m_headTiltTarget = 0f;

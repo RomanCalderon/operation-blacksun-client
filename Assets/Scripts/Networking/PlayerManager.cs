@@ -29,7 +29,7 @@ public class PlayerManager
         ClientSend.PlayerReady ();
     }
 
-    public void SetMovementValues ( Vector2 movement, bool run, bool crouch )
+    public void SetMovementValues ( Vector2 movement, bool run, bool crouch, bool prone )
     {
         if ( Player == null )
         {
@@ -39,6 +39,7 @@ public class PlayerManager
         Player.SetMovementVector ( movement );
         Player.SetRun ( run );
         Player.SetCrouch ( crouch );
+        Player.SetProne ( prone );
     }
 
     public void SetHealth ( float _health )
