@@ -15,5 +15,6 @@ MonoBehaviour:
   Id: 16-rnd-9mm
   Name: 16 Rnd 9mm
   StackLimit: 1
+  Image: {fileID: 21300000, guid: ada5faa6896c6ca42a779d1295b9238e, type: 3}
   AmmoCapacity: 16
   CompatibleAmmoCaliber: 0
