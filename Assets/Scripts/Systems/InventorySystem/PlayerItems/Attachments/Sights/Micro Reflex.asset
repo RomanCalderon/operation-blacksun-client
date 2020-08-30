@@ -15,6 +15,6 @@ MonoBehaviour:
   Id: mirco-reflex
   Name: Micro Reflex
   StackLimit: 1
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: 3e8c152b9e7fe2d4e91171d7493f3c02, type: 3}
   SightZoomStrength: 1
   PlayerZoomModifier: 1.1
