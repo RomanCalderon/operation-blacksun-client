@@ -70,7 +70,6 @@ public class Player : MonoBehaviour
 
         if ( Client.instance.myId == m_id )
         {
-            Debug.Log ( $"movementVelocity [{movementVelocity}]" );
             m_cameraController.ApplySlideShake ( crouchInput );
         }
         else

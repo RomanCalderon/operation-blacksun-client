@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
 
     [SerializeField]
     private float m_clampAngle = 85f;
-    private Vector3 m_crouchTarget = new Vector3 ( 0, -0.5f, 0 );
+    private Vector3 m_crouchTarget = new Vector3 ( 0, -0.75f, 0 );
     private Vector3 m_proneTarget = new Vector3 ( 0, -1.5f, 0 );
     [SerializeField]
     private float m_crouchSpeed = 3f;
@@ -132,7 +132,6 @@ public class CameraController : MonoBehaviour
         }
         if ( m_isShaking )
         {
-            Debug.Log ($"is shaking - speed [{playerSpeed}]");
             m_shakeInstance.UpdateShake ();
 
             if ( playerSpeed < SLIDE_SHAKE_THRESHOLD || !crouchInput )
