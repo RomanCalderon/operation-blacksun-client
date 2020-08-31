@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: zero-1
   Name: Zero 1
   StackLimit: 1
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: 9cff8e59b13dfd84a82e3b00fa53eebe, type: 3}
   WeaponType: 1
   WeaponClass: 3
   Caliber: 0
