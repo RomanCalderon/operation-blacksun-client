@@ -1,15 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class CameraController : MonoBehaviour
 {
     public static CameraController Instance;
 
-    [SerializeField]
-    private Player player;
+    private const float SLIDE_SHAKE_THRESHOLD = 5.0f;
+    private const float SLIDE_SHAKE_ROUGHNESS = 12.0f;
+    private const float SLIDE_SHAKE_FADEIN = 0.2f;
 
     private bool m_canControl = false;
+
+    [SerializeField]
+    private Player player;
 
     [SerializeField]
     private float m_clampAngle = 85f;
@@ -28,6 +33,10 @@ public class CameraController : MonoBehaviour
     private float m_aimSensitivity;
     private float m_verticalRotation;
     private float m_horizontalRotation;
+
+    // Sliding params
+    private bool m_isShaking = false;
+    private CameraShakeInstance m_shakeInstance = null;
 
 
     private void OnEnable ()
@@ -76,7 +85,7 @@ public class CameraController : MonoBehaviour
 
         // Lock cursor
         SetCursorMode ( CursorLockMode.Locked );
-        
+
         CanControl ( true );
     }
 
@@ -111,6 +120,29 @@ public class CameraController : MonoBehaviour
         player.transform.rotation = Quaternion.Euler ( 0f, m_horizontalRotation, 0f );
     }
 
+    public void ApplySlideShake ( bool crouchInput )
+    {
+        float playerSpeed = player.MovementVelocity.magnitude;
+        float shakeMagnitude = playerSpeed / 75f;
+
+        if ( !m_isShaking && playerSpeed >= SLIDE_SHAKE_THRESHOLD && crouchInput )
+        {
+            m_isShaking = true;
+            m_shakeInstance = CameraShaker.Instance.StartShake ( shakeMagnitude, SLIDE_SHAKE_ROUGHNESS, SLIDE_SHAKE_FADEIN );
+        }
+        if ( m_isShaking )
+        {
+            Debug.Log ($"is shaking - speed [{playerSpeed}]");
+            m_shakeInstance.UpdateShake ();
+
+            if ( playerSpeed < SLIDE_SHAKE_THRESHOLD || !crouchInput )
+            {
+                m_isShaking = false;
+                m_shakeInstance.StartFadeOut ( 0.1f );
+            }
+        }
+    }
+
     public void AddRecoil ( float verticalRecoil, float horizontalRecoil )
     {
         m_verticalRotation -= verticalRecoil;
@@ -121,8 +153,6 @@ public class CameraController : MonoBehaviour
     {
         if ( !m_canControl )
         {
-            crouch = false;
-            prone = false;
             return;
         }
 

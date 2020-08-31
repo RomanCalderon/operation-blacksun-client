@@ -29,17 +29,14 @@ public class PlayerManager
         ClientSend.PlayerReady ();
     }
 
-    public void SetMovementValues ( Vector2 movement, bool run, bool crouch, bool prone )
+    public void SetMovementValues ( Vector3 movementVelocity, Vector2 inputVelocity, bool run, bool crouch, bool prone )
     {
         if ( Player == null )
         {
             Debug.LogError ( "Player is null." );
             return;
         }
-        Player.SetMovementVector ( movement );
-        Player.SetRun ( run );
-        Player.SetCrouch ( crouch );
-        Player.SetProne ( prone );
+        Player.SetMovementValues ( movementVelocity, inputVelocity, run, crouch, prone );
     }
 
     public void SetHealth ( float _health )

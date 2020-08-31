@@ -26,6 +26,17 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform m_ragdollParent = null;
 
+    public Vector3 MovementVelocity
+    {
+        get
+        {
+            return m_movementVelocity;
+        }
+    }
+    private Vector3 m_movementVelocity = Vector3.zero;
+    private Vector3 previousPos;
+
+
     private void Awake ()
     {
         m_modelController = GetComponent<PlayerModelController> ();
@@ -53,24 +64,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SetMovementVector ( Vector2 movement )
+    public void SetMovementValues ( Vector3 movementVelocity, Vector2 inputVelocity, bool runInput, bool crouchInput, bool proneInput )
     {
-        m_modelController.SetMovementVector ( movement );
-    }
+        m_movementVelocity = movementVelocity;
 
-    public void SetRun ( bool value )
-    {
-        m_modelController.SetRun ( value );
-    }
-
-    public void SetCrouch ( bool value )
-    {
-        m_modelController.SetCrouch ( value );
-    }
-
-    public void SetProne ( bool value )
-    {
-        m_modelController.SetProne ( value );
+        if ( Client.instance.myId == m_id )
+        {
+            Debug.Log ( $"movementVelocity [{movementVelocity}]" );
+            m_cameraController.ApplySlideShake ( crouchInput );
+        }
+        else
+        {
+            // Eventually this will be executed for the local player as well
+            m_modelController.SetMovementVector ( inputVelocity );
+            m_modelController.SetRun ( runInput );
+            m_modelController.SetCrouch ( crouchInput );
+            m_modelController.SetProne ( proneInput );
+        }
     }
 
     public void Die ()

@@ -90,13 +90,14 @@ public class ClientHandle : MonoBehaviour
             return;
         }
 
+        Vector3 _playerMovementVelocity = _packet.ReadVector3 ();
         float _playerMovementX = _packet.ReadFloat ();
         float _playerMovementY = _packet.ReadFloat ();
         bool _playerRun = _packet.ReadBool ();
         bool _playerCrouch = _packet.ReadBool ();
         bool _playerProne = _packet.ReadBool ();
 
-        GameManager.players [ _id ].SetMovementValues ( new Vector2 ( _playerMovementX, _playerMovementY ), _playerRun, _playerCrouch, _playerProne );
+        GameManager.players [ _id ].SetMovementValues ( _playerMovementVelocity, new Vector2 ( _playerMovementX, _playerMovementY ), _playerRun, _playerCrouch, _playerProne );
     }
 
     public static void PlayerDisconnected ( Packet _packet )
