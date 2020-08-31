@@ -63,17 +63,13 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void PlayerMovement ( bool [] _inputs )
+    public static void PlayerInput ( byte [] _inputs )
     {
-        using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerMovement ) )
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerInput ) )
         {
             _packet.Write ( _inputs.Length );
-            foreach ( bool _input in _inputs )
-            {
-                _packet.Write ( _input );
-            }
-            _packet.Write ( GameManager.players [ Client.instance.myId ].Player.transform.rotation );
-
+            _packet.Write ( _inputs );
+            
             SendUDPData ( _packet );
         }
     }

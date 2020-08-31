@@ -61,24 +61,24 @@ public class ClientHandle : MonoBehaviour
             return;
         }
 
-        // Interpolate the players position
-        Vector3 oldPosition = GameManager.players [ _id ].Player.transform.position;
+        // Update the players new position
         Vector3 newPosition = _packet.ReadVector3 ();
-        GameManager.players [ _id ].Player.transform.position = Vector3.Lerp ( oldPosition, newPosition, Time.deltaTime * 32f );
+        GameManager.players [ _id ].SetPlayerPosition ( newPosition );
     }
 
     public static void PlayerRotation ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
+
         // Ignore if Player is null
         if ( GameManager.players [ _id ].Player == null )
         {
             return;
         }
 
-        Quaternion _rotation = _packet.ReadQuaternion ();
-
-        GameManager.players [ _id ].Player.transform.rotation = _rotation;
+        // Update the players new rotation
+        Quaternion newRotation = _packet.ReadQuaternion ();
+        GameManager.players [ _id ].SetPlayerRotation ( newRotation );
     }
 
     public static void PlayerMovementVector ( Packet _packet )
