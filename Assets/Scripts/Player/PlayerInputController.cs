@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+/// <summary>
+/// Controlls player input and handles sending these sampled inputs
+/// to the server and the local movement controller.
+/// </summary>
+public class PlayerInputController : MonoBehaviour
 {
     #region Constants
 
@@ -22,6 +26,8 @@ public class PlayerController : MonoBehaviour
 
     public struct PlayerInputs
     {
+        // Request number
+        public uint request;
         // Interpolation time on client
         public short lerp_msec;
         // Duration in ms of command
@@ -35,6 +41,12 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region Members
+
+    // Movement Controller reference
+    [SerializeField]
+    private PlayerMovementController m_playerMovementController = null;
+
     public static bool CrouchInput { get; private set; } = false;
     public static bool ProneInput { get; private set; } = false;
 
@@ -42,6 +54,11 @@ public class PlayerController : MonoBehaviour
     private static bool m_crouchToggle = false;
     private InputModes m_proneInputMode = InputModes.TOGGLE; // TODO: Update from KeybindManager
     private static bool m_proneToggle = false;
+
+    private PlayerInputs m_currentInput;
+    private uint m_requestRef = 0;
+
+    #endregion
 
 
     private void Awake ()
@@ -96,15 +113,27 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
+
     }
 
     private void FixedUpdate ()
     {
-        SendInputToServer ();
+        m_currentInput = SamplePlayerInputs ();
+
+        // Send sampled inputs to the server
+        SendInputToServer ( m_currentInput );
+        
+        // Send sampled inputs to the movement controller
+        SendInputsToMovementController ( m_currentInput );
     }
 
-    private void SendInputToServer ()
+    /// <summary>
+    /// Samples the current inputs and returns a PlayerInputs struct.
+    /// </summary>
+    /// <returns>PlayerInput struct of the sampled inputs at this given frame.</returns>
+    private PlayerInputs SamplePlayerInputs ()
     {
+        m_requestRef++;
         short lerpMilliseconds = ( short ) ( Time.deltaTime * 1000 );
         byte milliseconds = ( byte ) ( Time.fixedDeltaTime * 1000 );
         bool [] _inputs = new bool [ NUM_BOOL_INPUTS ]
@@ -121,13 +150,46 @@ public class PlayerController : MonoBehaviour
         Quaternion rotation = transform.rotation;
         PlayerInputs playerInput = new PlayerInputs ()
         {
+            request = m_requestRef,
             lerp_msec = lerpMilliseconds,
             msec = milliseconds,
             inputs = _inputs,
             rot = rotation
         };
-        byte [] inputByteArr = GetBytes ( playerInput );
+        return playerInput;
+    }
+
+    private void SendInputToServer ( PlayerInputs inputs )
+    {
+        byte [] inputByteArr = GetBytes ( inputs );
         ClientSend.PlayerInput ( inputByteArr );
+    }
+
+    private void SendInputsToMovementController ( PlayerInputs inputs )
+    {
+        // Movement / Run / Jump / Crouch / Prone
+        Vector2 inputDirection = Vector2.zero;
+        if ( inputs.inputs [ 0 ] )
+        {
+            inputDirection.y += 1;
+        }
+        if ( inputs.inputs [ 1 ] )
+        {
+            inputDirection.y -= 1;
+        }
+        if ( inputs.inputs [ 2 ] )
+        {
+            inputDirection.x -= 1;
+        }
+        if ( inputs.inputs [ 3 ] )
+        {
+            inputDirection.x += 1;
+        }
+        bool runInput = inputs.inputs [ 4 ];
+        bool jumpInput = inputs.inputs [ 5 ];
+        bool crouchInput = inputs.inputs [ 6 ];
+        bool proneInput = inputs.inputs [ 7 ];
+        m_playerMovementController.Movement ( inputDirection, runInput, jumpInput, crouchInput, proneInput );
     }
 
     private byte [] GetBytes ( PlayerInputs str )

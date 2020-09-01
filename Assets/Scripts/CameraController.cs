@@ -66,7 +66,7 @@ public class CameraController : MonoBehaviour
         m_canControl = value;
 
         // Reinitialize PlayerController inputs
-        PlayerController.Initialize ();
+        PlayerInputController.Initialize ();
     }
 
     private void Initialize ()
@@ -99,8 +99,8 @@ public class CameraController : MonoBehaviour
         }
 
         // Update head crouch/prone positioning
-        bool crouchInput = PlayerController.CrouchInput;
-        bool proneInput = PlayerController.ProneInput;
+        bool crouchInput = PlayerInputController.CrouchInput;
+        bool proneInput = PlayerInputController.ProneInput;
         SetCrouchProne ( crouchInput, proneInput );
         transform.localPosition = Vector3.MoveTowards ( transform.localPosition, m_headPositionTarget + m_headOffset, deltaTime * m_crouchSpeed );
     }

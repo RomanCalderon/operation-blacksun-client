@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     private int m_id;
     private string m_username;
+    public bool IsDead { get; private set; }
     [SerializeField]
     private Camera m_playerCamera = null;
     [SerializeField]
@@ -25,17 +26,7 @@ public class Player : MonoBehaviour
     private Camera m_ragdollCamera = null;
     [SerializeField]
     private Transform m_ragdollParent = null;
-
-    public Vector3 MovementVelocity
-    {
-        get
-        {
-            return m_movementVelocity;
-        }
-    }
-    private Vector3 m_movementVelocity = Vector3.zero;
-    private Vector3 previousPos;
-
+    
 
     private void Awake ()
     {
@@ -52,6 +43,15 @@ public class Player : MonoBehaviour
         Debug.Assert ( m_ragdollController != null, "Ragdoll controller is null." );
         Debug.Assert ( m_ragdollParent != null, "Ragdoll parent is null." );
     }
+
+    public Vector3 MovementVelocity
+    {
+        get
+        {
+            return m_movementVelocity;
+        }
+    }
+    private Vector3 m_movementVelocity = Vector3.zero;
 
     public void Initialize ( int _id, string _username )
     {
@@ -84,6 +84,7 @@ public class Player : MonoBehaviour
 
     public void Die ()
     {
+        IsDead = true;
         m_modelController.ShowModel ( false );
         if ( Client.instance.myId == m_id )
         {
@@ -101,6 +102,7 @@ public class Player : MonoBehaviour
 
     public void Respawn ()
     {
+        IsDead = false;
         m_modelController.ShowModel ( true );
         if ( Client.instance.myId == m_id )
         {
