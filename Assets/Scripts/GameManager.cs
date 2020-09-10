@@ -29,24 +29,6 @@ public class GameManager : MonoBehaviour
         Debug.Assert ( m_mainCamera != null, "m_mainCamera is null." );
     }
 
-    private void Update ()
-    {
-        /*
-        for ( int i = 1; i <= players.Count; i++ )
-        {
-            if ( !players.ContainsKey ( i ) )
-            {
-                continue;
-            }
-
-            if ( players [ i ].IsInitialized )
-            {
-                players [ i ].Update ( Time.deltaTime );
-            }
-        }
-        */
-    }
-
     /// <summary>
     /// Adds a new PlayerManager to players for the new player that connected.
     /// </summary>

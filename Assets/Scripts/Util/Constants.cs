@@ -7,6 +7,17 @@ public class Constants
     public const int TICKS_PER_SECOND = 30;
     public const int MS_PER_TICK = 1000 / TICKS_PER_SECOND;
 
+    // INPUT
+    public const int NUM_PLAYER_INPUTS = 8;
+
+    // CLIENT PREDICTION
+    // Known good values:
+    // Velocity Tolerance - 5f
+    // Converge Multiplier - 1.005f
+    public const float VELOCITY_TOLERANCE = 2.5f;
+    public const float PLAYER_CONVERGE_MULTIPLIER = 0.2f;
+
+    // INVENTORY
     public const int INVENTORY_RIG_SIZE = 6;
     public const int INVENTORY_BACKPACK_SIZE = 10;
     public const int SLOT_MAX_STACK_SIZE = 256;

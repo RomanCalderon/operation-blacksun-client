@@ -14,9 +14,6 @@ public class PlayerManager
     public float Health { get; private set; }
     public bool IsInitialized { get; private set; }
 
-    private Vector3 m_newPlayerPosition;
-    private Quaternion m_newPlayerRotation;
-
 
     public PlayerManager ( int _id, string _username )
     {
@@ -37,30 +34,14 @@ public class PlayerManager
         ClientSend.PlayerReady ();
     }
 
-    /// <summary>
-    /// Main update loop called by GameManager to update any
-    /// objects for this Player instance.
-    /// </summary>
-    public void Update ( float _deltaTime )
+    public void UpdatePlayerPosition ( Vector3 position )
     {
-        //Player.transform.position = Vector3.Lerp ( Player.transform.position, m_newPlayerPosition, _deltaTime * POSITION_INTERPOLATION_SPEED );
-        //Player.transform.rotation = Quaternion.Slerp ( Player.transform.rotation, m_newPlayerRotation, _deltaTime * ROTATION_INTERPOLATION_SPEED );
+        Player.transform.position = position;
     }
 
-    public void SetPlayerPosition ( Vector3 newPosition )
+    public void UpdatePlayerRotation ( Quaternion rotation )
     {
-        m_newPlayerPosition = newPosition;
-
-        // Direct assignment
-        Player.transform.position = newPosition;
-    }
-
-    public void SetPlayerRotation ( Quaternion newRotation )
-    {
-        m_newPlayerRotation = newRotation;
-
-        // Direct assignment
-        Player.transform.rotation = newRotation;
+        Player.transform.rotation = rotation;
     }
 
     public void SetMovementValues ( Vector3 movementVelocity, Vector2 inputVelocity, bool run, bool crouch, bool prone )
@@ -71,6 +52,11 @@ public class PlayerManager
             return;
         }
         Player.SetMovementValues ( movementVelocity, inputVelocity, run, crouch, prone );
+    }
+
+    public void OnServerFrame ( byte [] processedRequest )
+    {
+        Player.OnServerFrame ( processedRequest );
     }
 
     public void SetHealth ( float _health )

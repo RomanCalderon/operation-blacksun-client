@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerInput;
 
+[RequireComponent ( typeof ( PlayerInputController ) )]
+[RequireComponent ( typeof ( ClientPredictionController ) )]
 [RequireComponent ( typeof ( PlayerModelController ) )]
 [RequireComponent ( typeof ( InventoryManager ) )]
 public class Player : MonoBehaviour
@@ -15,6 +18,7 @@ public class Player : MonoBehaviour
     private Camera m_fpCamera = null;
     public InventoryManager InventoryManager { get; private set; }
     public WeaponsController WeaponsController { get; private set; }
+    private ClientPredictionController m_clientPredictionController = null;
     [SerializeField]
     private GameObject m_weaponsController = null;
     [SerializeField]
@@ -30,6 +34,7 @@ public class Player : MonoBehaviour
 
     private void Awake ()
     {
+        m_clientPredictionController = GetComponent<ClientPredictionController> ();
         m_modelController = GetComponent<PlayerModelController> ();
         InventoryManager = GetComponent<InventoryManager> ();
         if ( Client.instance.myId == m_id )
@@ -80,6 +85,11 @@ public class Player : MonoBehaviour
             m_modelController.SetCrouch ( crouchInput );
             m_modelController.SetProne ( proneInput );
         }
+    }
+
+    public void OnServerFrame ( byte [] processedRequest )
+    {
+        m_clientPredictionController.OnServerFrame ( processedRequest );
     }
 
     public void Die ()

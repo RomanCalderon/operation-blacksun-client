@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerInput;
+using UnityEditorInternal;
 
-[RequireComponent ( typeof ( Player ) )]
 [RequireComponent ( typeof ( CharacterMotor ) )]
 [RequireComponent ( typeof ( CharacterController ) )]
 public class PlayerMovementController : MonoBehaviour
@@ -31,7 +32,14 @@ public class PlayerMovementController : MonoBehaviour
 
     #region Members
 
-    private Player m_player = null;
+    public Vector3 Velocity
+    {
+        get
+        {
+            return m_motor.movement.velocity;
+        }
+    }
+
     private CharacterMotor m_motor = null;
     private CharacterController m_controller = null;
 
@@ -65,7 +73,6 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Awake ()
     {
-        m_player = GetComponent<Player> ();
         m_motor = GetComponent<CharacterMotor> ();
         m_controller = GetComponent<CharacterController> ();
     }
@@ -76,25 +83,42 @@ public class PlayerMovementController : MonoBehaviour
         m_height = m_controller.height; // Initial height
     }
 
-    public void Movement ( Vector2 inputDirection, bool runInput, bool jumpInput, bool crouchInput, bool proneInput )
+    public Frame Movement ( Frame inputFrame, float deltaTime, bool [] inputs )
     {
-        if ( m_player.IsDead )
+        // Movement Input - Run / Jump / Crouch / Prone
+        Vector2 inputDirection = Vector2.zero;
+        if ( inputs [ 0 ] )
         {
-            return;
+            inputDirection.y += 1;
         }
+        if ( inputs [ 1 ] )
+        {
+            inputDirection.y -= 1;
+        }
+        if ( inputs [ 2 ] )
+        {
+            inputDirection.x -= 1;
+        }
+        if ( inputs [ 3 ] )
+        {
+            inputDirection.x += 1;
+        }
+        bool runInput = inputs [ 4 ];
+        bool jumpInput = inputs [ 5 ];
+        bool crouchInput = inputs [ 6 ];
+        bool proneInput = inputs [ 7 ];
+        Vector3 movementVelocity = m_motor.movement.velocity;
 
-        float deltaTime = Time.fixedDeltaTime;
         float height = m_height;
         float jumpHeight = BASE_JUMP_HEIGHT;
         float speed = m_walkSpeed;
-        Vector3 movementVelocity = m_motor.movement.velocity;
+
         m_currentMovementState = MovementStates.WALKING;
 
         // Movement input direction
         if ( !m_isSliding )
         {
-            Vector3 movementInputVector = ( transform.right * inputDirection.x + transform.forward * inputDirection.y ).normalized;
-            m_motor.inputMoveDirection = movementInputVector;
+            m_motor.inputMoveDirection = ( transform.right * inputDirection.x + transform.forward * inputDirection.y ).normalized;
         }
 
         // Running
@@ -159,7 +183,7 @@ public class PlayerMovementController : MonoBehaviour
                 Debug.DrawRay ( transform.position, slopeDir.normalized, Color.blue );
             }
 
-            speed = m_slideSpeed -= m_slideTimer * slideTimeModifier;
+            speed = m_slideSpeed -= m_slideTimer * slideTimeModifier / 48f;
             if ( m_motor.IsGrounded () )
             {
                 m_motor.movement.velocity = m_initialSlideVelocity.normalized * speed;
@@ -187,7 +211,14 @@ public class PlayerMovementController : MonoBehaviour
         float lastHeight = m_controller.height; // Crouch/stand up smoothly 
         m_controller.height = Mathf.SmoothDamp ( m_controller.height, height, ref m_crouchCurrVelocity, CROUCH_SMOOTH_TIME * deltaTime );
         m_controller.center += new Vector3 ( 0f, ( m_controller.height - lastHeight ) / 2, 0f ); // Fix vertical position
+
+        Vector3 deltaPosition = transform.position - inputFrame.position;
+        Vector3 newVelocity = m_motor.movement.velocity;
+        Vector3 newPosition = transform.position + ( newVelocity * deltaTime );
+        return new Frame ( inputFrame.timestamp, inputFrame.lerp_msec, deltaTime, transform.position, deltaPosition, newVelocity, inputs, transform.rotation );
     }
+
+    #region Util
 
     private float CalculateSlopeAngle ( Vector3 position )
     {
@@ -279,4 +310,6 @@ public class PlayerMovementController : MonoBehaviour
                 return m_walkSpeed;
         }
     }
+
+    #endregion
 }

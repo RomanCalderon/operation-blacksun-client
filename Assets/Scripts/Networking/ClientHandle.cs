@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlayerInput;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -63,7 +64,7 @@ public class ClientHandle : MonoBehaviour
 
         // Update the players new position
         Vector3 newPosition = _packet.ReadVector3 ();
-        GameManager.players [ _id ].SetPlayerPosition ( newPosition );
+        GameManager.players [ _id ].UpdatePlayerPosition ( newPosition );
     }
 
     public static void PlayerRotation ( Packet _packet )
@@ -76,14 +77,15 @@ public class ClientHandle : MonoBehaviour
             return;
         }
 
-        // Update the players new rotation
+        // Update the remote players' rotation
         Quaternion newRotation = _packet.ReadQuaternion ();
-        GameManager.players [ _id ].SetPlayerRotation ( newRotation );
+        GameManager.players [ _id ].UpdatePlayerRotation ( newRotation );
     }
 
-    public static void PlayerMovementVector ( Packet _packet )
+    public static void PlayerMovement ( Packet _packet )
     {
         int _id = _packet.ReadInt ();
+
         // Ignore if Player is null
         if ( GameManager.players [ _id ].Player == null )
         {
@@ -97,7 +99,23 @@ public class ClientHandle : MonoBehaviour
         bool _playerCrouch = _packet.ReadBool ();
         bool _playerProne = _packet.ReadBool ();
 
+        // Used for visual effects
         GameManager.players [ _id ].SetMovementValues ( _playerMovementVelocity, new Vector2 ( _playerMovementX, _playerMovementY ), _playerRun, _playerCrouch, _playerProne );
+    }
+
+    public static void PlayerInputProcessed ( Packet _packet )
+    {
+        int playerId = _packet.ReadInt ();
+
+        // Ignore if Player is null
+        if ( GameManager.players [ playerId ].Player == null )
+        {
+            return;
+        }
+
+        int length = _packet.ReadInt ();
+        byte [] request = _packet.ReadBytes ( length );
+        GameManager.players [ playerId ].OnServerFrame ( request );
     }
 
     public static void PlayerDisconnected ( Packet _packet )
