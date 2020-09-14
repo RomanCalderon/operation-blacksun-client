@@ -7,14 +7,18 @@ using UnityEngine;
 public class Client : MonoBehaviour
 {
     private const float PING_CHECK_INTERVAL = 1f;
+
+    /// <summary>
+    /// Local Host IP:          127.0.0.1
+    /// Private Network IP:     192.168.0.172
+    /// Public Network IP:      172.73.164.161
+    /// </summary>
     private const string LOCAL_IP_ADDRESS = "127.0.0.1";
-    private const string PUBLIC_IP_ADDRESS = "192.168.0.172";
+    private const string PUBLIC_IP_ADDRESS = "172.73.164.161";
 
     public static Client instance;
     public static int dataBufferSize = 4096;
 
-    public bool usePublicIP = false;
-    [HideInInspector]
     public string ip = "127.0.0.1";
     public int port = 26950;
     public int myId = 0;
@@ -41,8 +45,6 @@ public class Client : MonoBehaviour
             Debug.Log ( "Instance already exists, destroying object!" );
             Destroy ( this );
         }
-
-        ip = usePublicIP ? PUBLIC_IP_ADDRESS : LOCAL_IP_ADDRESS;
     }
 
     private void Start ()

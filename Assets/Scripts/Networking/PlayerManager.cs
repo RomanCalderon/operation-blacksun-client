@@ -36,12 +36,12 @@ public class PlayerManager
 
     public void UpdatePlayerPosition ( Vector3 position )
     {
-        Player.transform.position = position;
+        Player.SetUpdatedPosition ( position );
     }
 
     public void UpdatePlayerRotation ( Quaternion rotation )
     {
-        Player.transform.rotation = rotation;
+        Player.SetUpdatedRotation ( rotation );
     }
 
     public void SetMovementValues ( Vector3 movementVelocity, Vector2 inputVelocity, bool run, bool crouch, bool prone )

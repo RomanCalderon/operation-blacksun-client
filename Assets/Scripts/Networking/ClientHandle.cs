@@ -28,7 +28,6 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt ();
         string _username = _packet.ReadString ();
 
-
         GameManager.instance.PlayerConnected ( _id, _username );
     }
 
@@ -57,7 +56,7 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt ();
 
         // Ignore if Player is null
-        if ( GameManager.players [ _id ].Player == null )
+        if ( !GameManager.players.ContainsKey ( _id ) || GameManager.players [ _id ].Player == null )
         {
             return;
         }
@@ -72,7 +71,7 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt ();
 
         // Ignore if Player is null
-        if ( GameManager.players [ _id ].Player == null )
+        if ( !GameManager.players.ContainsKey ( _id ) || GameManager.players [ _id ].Player == null )
         {
             return;
         }
@@ -87,7 +86,7 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt ();
 
         // Ignore if Player is null
-        if ( GameManager.players [ _id ].Player == null )
+        if ( !GameManager.players.ContainsKey ( _id ) || GameManager.players [ _id ].Player == null )
         {
             return;
         }
@@ -108,7 +107,7 @@ public class ClientHandle : MonoBehaviour
         int playerId = _packet.ReadInt ();
 
         // Ignore if Player is null
-        if ( GameManager.players [ playerId ].Player == null )
+        if ( !GameManager.players.ContainsKey ( playerId ) || GameManager.players [ playerId ].Player == null )
         {
             return;
         }

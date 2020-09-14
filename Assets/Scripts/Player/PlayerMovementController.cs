@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerInput;
-using UnityEditorInternal;
 
 [RequireComponent ( typeof ( CharacterMotor ) )]
 [RequireComponent ( typeof ( CharacterController ) )]

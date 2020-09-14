@@ -30,7 +30,20 @@ public class Player : MonoBehaviour
     private Camera m_ragdollCamera = null;
     [SerializeField]
     private Transform m_ragdollParent = null;
-    
+
+    public Vector3 MovementVelocity
+    {
+        get
+        {
+            return m_movementVelocity;
+        }
+    }
+    private Vector3 m_movementVelocity = Vector3.zero;
+
+    // Interpolation targets
+    private Vector3 m_targetPosition;
+    private Quaternion m_targetRotation;
+
 
     private void Awake ()
     {
@@ -49,14 +62,17 @@ public class Player : MonoBehaviour
         Debug.Assert ( m_ragdollParent != null, "Ragdoll parent is null." );
     }
 
-    public Vector3 MovementVelocity
+    private void Update ()
     {
-        get
+        float deltaTime = Time.deltaTime;
+
+        // Interpolate remote player position and rotation
+        if ( Client.instance.myId != m_id )
         {
-            return m_movementVelocity;
+            transform.position = Vector3.Lerp ( transform.position, m_targetPosition, deltaTime * Constants.INTERP_POSITION_SPEED );
+            transform.rotation = Quaternion.Lerp ( transform.rotation, m_targetRotation, deltaTime * Constants.INTERP_ROTATION_SPEED );
         }
     }
-    private Vector3 m_movementVelocity = Vector3.zero;
 
     public void Initialize ( int _id, string _username )
     {
@@ -67,6 +83,16 @@ public class Player : MonoBehaviour
         {
             m_cameraController.CanControl ( true );
         }
+    }
+
+    public void SetUpdatedPosition ( Vector3 pos )
+    {
+        m_targetPosition = pos;
+    }
+
+    public void SetUpdatedRotation ( Quaternion rot )
+    {
+        m_targetRotation = rot;
     }
 
     public void SetMovementValues ( Vector3 movementVelocity, Vector2 inputVelocity, bool runInput, bool crouchInput, bool proneInput )

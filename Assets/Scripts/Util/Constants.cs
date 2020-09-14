@@ -17,6 +17,10 @@ public class Constants
     public const float VELOCITY_TOLERANCE = 2.5f;
     public const float PLAYER_CONVERGE_MULTIPLIER = 0.2f;
 
+    // INTERPOLATION
+    public const float INTERP_POSITION_SPEED = 18.0f;
+    public const float INTERP_ROTATION_SPEED = 12.0f;
+
     // INVENTORY
     public const int INVENTORY_RIG_SIZE = 6;
     public const int INVENTORY_BACKPACK_SIZE = 10;
