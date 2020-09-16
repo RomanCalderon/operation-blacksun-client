@@ -8,6 +8,9 @@ public class PlayerManager
     private const float POSITION_INTERPOLATION_SPEED = 32f;
     private const float ROTATION_INTERPOLATION_SPEED = 32f;
 
+    public delegate void HealthHandler ( int playerId, float currentHealth, float maxHealth );
+    public static HealthHandler OnHealthUpdated;
+
     public int Id { get; private set; }
     public string Username { get; private set; }
     public Player Player { get; private set; }
@@ -68,6 +71,7 @@ public class PlayerManager
         }
 
         Health = _health;
+        OnHealthUpdated?.Invoke ( Id, Health, MAX_HEALTH );
 
         if ( Health <= 0f )
         {
