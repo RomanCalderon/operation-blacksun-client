@@ -19,8 +19,6 @@ public class ClientPredictionController : MonoBehaviour
     private Frame m_predictedState;
     private float m_latency;
     private float m_historyDuration;
-    private Vector3 m_positionDelta = Vector3.zero;
-
 
     // DEBUG
     [SerializeField]
@@ -39,6 +37,8 @@ public class ClientPredictionController : MonoBehaviour
     private void Initialize ()
     {
         InputBuffer = new PlayerInputBuffer ();
+
+        m_latency = 0.1f; // Init value for position calculation
     }
 
     // Update is called once per frame
@@ -48,8 +48,9 @@ public class ClientPredictionController : MonoBehaviour
         m_debugText.text = "input_buffer_size: " + InputBuffer.Size.ToString ();
 
         // Get input
-        m_currentInput = m_playerInputController.SamplePlayerInputs ();
-        UpdateFrame ( Time.deltaTime, m_currentInput );
+        float deltaTime = Time.deltaTime;
+        m_currentInput = m_playerInputController.SamplePlayerInputs ( deltaTime );
+        UpdateFrame ( deltaTime, m_currentInput );
 
         // Send input to the server
         SendInputToServer ( m_currentInput );
@@ -60,7 +61,8 @@ public class ClientPredictionController : MonoBehaviour
         // Run player controller to get new prediction and add to input buffer
         Frame newState = m_playerMovementController.Movement ( m_predictedState, deltaTime, input.inputs );
         Vector3 deltaPosition = newState.position - m_predictedState.position;
-        Frame frame = new Frame ( input.timestamp, input.lerp_msec, deltaTime, input.position, deltaPosition, newState.velocity, input.inputs, input.rot );
+        //Frame frame = new Frame ( input.timestamp, input.lerp_msec, deltaTime, input.position, deltaPosition, newState.velocity, input.inputs, input.rot );
+        Frame frame = m_playerInputController.SamplePlayerInputs ( deltaTime );
         InputBuffer.Add ( frame );
         m_historyDuration += deltaTime;
 
@@ -69,8 +71,7 @@ public class ClientPredictionController : MonoBehaviour
 
         // Interpolate client position towards extrapolated position
         float t = deltaTime / ( m_latency * Constants.PLAYER_CONVERGE_MULTIPLIER );
-        //t = Mathf.Clamp01 ( t );
-        transform.position = Vector3.Lerp ( transform.position, transform.position + ( extrapolatedPosition - transform.position ), t * Constants.PLAYER_CONVERGE_MULTIPLIER );
+        transform.position += ( extrapolatedPosition - transform.position ) * t;
     }
 
     private void SendInputToServer ( Frame inputs )

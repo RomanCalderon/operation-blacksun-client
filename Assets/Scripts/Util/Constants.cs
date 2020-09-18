@@ -12,10 +12,10 @@ public class Constants
 
     // CLIENT PREDICTION
     // Known good values:
-    // Velocity Tolerance - 5f
-    // Converge Multiplier - 1.005f
+    // Velocity Tolerance - 2.5f
+    // Converge Multiplier - 1.02f
     public const float VELOCITY_TOLERANCE = 2.5f;
-    public const float PLAYER_CONVERGE_MULTIPLIER = 0.2f;
+    public const float PLAYER_CONVERGE_MULTIPLIER = 1.5f;
 
     // INTERPOLATION
     public const float INTERP_POSITION_SPEED = 18.0f;

@@ -124,7 +124,7 @@ namespace PlayerInput
                     }
                     break;
                 case InputModes.HOLD:
-                    CrouchInput = Input.GetKey ( KeyCode.C ); // TODO: Switch to KeybindManager as input
+                    CrouchInput = Input.GetKey ( KeyCode.LeftControl ); // TODO: Switch to KeybindManager as input
                     break;
                 default:
                     break;
@@ -140,14 +140,14 @@ namespace PlayerInput
             switch ( m_proneInputMode )
             {
                 case InputModes.TOGGLE:
-                    if ( Input.GetKeyDown ( KeyCode.LeftAlt ) ) // TODO: Switch to KeybindManager as input
+                    if ( Input.GetKeyDown ( KeyCode.Z ) ) // TODO: Switch to KeybindManager as input
                     {
                         m_proneToggle = !m_proneToggle;
                         ProneInput = m_proneToggle;
                     }
                     break;
                 case InputModes.HOLD:
-                    ProneInput = Input.GetKey ( KeyCode.LeftAlt ); // TODO: Switch to KeybindManager as input
+                    ProneInput = Input.GetKey ( KeyCode.Z ); // TODO: Switch to KeybindManager as input
                     break;
                 default:
                     break;
@@ -158,11 +158,10 @@ namespace PlayerInput
         /// Samples the current inputs and returns a PlayerInputs struct.
         /// </summary>
         /// <returns>PlayerInput struct of the sampled inputs at this given frame.</returns>
-        public Frame SamplePlayerInputs ()
+        public Frame SamplePlayerInputs ( float deltaTime )
         {
             float timestamp = Time.time;
             short lerpMilliseconds = ( short ) ( Time.deltaTime * 1000 );
-            float deltaTime = Time.deltaTime;
             Vector3 position = transform.position;
             Vector3 deltaPosition = position - m_previousPosition;
             m_previousPosition = transform.position;
