@@ -1,8 +1,8 @@
 ﻿using System.IO;
-using System.Collections;
-using System.Collections.Generic;
+using System.IO.Compression;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditor.Build.Reporting;
 
 
@@ -56,6 +56,8 @@ public class BuildManagementEditor : EditorWindow
     {
         Initialize ();
     }
+
+    #region GUI
 
     private void OnGUI ()
     {
@@ -133,12 +135,7 @@ public class BuildManagementEditor : EditorWindow
         }
     }
 
-    private bool IsValid ()
-    {
-        return !string.IsNullOrEmpty ( m_productName ) &&
-            !string.IsNullOrEmpty ( m_buildPath ) &&
-            Directory.Exists ( m_buildPath );
-    }
+    #endregion
 
     private static void LoadBuildSettings ()
     {
@@ -186,12 +183,8 @@ public class BuildManagementEditor : EditorWindow
 
         if ( buildSummary.result == BuildResult.Succeeded )
         {
-            Debug.Log ( $"Build succeeded - Name [{m_buildName}] - Size [{buildSummary.totalSize}] - Time [{buildSummary.totalTime}]" );
-            
-            if ( m_includeZip )
-            {
-                CreateZIP (m_buildDirectory);
-            }
+            string totalSize = FileSizeFormatter.SizeSuffix ( ( long ) buildSummary.totalSize );
+            Debug.Log ( $"Build succeeded - Name [{m_buildName}] - Size [{totalSize}] - Time [{buildSummary.totalTime}]" );
         }
         else if ( buildSummary.result == BuildResult.Failed )
         {
@@ -199,10 +192,43 @@ public class BuildManagementEditor : EditorWindow
         }
     }
 
-    private void CreateZIP ( string directory )
+    [PostProcessBuild]
+    public static void OnPostProcessBuild ( BuildTarget target, string pathToBuiltProject )
     {
-        Debug.Log ( "Creating ZIP..." );
-
-
+        if ( m_includeZip )
+        {
+            string zipPath = new DirectoryInfo ( pathToBuiltProject ).Parent.FullName + ".zip";
+            Debug.Log ( $"Creating ZIP [{zipPath}]" );
+            if ( File.Exists ( zipPath ) ) // Remove existing .zip
+            {
+                File.Delete ( zipPath );
+            }
+            ZipFile.CreateFromDirectory ( m_buildDirectory, zipPath );
+            
+            // Open zip directory
+            ShowExplorer ( zipPath );
+        }
+        else
+        {
+            // Open build directory
+            ShowExplorer ( pathToBuiltProject );
+        }
     }
+
+    #region Util
+
+    private bool IsValid ()
+    {
+        return !string.IsNullOrEmpty ( m_productName ) &&
+            !string.IsNullOrEmpty ( m_buildPath ) &&
+            Directory.Exists ( m_buildPath );
+    }
+
+    private static void ShowExplorer ( string path )
+    {
+        path = path.Replace ( @"/", @"\" );
+        System.Diagnostics.Process.Start ( "explorer.exe", "/select," + path );
+    }
+
+    #endregion
 }
