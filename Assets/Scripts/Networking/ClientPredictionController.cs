@@ -60,7 +60,7 @@ public class ClientPredictionController : MonoBehaviour
     {
         // Run player controller to get new prediction and add to input buffer
         Frame newState = m_playerMovementController.Movement ( m_predictedState, deltaTime, input.inputs );
-        Vector3 deltaPosition = newState.position - m_predictedState.position;
+        CheckPosition ( newState.position - m_predictedState.position );
         //Frame frame = new Frame ( input.timestamp, input.lerp_msec, deltaTime, input.position, deltaPosition, newState.velocity, input.inputs, input.rot );
         Frame frame = m_playerInputController.SamplePlayerInputs ( deltaTime );
         InputBuffer.Add ( frame );
@@ -72,6 +72,15 @@ public class ClientPredictionController : MonoBehaviour
         // Interpolate client position towards extrapolated position
         float t = deltaTime / ( m_latency * Constants.PLAYER_CONVERGE_MULTIPLIER );
         transform.position += ( extrapolatedPosition - transform.position ) * t;
+    }
+
+    private void CheckPosition ( Vector3 positionDelta )
+    {
+        if ( positionDelta.magnitude > Constants.POSITION_CORRECTION_TOLERANCE )
+        {
+            Debug.Log ( "Correct position!" );
+            transform.position = m_predictedState.position;
+        }
     }
 
     private void SendInputToServer ( Frame inputs )
