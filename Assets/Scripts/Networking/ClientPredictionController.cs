@@ -50,17 +50,17 @@ public class ClientPredictionController : MonoBehaviour
         // Get input
         float deltaTime = Time.deltaTime;
         m_currentInput = m_playerInputController.SamplePlayerInputs ( deltaTime );
-        UpdateFrame ( deltaTime, m_currentInput );
 
         // Send input to the server
         SendInputToServer ( m_currentInput );
+
+        UpdateFrame ( deltaTime, m_currentInput );
     }
 
     private void UpdateFrame ( float deltaTime, Frame input )
     {
         // Run player controller to get new prediction and add to input buffer
         Frame newState = m_playerMovementController.Movement ( m_predictedState, deltaTime, input.inputs );
-        CheckPosition ( newState.position - m_predictedState.position );
         //Frame frame = new Frame ( input.timestamp, input.lerp_msec, deltaTime, input.position, deltaPosition, newState.velocity, input.inputs, input.rot );
         Frame frame = m_playerInputController.SamplePlayerInputs ( deltaTime );
         InputBuffer.Add ( frame );
@@ -72,15 +72,6 @@ public class ClientPredictionController : MonoBehaviour
         // Interpolate client position towards extrapolated position
         float t = deltaTime / ( m_latency * Constants.PLAYER_CONVERGE_MULTIPLIER );
         transform.position += ( extrapolatedPosition - transform.position ) * t;
-    }
-
-    private void CheckPosition ( Vector3 positionDelta )
-    {
-        if ( positionDelta.magnitude > Constants.POSITION_CORRECTION_TOLERANCE )
-        {
-            Debug.Log ( "Correct position!" );
-            transform.position = m_predictedState.position;
-        }
     }
 
     private void SendInputToServer ( Frame inputs )
@@ -136,6 +127,8 @@ public class ClientPredictionController : MonoBehaviour
                 InputBuffer.Frames [ i ].velocity = newState.velocity;
                 m_predictedState = newState;
             }
+            Debug.Log ( "Exceeded velocity tolerance" );
+            CheckPosition ( transform.position - m_serverState.position );
         }
         else
         {
@@ -150,6 +143,15 @@ public class ClientPredictionController : MonoBehaviour
     }
 
     #region Util
+
+    private void CheckPosition ( Vector3 positionDelta )
+    {
+        if ( positionDelta.magnitude > Constants.POSITION_CORRECTION_TOLERANCE )
+        {
+            Debug.Log ( "Correct position!" );
+            transform.position = m_serverState.position;
+        }
+    }
 
     private byte [] FrameToBytes ( Frame str )
     {
