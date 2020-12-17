@@ -153,6 +153,8 @@ public class ClientHandle : MonoBehaviour
         InventoryManager.Instance.UpdateSlot ( _slotId, _playerItemId, _quantity );
     }
 
+    #endregion
+
     public static void SpawnHitObject ( Packet _packet )
     {
         int _hitType = _packet.ReadInt ();
@@ -174,5 +176,11 @@ public class ClientHandle : MonoBehaviour
         AudioManager.PlaySound ( _audioClipName, _volume, _location, _minDistance, _maxDistance );
     }
 
-    #endregion
+    public static void Hitmarker ( Packet _packet )
+    {
+        int _id = _packet.ReadInt ();
+        int _hitmarkerType = _packet.ReadInt ();
+
+        GameManager.players [ _id ].Player.Hitmarker ( _hitmarkerType );
+    }
 }

@@ -85,11 +85,14 @@ namespace PlayerInput
 
         private PlayerMovementController m_playerMovementController = null;
 
+        public static bool JumpInput { get; private set; } = false;
         public static bool CrouchInput { get; private set; } = false;
         public static bool ProneInput { get; private set; } = false;
+        
 
         private InputModes m_crouchInputMode = InputModes.HOLD; // TODO: Update from KeybindManager
         private static bool m_crouchToggle = false;
+        
         private InputModes m_proneInputMode = InputModes.TOGGLE; // TODO: Update from KeybindManager
         private static bool m_proneToggle = false;
 
@@ -109,10 +112,14 @@ namespace PlayerInput
         {
             CrouchInput = m_crouchToggle = false;
             ProneInput = m_proneToggle = false;
+            JumpInput = false;
         }
 
         private void Update ()
         {
+            // JUMP INPUT
+            JumpInput = !ProneInput && Input.GetKey ( KeyCode.Space ); // TODO: Switch to KeybindManager as input
+
             // CROUCH INPUT
             switch ( m_crouchInputMode )
             {
@@ -131,7 +138,7 @@ namespace PlayerInput
             }
 
             // Switch prone to false if crouch is true
-            if ( CrouchInput && ProneInput )
+            if ( ProneInput && ( CrouchInput || Input.GetKeyDown ( KeyCode.Space ) ) )  // TODO: Switch to KeybindManager as input
             {
                 ProneInput = m_proneToggle = false;
             }
@@ -166,14 +173,15 @@ namespace PlayerInput
             Vector3 deltaPosition = position - m_previousPosition;
             m_previousPosition = transform.position;
             Vector3 velocity = m_playerMovementController.Velocity;
+
             bool [] inputs = new bool [ Constants.NUM_PLAYER_INPUTS ]
             {
-            Input.GetKey(KeyCode.W),            // [0] Forward
-            Input.GetKey(KeyCode.S),            // [1] Backward
-            Input.GetKey(KeyCode.A),            // [2] Left
-            Input.GetKey(KeyCode.D),            // [3] Right
-            Input.GetKey(KeyCode.LeftShift),    // [4] Run
-            Input.GetKey(KeyCode.Space),        // [5] Jump
+            Input.GetKey(KeyCode.W),            // [0] Forward - switch to KeybindManager
+            Input.GetKey(KeyCode.S),            // [1] Backward - switch to KeybindManager
+            Input.GetKey(KeyCode.A),            // [2] Left - switch to KeybindManager
+            Input.GetKey(KeyCode.D),            // [3] Right - switch to KeybindManager
+            Input.GetKey(KeyCode.LeftShift),    // [4] Run - switch to KeybindManager
+            JumpInput,                          // [5] Jump
             CrouchInput,                        // [6] Crouch
             ProneInput                          // [7] Prone
             };

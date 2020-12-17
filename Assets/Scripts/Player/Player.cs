@@ -7,6 +7,7 @@ using PlayerInput;
 [RequireComponent ( typeof ( ClientPredictionController ) )]
 [RequireComponent ( typeof ( PlayerModelController ) )]
 [RequireComponent ( typeof ( InventoryManager ) )]
+[RequireComponent ( typeof ( HitmarkerController ) )]
 public class Player : MonoBehaviour
 {
     private int m_id;
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     public bool IsDead { get; private set; }
     [SerializeField]
     private Camera m_playerCamera = null;
+    private AudioListener m_playerAudioListener = null;
     [SerializeField]
     private Camera m_fpCamera = null;
     public InventoryManager InventoryManager { get; private set; }
@@ -23,6 +25,8 @@ public class Player : MonoBehaviour
     private GameObject m_weaponsController = null;
     [SerializeField]
     private CameraController m_cameraController = null;
+    [SerializeField]
+    private HitmarkerController m_hitmarkerController = null;
     private PlayerModelController m_modelController = null;
     [SerializeField]
     private RagdollMasterJointController m_ragdollController = null;
@@ -50,10 +54,6 @@ public class Player : MonoBehaviour
         m_clientPredictionController = GetComponent<ClientPredictionController> ();
         m_modelController = GetComponent<PlayerModelController> ();
         InventoryManager = GetComponent<InventoryManager> ();
-        if ( Client.instance.myId == m_id )
-        {
-            WeaponsController = m_weaponsController.GetComponent<WeaponsController> ();
-        }
     }
 
     private void Start ()
@@ -81,9 +81,21 @@ public class Player : MonoBehaviour
 
         if ( Client.instance.myId == m_id )
         {
+            // Initializations
+            m_playerAudioListener = m_playerCamera.GetComponent<AudioListener> ();
+            WeaponsController = m_weaponsController.GetComponent<WeaponsController> ();
+
+            m_playerCamera.enabled = true;
             m_cameraController.CanControl ( true );
+            m_fpCamera.enabled = true;
+            m_ragdollCamera.gameObject.SetActive ( false );
+
+            // Reset feedback
+            m_hitmarkerController.ResetHitmarkers ();
         }
     }
+
+    #region Movement/Positioning
 
     public void SetUpdatedPosition ( Vector3 pos )
     {
@@ -118,6 +130,17 @@ public class Player : MonoBehaviour
         m_clientPredictionController.OnServerFrame ( processedRequest );
     }
 
+    #endregion
+
+    #region Feedback
+
+    public void Hitmarker ( int type )
+    {
+        m_hitmarkerController.ShowHitmarker ( type );
+    }
+
+    #endregion
+
     public void Die ()
     {
         IsDead = true;
@@ -125,9 +148,10 @@ public class Player : MonoBehaviour
         if ( Client.instance.myId == m_id )
         {
             m_playerCamera.enabled = false;
+            m_playerAudioListener.enabled = false;
             m_cameraController.CanControl ( false );
             m_fpCamera.enabled = false;
-            m_ragdollCamera.enabled = true;
+            m_ragdollCamera.gameObject.SetActive ( true );
         }
 
         // Enable the player ragdoll
@@ -143,9 +167,13 @@ public class Player : MonoBehaviour
         if ( Client.instance.myId == m_id )
         {
             m_playerCamera.enabled = true;
+            m_playerAudioListener.enabled = true;
             m_cameraController.CanControl ( true );
             m_fpCamera.enabled = true;
-            m_ragdollCamera.enabled = false;
+            m_ragdollCamera.gameObject.SetActive ( false );
+
+            // Reset feedback
+            m_hitmarkerController.ResetHitmarkers ();
         }
 
         // Reset and disable the player ragdoll

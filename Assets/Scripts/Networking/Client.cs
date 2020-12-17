@@ -330,7 +330,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerRespawned, ClientHandle.PlayerRespawned },
             { (int)ServerPackets.playerUpdateInventorySlot, ClientHandle.PlayerUpdateInventorySlot },
             { (int)ServerPackets.spawnHitObject, ClientHandle.SpawnHitObject },
-            { (int)ServerPackets.playAudioClip, ClientHandle.PlayAudioClip }
+            { (int)ServerPackets.playAudioClip, ClientHandle.PlayAudioClip },
+            { (int)ServerPackets.hitmarker, ClientHandle.Hitmarker }
         };
         Debug.Log ( "Initialized packets." );
     }

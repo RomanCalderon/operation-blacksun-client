@@ -114,6 +114,15 @@ public static class AudioManager
         }
     }
 
+    /// <summary>
+    /// Plays an AudioClip.
+    /// </summary>
+    /// <param name="clip">The AudioClip to play.</param>
+    /// <param name="mixerGroup">The AudioMixerGroup used for this playback.</param>
+    /// <param name="volume">Playback volume.</param>
+    /// <param name="loop">Loop the AudioClip?</param>
+    /// <param name="spatialBlend">0.0 makes the sound full 2D, 1.0 makes it full 3D.</param>
+    /// <param name="location">Where the AudioSource is located in the scene.</param>
     public static void PlaySound ( AudioClip clip, AudioMixerGroup mixerGroup, float volume, bool loop, float spatialBlend, Vector3 location )
     {
         GameObject soundGameObject = new GameObject ( $"Audio [{clip.name}]" );

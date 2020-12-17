@@ -149,7 +149,7 @@ public class ClientPredictionController : MonoBehaviour
         if ( positionDelta.magnitude > Constants.POSITION_CORRECTION_TOLERANCE )
         {
             Debug.Log ( "Correct position!" );
-            transform.position = m_serverState.position;
+            transform.position = m_predictedState.position;
         }
     }
 
