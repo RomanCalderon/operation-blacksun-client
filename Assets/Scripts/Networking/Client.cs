@@ -6,6 +6,13 @@ using UnityEngine;
 
 public class Client : MonoBehaviour
 {
+    private enum IP_ADDRESSES
+    {
+        LOCAL,
+        PRIVATE,
+        PUBLIC
+    }
+
     private const float PING_CHECK_INTERVAL = 1f;
 
     /// <summary>
@@ -14,7 +21,8 @@ public class Client : MonoBehaviour
     /// Public Network IP:      172.73.164.161
     /// </summary>
     private const string LOCAL_IP_ADDRESS = "127.0.0.1";
-    private const string PUBLIC_IP_ADDRESS = "172.73.164.161";
+    private const string PUBLIC_IP_ADDRESS = "99.24.219.47";
+    private const string PRIVATE_IP_ADDRESS = "192.168.1.67";
 
     public static Client instance;
     public static int dataBufferSize = 4096;
@@ -26,6 +34,8 @@ public class Client : MonoBehaviour
     public TCP tcp;
     public UDP udp;
 
+    [SerializeField]
+    private IP_ADDRESSES m_activeIpAddress;
     private bool isConnected = false;
     private delegate void PacketHandler ( Packet _packet );
     private static Dictionary<int, PacketHandler> packetHandlers;
@@ -49,6 +59,22 @@ public class Client : MonoBehaviour
 
     private void Start ()
     {
+        switch ( m_activeIpAddress )
+        {
+            case IP_ADDRESSES.LOCAL:
+                ip = LOCAL_IP_ADDRESS;
+                break;
+            case IP_ADDRESSES.PRIVATE:
+                ip = PRIVATE_IP_ADDRESS;
+                break;
+            case IP_ADDRESSES.PUBLIC:
+                ip = PUBLIC_IP_ADDRESS;
+                break;
+            default:
+                ip = LOCAL_IP_ADDRESS;
+                break;
+        }
+
         tcp = new TCP ();
         udp = new UDP ();
     }

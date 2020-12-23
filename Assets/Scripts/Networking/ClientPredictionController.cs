@@ -19,6 +19,7 @@ public class ClientPredictionController : MonoBehaviour
     private Frame m_predictedState;
     private float m_latency;
     private float m_historyDuration;
+    private Vector3 m_targetPosition;
 
     // DEBUG
     [SerializeField]
@@ -59,18 +60,18 @@ public class ClientPredictionController : MonoBehaviour
 
     private void UpdateFrame ( float deltaTime, Frame input )
     {
-        // Run player controller to get new prediction and add to input buffer
+        // Run player controller to get new prediction
         Frame newState = m_playerMovementController.Movement ( m_predictedState, deltaTime, input.inputs );
-        //Frame frame = new Frame ( input.timestamp, input.lerp_msec, deltaTime, input.position, deltaPosition, newState.velocity, input.inputs, input.rot );
-        Frame frame = m_playerInputController.SamplePlayerInputs ( deltaTime );
-        InputBuffer.Add ( frame );
-        m_historyDuration += deltaTime;
+        // Add input to input buffer
+        InputBuffer.Add ( m_playerInputController.SamplePlayerInputs ( deltaTime ) );
 
         // Extrapolate predicted position
         Vector3 extrapolatedPosition = m_predictedState.position + newState.velocity * m_latency * Constants.PLAYER_CONVERGE_MULTIPLIER;
 
         // Interpolate client position towards extrapolated position
         float t = deltaTime / ( m_latency * Constants.PLAYER_CONVERGE_MULTIPLIER );
+        m_historyDuration += deltaTime;
+
         transform.position += ( extrapolatedPosition - transform.position ) * t;
     }
 
@@ -85,6 +86,8 @@ public class ClientPredictionController : MonoBehaviour
     /// </summary>
     public void OnServerFrame ( byte [] processedRequest )
     {
+        //Debug.Log ( "OnServerFrame()" );
+
         // Get server frame
         Frame serverFrame = BytesToFrame ( processedRequest );
         m_latency = Time.time - serverFrame.timestamp;
@@ -122,6 +125,7 @@ public class ClientPredictionController : MonoBehaviour
 
             for ( int i = 0; i < InputBuffer.Size; i++ )
             {
+                Debug.Log ( "Server frame movement update" );
                 Frame newState = m_playerMovementController.Movement ( m_predictedState, InputBuffer.Frames [ i ].deltaTime, InputBuffer.Frames [ i ].inputs );
                 InputBuffer.Frames [ i ].deltaPosition = newState.position - m_predictedState.position;
                 InputBuffer.Frames [ i ].velocity = newState.velocity;

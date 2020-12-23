@@ -213,7 +213,6 @@ public class PlayerMovementController : MonoBehaviour
 
         Vector3 deltaPosition = transform.position - inputFrame.position;
         Vector3 newVelocity = m_motor.movement.velocity;
-        Vector3 newPosition = transform.position + ( newVelocity * deltaTime );
         return new Frame ( inputFrame.timestamp, inputFrame.lerp_msec, deltaTime, transform.position, deltaPosition, newVelocity, inputs, transform.rotation );
     }
 
