@@ -172,24 +172,24 @@ public class WeaponsController : MonoBehaviour
     public static float CalculateRecoilStrength ( Weapon.WeaponClasses weaponClass, Ammunition.Calibers caliber, out float aspect )
     {
         float strength = 0f;
-        aspect = UnityEngine.Random.Range ( 0.45f, 0.55f );
+        aspect = UnityEngine.Random.Range ( 0.25f, 0.5f );
 
         switch ( weaponClass )
         {
             case Weapon.WeaponClasses.Rifle:
-                strength += 0.4f;
+                strength += 0.12f;
                 break;
             case Weapon.WeaponClasses.SMG:
-                strength += 0.6f;
+                strength += 0.2f;
                 break;
             case Weapon.WeaponClasses.Shotgun:
-                strength += 5.0f;
+                strength += 1.4f;
                 break;
             case Weapon.WeaponClasses.Pistol:
-                strength += 0.3f;
+                strength += 0.1f;
                 break;
             case Weapon.WeaponClasses.Sniper:
-                strength += 2.0f;
+                strength += 0.75f;
                 break;
             default:
                 break;
@@ -198,22 +198,22 @@ public class WeaponsController : MonoBehaviour
         switch ( caliber )
         {
             case Ammunition.Calibers.Wilson_9MM:
-                strength += UnityEngine.Random.Range ( 0.0f, 0.08f );
+                strength += UnityEngine.Random.Range ( 0.0f, 0.04f );
                 break;
             case Ammunition.Calibers.ACP_Ultra:
-                strength += UnityEngine.Random.Range ( 0.0f, 0.1f );
+                strength += UnityEngine.Random.Range ( 0.0f, 0.05f );
                 break;
             case Ammunition.Calibers.NATO_556:
                 strength += 0.0f;
                 break;
             case Ammunition.Calibers.AAC:
-                strength += 0.3f;
+                strength += 0.15f;
                 break;
             case Ammunition.Calibers.G12:
                 strength += UnityEngine.Random.Range ( 0.0f, 2.0f );
                 break;
             case Ammunition.Calibers.Boar_75:
-                strength += UnityEngine.Random.Range ( 1.0f, 3.5f );
+                strength += UnityEngine.Random.Range ( 0.2f, 0.3f );
                 break;
             case Ammunition.Calibers.C3:
                 strength += UnityEngine.Random.Range ( 0.0f, 0.1f );
@@ -305,6 +305,16 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
+    private void UpdateIdleSpeed ( bool aimState )
+    {
+        float idleSpeed = aimState ? 0f : 1f;
+        if ( aimState && ActiveWeapon.BulletCount > 0 )
+        {
+            OnSetTrigger?.Invoke ( "ResetIdle" );
+        }
+        OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
+    }
+
     #endregion
 
     #region Weapon switching
@@ -353,16 +363,6 @@ public class WeaponsController : MonoBehaviour
     }
 
     #endregion
-
-    private void UpdateIdleSpeed ( bool aimState )
-    {
-        float idleSpeed = aimState ? 0f : 1f;
-        if ( aimState && ActiveWeapon.BulletCount > 0 )
-        {
-            OnSetTrigger?.Invoke ( "ResetIdle" );
-        }
-        OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
-    }
 
     #region Weapon and Attachment Equipping
 
@@ -526,6 +526,8 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
+    #region Util
+
     private void ClearWeapon ( Weapons weaponType )
     {
         switch ( weaponType )
@@ -554,4 +556,6 @@ public class WeaponsController : MonoBehaviour
         ClearWeapon ( Weapons.Primary );
         ClearWeapon ( Weapons.Secondary );
     }
+
+    #endregion
 }
