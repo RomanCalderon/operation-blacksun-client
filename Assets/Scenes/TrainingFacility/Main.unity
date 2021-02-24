@@ -22917,7 +22917,7 @@ MonoBehaviour:
   ip: 192.168.1.67
   port: 26950
   myId: 0
-  m_activeIpAddress: 2
+  m_activeIpAddress: 1
 --- !u!4 &1664156214
 Transform:
   m_ObjectHideFlags: 0

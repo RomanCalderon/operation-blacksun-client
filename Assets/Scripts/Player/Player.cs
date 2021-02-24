@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayerInput;
 
+[RequireComponent ( typeof ( ClientPredictionHandler ) )]
+[RequireComponent ( typeof ( PlayerMovementController ) )]
 [RequireComponent ( typeof ( PlayerInputController ) )]
-[RequireComponent ( typeof ( ClientPredictionController ) )]
 [RequireComponent ( typeof ( PlayerModelController ) )]
 [RequireComponent ( typeof ( InventoryManager ) )]
 [RequireComponent ( typeof ( HitmarkerController ) )]
@@ -18,9 +19,10 @@ public class Player : MonoBehaviour
     private AudioListener m_playerAudioListener = null;
     [SerializeField]
     private Camera m_fpCamera = null;
+    private ClientPredictionHandler m_clientPredictionHandler = null;
+    private PlayerMovementController m_playerMovementController = null;
     public InventoryManager InventoryManager { get; private set; }
     public WeaponsController WeaponsController { get; private set; }
-    private ClientPredictionController m_clientPredictionController = null;
     [SerializeField]
     private GameObject m_weaponsController = null;
     [SerializeField]
@@ -39,10 +41,9 @@ public class Player : MonoBehaviour
     {
         get
         {
-            return m_movementVelocity;
+            return m_playerMovementController.Velocity;
         }
     }
-    private Vector3 m_movementVelocity = Vector3.zero;
 
     // Interpolation targets
     private Vector3 m_targetPosition;
@@ -51,7 +52,8 @@ public class Player : MonoBehaviour
 
     private void Awake ()
     {
-        m_clientPredictionController = GetComponent<ClientPredictionController> ();
+        m_clientPredictionHandler = GetComponent<ClientPredictionHandler> ();
+        m_playerMovementController = GetComponent<PlayerMovementController> ();
         m_modelController = GetComponent<PlayerModelController> ();
         InventoryManager = GetComponent<InventoryManager> ();
     }
@@ -107,15 +109,9 @@ public class Player : MonoBehaviour
         m_targetRotation = rot;
     }
 
-    public void SetMovementValues ( Vector3 movementVelocity, Vector2 inputVelocity, bool runInput, bool crouchInput, bool proneInput )
+    public void SetMovementAnimationValues ( Vector2 inputVelocity, bool runInput, bool crouchInput, bool proneInput )
     {
-        m_movementVelocity = movementVelocity;
-
-        if ( Client.instance.myId == m_id )
-        {
-            m_cameraController.ApplySlideShake ( crouchInput );
-        }
-        else
+        if ( Client.instance.myId != m_id )
         {
             // Eventually this will be executed for the local player as well
             m_modelController.SetMovementVector ( inputVelocity );
@@ -125,9 +121,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void OnServerFrame ( byte [] processedRequest )
+    public void OnServerFrame ( byte [] simulationState )
     {
-        m_clientPredictionController.OnServerFrame ( processedRequest );
+        m_clientPredictionHandler.OnServerSimulationStateReceived ( simulationState );
     }
 
     #endregion

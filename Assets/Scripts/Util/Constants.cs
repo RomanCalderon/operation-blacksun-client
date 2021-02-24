@@ -1,35 +1,67 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Constants
+﻿public class Constants
 {
+    #region Timestep
+
     public const int TICKS_PER_SECOND = 30;
     public const int MS_PER_TICK = 1000 / TICKS_PER_SECOND;
 
-    // INPUT
+    #endregion
+
+    #region Input
+
+    /// <summary>
+    /// Total number of input that is being
+    /// sent across the network from this client:
+    /// - Move forward
+    /// - Move backward
+    /// - Move right
+    /// - Move left
+    /// - Jump
+    /// - Run
+    /// - Crouch
+    /// - Rotational orientation
+    /// </summary>
     public const int NUM_PLAYER_INPUTS = 8;
 
-    // CLIENT PREDICTION
-    // Known good values:
-    // Velocity Tolerance - 5.0f
-    // Converge Multiplier - 1.02f
-    public const float VELOCITY_TOLERANCE = 18f;
-    public const float PLAYER_CONVERGE_MULTIPLIER = 1.2f;
+    // Player camera control
+    public const string MOUSE_HORIZONTAL_INPUT = "Mouse X";
+    public const string MOUSE_VERTICAL_INPUT = "Mouse Y";
 
-    public const float POSITION_CORRECTION_TOLERANCE = 10.0f;
+    #endregion
 
-    // INTERPOLATION
+    #region Client Prediction
+
+
+
+    #endregion
+
+    #region Interpolation
+
+    // Remote (other) players
     public const float INTERP_POSITION_SPEED = 18.0f;
     public const float INTERP_ROTATION_SPEED = 12.0f;
 
-    // INVENTORY
+    #endregion
+
+    #region Inventory
+
     public const int INVENTORY_RIG_SIZE = 6;
     public const int INVENTORY_BACKPACK_SIZE = 10;
     public const int SLOT_MAX_STACK_SIZE = 256;
 
+    #endregion
+
+    #region Player
+
+    // Respawn
     public const float PLAYER_RESPAWN_DELAY = 3.0f;
+
+    #endregion
+
+    #region Audio
 
     public const float GUNSHOT_MIN_DISTANCE = 10f;
     public const float GUNSHOT_MAX_DISTANCE = 500f;
+
+    #endregion
 }

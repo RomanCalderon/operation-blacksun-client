@@ -6,25 +6,24 @@ using EZCameraShake;
 
 public class CameraController : MonoBehaviour
 {
-    public static CameraController Instance;
-
+    private const float CROUCH_SPEED = 4f;
+    private const float CROUCH_TARGET_HEIGHT = -0.5f;
+    private const float CROUCH_HEAD_TILT = 0.5f;
     private const float SLIDE_SHAKE_THRESHOLD = 5.0f;
-    private const float SLIDE_SHAKE_ROUGHNESS = 12.0f;
     private const float SLIDE_SHAKE_FADEIN = 0.2f;
+
+    public static CameraController Instance;
 
     private bool m_canControl = false;
 
     [SerializeField]
     private Player player;
+    [SerializeField]
+    private PlayerMovementController m_movementController = null;
 
     [SerializeField]
     private float m_clampAngle = 85f;
-    private Vector3 m_crouchTarget = new Vector3 ( 0, -0.75f, 0 );
-    private Vector3 m_proneTarget = new Vector3 ( 0, -1.5f, 0 );
-    [SerializeField]
-    private float m_crouchSpeed = 3f;
     private Vector3 m_headPositionTarget;
-    private float m_crouchHeadTiltAmount = 0.5f;
     private float m_headTilt = 0f;
     private float m_headTiltTarget = 0f;
     private Vector3 m_headOffset;
@@ -99,37 +98,36 @@ public class CameraController : MonoBehaviour
             Look ( deltaTime );
         }
 
-        // Update head crouch/prone positioning
-        bool crouchInput = PlayerInputController.CrouchInput;
-        bool proneInput = PlayerInputController.ProneInput;
-        SetCrouchProne ( crouchInput, proneInput );
-        transform.localPosition = Vector3.MoveTowards ( transform.localPosition, m_headPositionTarget + m_headOffset, deltaTime * m_crouchSpeed );
+        // Set crouch height
+        bool crouching = PlayerInputController.CrouchInput;
+        UpdateMovementChanges ( crouching, deltaTime );
     }
 
     private void Look ( float deltaTime )
     {
-        float mouseVertical = -Input.GetAxis ( "Mouse Y" );
-        float mouseHorizontal = Input.GetAxis ( "Mouse X" );
+        float mouseHorizontalInput = Input.GetAxis ( Constants.MOUSE_HORIZONTAL_INPUT );
+        float mouseVerticalInput = -Input.GetAxis ( Constants.MOUSE_VERTICAL_INPUT );
 
-        m_verticalRotation += mouseVertical * m_sensitivity * deltaTime;
-        m_horizontalRotation += mouseHorizontal * m_sensitivity * deltaTime;
+        m_horizontalRotation += mouseHorizontalInput * m_sensitivity * deltaTime;
+        m_verticalRotation += mouseVerticalInput * m_sensitivity * deltaTime;
 
         m_verticalRotation = Mathf.Clamp ( m_verticalRotation, -m_clampAngle, m_clampAngle );
 
         m_headTilt = Mathf.Lerp ( m_headTilt, m_headTiltTarget, deltaTime * 16f );
         transform.localRotation = Quaternion.Euler ( m_verticalRotation - m_headTilt, 0f, 0f );
-        player.transform.rotation = Quaternion.Euler ( 0f, m_horizontalRotation, 0f );
+        m_movementController.SetRotation ( Quaternion.Euler ( 0f, m_horizontalRotation, 0f ) );
     }
 
-    public void ApplySlideShake ( bool crouchInput )
+    private void ApplySlideShake ( bool crouchInput )
     {
         float playerSpeed = player.MovementVelocity.magnitude;
-        float shakeMagnitude = playerSpeed / 75f;
+        float shakeMagnitude = Mathf.Sqrt ( playerSpeed / 60f );
+        float shakeRoughness = playerSpeed / 3f;
 
         if ( !m_isShaking && playerSpeed >= SLIDE_SHAKE_THRESHOLD && crouchInput )
         {
             m_isShaking = true;
-            m_shakeInstance = CameraShaker.Instance.StartShake ( shakeMagnitude, SLIDE_SHAKE_ROUGHNESS, SLIDE_SHAKE_FADEIN );
+            m_shakeInstance = CameraShaker.Instance.StartShake ( shakeMagnitude, shakeRoughness, SLIDE_SHAKE_FADEIN );
         }
         if ( m_isShaking )
         {
@@ -149,28 +147,30 @@ public class CameraController : MonoBehaviour
         m_horizontalRotation -= horizontalRecoil;
     }
 
-    private void SetCrouchProne ( bool crouch, bool prone )
+    public void UpdateMovementChanges ( bool crouch, float deltaTime )
     {
         if ( !m_canControl )
         {
             return;
         }
 
+        // Slide shake effect
+        ApplySlideShake ( crouch );
+
         if ( crouch ) // Crouch
         {
-            m_headPositionTarget = m_crouchTarget;
-            m_headTiltTarget = m_crouchHeadTiltAmount;
-        }
-        else if ( prone ) // Prone
-        {
-            m_headPositionTarget = m_proneTarget;
-            m_headTiltTarget = m_crouchHeadTiltAmount;
+            m_headPositionTarget = new Vector3 ( 0, CROUCH_TARGET_HEIGHT, 0 );
+            m_headTiltTarget = CROUCH_HEAD_TILT;
+            m_headTiltTarget = CROUCH_HEAD_TILT;
         }
         else // Standing
         {
             m_headPositionTarget = Vector3.zero;
             m_headTiltTarget = 0f;
         }
+
+        // Update head positioning
+        transform.localPosition = Vector3.MoveTowards ( transform.localPosition, m_headPositionTarget + m_headOffset, deltaTime * CROUCH_SPEED );
     }
 
     /// <summary>
