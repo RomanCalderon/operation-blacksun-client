@@ -68,6 +68,9 @@ public class ClientPredictionHandler : MonoBehaviour
         {
             Reconciliate ();
         }
+            
+        // Simulate physics
+        Physics.Simulate ( Time.fixedDeltaTime );
 
         // Get the current simulation state
         SimulationState simulationState = CurrentSimulationState ( InputState );
@@ -148,7 +151,7 @@ public class ClientPredictionHandler : MonoBehaviour
         //  The amount of distance in units that we will allow the client's
         //  prediction to drift from it's position on the server.
         //  Exceeding this threshold will warrant a correction.
-        float tolerance = 0.1f;
+        float tolerance = 0.05f;
 
         // A correction is necessary.
         if ( differenceX > tolerance || differenceY > tolerance || differenceZ > tolerance )
@@ -183,6 +186,9 @@ public class ClientPredictionHandler : MonoBehaviour
 
                 // Process the cached inputs
                 m_playerMovementController.ProcessInputs ( rewindCachedInputState );
+
+                // Simulate physics
+                //Physics.Simulate ( Time.fixedDeltaTime );
 
                 // Replace the simulationStateCache index with the new value
                 SimulationState rewoundSimulationState = CurrentSimulationState ();

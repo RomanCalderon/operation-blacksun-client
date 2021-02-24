@@ -2,7 +2,7 @@
 {
     #region Timestep
 
-    public const int TICKS_PER_SECOND = 30;
+    public const int TICKS_PER_SECOND = 64;
     public const int MS_PER_TICK = 1000 / TICKS_PER_SECOND;
 
     #endregion
@@ -26,12 +26,6 @@
     // Player camera control
     public const string MOUSE_HORIZONTAL_INPUT = "Mouse X";
     public const string MOUSE_VERTICAL_INPUT = "Mouse Y";
-
-    #endregion
-
-    #region Client Prediction
-
-
 
     #endregion
 
