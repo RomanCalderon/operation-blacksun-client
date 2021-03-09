@@ -60,10 +60,10 @@ public class PlayerModelController : MonoBehaviour
         m_model.SetActive ( activeState );
     }
 
-    public void SetMovementVector ( Vector2 movementVector )
+    public void SetMovementVector ( int moveInputX, int moveInputY, float moveSpeed )
     {
-        m_targetMovementDirection = movementVector;
-        m_movementSpeed = movementVector.magnitude;
+        m_targetMovementDirection = new Vector2 ( moveInputX, moveInputY );
+        m_movementSpeed = moveSpeed;
     }
 
     public void SetRun ( bool value )

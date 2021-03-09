@@ -47,14 +47,14 @@ public class PlayerManager
         Player.SetUpdatedRotation ( rotation );
     }
 
-    public void SetMovementValues ( Vector2 inputVelocity, bool run, bool crouch, bool prone )
+    public void SetMovementValues ( int moveInputX, int moveInputY, float moveSpeed, bool run, bool crouch )
     {
         if ( Player == null )
         {
             Debug.LogError ( "Player is null." );
             return;
         }
-        Player.SetMovementAnimationValues ( inputVelocity, run, crouch, prone );
+        Player.SetMovementAnimationValues ( moveInputX, moveInputY, moveSpeed, run, crouch );
     }
 
     public void OnServerFrame ( byte [] processedRequest )

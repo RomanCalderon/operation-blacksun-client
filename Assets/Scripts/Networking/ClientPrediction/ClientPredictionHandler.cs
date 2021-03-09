@@ -52,25 +52,23 @@ public class ClientPredictionHandler : MonoBehaviour
     private void FixedUpdate ()
     {
         // Set the InputState's simulation frame
-        // NOTE: We don't do this in Update, as FixedUpdate is called
-        // in conjunction with the Physics time step, and not once per frame
         InputState.SimulationFrame = m_simulationFrame;
-
-        // Process the input on the local client
-        m_playerMovementController.ProcessInputs ( InputState );
 
         // Send the input to the server as byte array to be processed
         byte [] inputBytes = StateToBytes ( InputState );
         ClientSend.PlayerInput ( inputBytes );
+
+        // Process the input on the local client
+        m_playerMovementController.ProcessInputs ( InputState );
+        
+        // Simulate physics
+        Physics.Simulate ( Time.fixedDeltaTime );
 
         // Reconciliate if there's a message from the server
         if ( m_serverSimulationState != null )
         {
             Reconciliate ();
         }
-            
-        // Simulate physics
-        Physics.Simulate ( Time.fixedDeltaTime );
 
         // Get the current simulation state
         SimulationState simulationState = CurrentSimulationState ( InputState );
@@ -188,7 +186,7 @@ public class ClientPredictionHandler : MonoBehaviour
                 m_playerMovementController.ProcessInputs ( rewindCachedInputState );
 
                 // Simulate physics
-                //Physics.Simulate ( Time.fixedDeltaTime );
+                Physics.Simulate ( Time.fixedDeltaTime );
 
                 // Replace the simulationStateCache index with the new value
                 SimulationState rewoundSimulationState = CurrentSimulationState ();

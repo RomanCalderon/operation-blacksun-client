@@ -95,6 +95,11 @@ public class Player : MonoBehaviour
             // Reset feedback
             m_hitmarkerController.ResetHitmarkers ();
         }
+        else
+        {
+            // Initialize animator states
+            SetMovementAnimationValues ( 0, 0, 0, false, false );
+        }
     }
 
     #region Movement/Positioning
@@ -109,15 +114,14 @@ public class Player : MonoBehaviour
         m_targetRotation = rot;
     }
 
-    public void SetMovementAnimationValues ( Vector2 inputVelocity, bool runInput, bool crouchInput, bool proneInput )
+    public void SetMovementAnimationValues ( int moveInputX, int moveInputY, float moveSpeed, bool runInput, bool crouchInput )
     {
         if ( Client.instance.myId != m_id )
         {
             // Eventually this will be executed for the local player as well
-            m_modelController.SetMovementVector ( inputVelocity );
+            m_modelController.SetMovementVector ( moveInputX, moveInputY, moveSpeed );
             m_modelController.SetRun ( runInput );
             m_modelController.SetCrouch ( crouchInput );
-            m_modelController.SetProne ( proneInput );
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -6,6 +7,8 @@ using UnityEngine;
 
 public class Client : MonoBehaviour
 {
+    #region Models
+
     private enum IP_ADDRESSES
     {
         LOCAL,
@@ -13,36 +16,49 @@ public class Client : MonoBehaviour
         PUBLIC
     }
 
+    #endregion
+
+    #region Members
+
+    private const float SERVER_CONNECT_TIMEOUT = 10f;
     private const float PING_CHECK_INTERVAL = 1f;
 
     /// <summary>
     /// Local Host IP:          127.0.0.1
-    /// Private Network IP:     192.168.0.172
-    /// Public Network IP:      172.73.164.161
+    /// Private Network IP:     192.168.1.67
+    /// Public Network IP:      99.24.219.47
     /// </summary>
     private const string LOCAL_IP_ADDRESS = "127.0.0.1";
-    private const string PUBLIC_IP_ADDRESS = "99.24.219.47";
     private const string PRIVATE_IP_ADDRESS = "192.168.1.67";
+    private const string PUBLIC_IP_ADDRESS = "99.24.219.47";
 
     public static Client instance;
     public static int dataBufferSize = 4096;
 
-    public string ip = "127.0.0.1";
+    [SerializeField]
+    private IP_ADDRESSES m_activeIpAddress;
+    public string ip { get; private set; } = "127.0.0.1";
     public int port = 26950;
-    public int myId = 0;
+    public int myId { get; private set; } = 0;
 
     public TCP tcp;
     public UDP udp;
-
-    [SerializeField]
-    private IP_ADDRESSES m_activeIpAddress;
     private bool isConnected = false;
+    public delegate void ServerConnectionHandler ( int status );
+    public static ServerConnectionHandler OnServerConnect;
+
     private delegate void PacketHandler ( Packet _packet );
     private static Dictionary<int, PacketHandler> packetHandlers;
+
+    // Timeout
+    private Coroutine m_serverConnectTimeout = null;
 
     // Ping
     public float Ping { get; private set; } = 0f;
     private float m_pingCheckTimer = 0f;
+
+    #endregion
+
 
     private void Awake ()
     {
@@ -93,7 +109,7 @@ public class Client : MonoBehaviour
     public void ConnectToServer ()
     {
         InitializeClientData ();
-
+        
         isConnected = true;
         tcp.Connect (); // Connect tcp, udp gets connected once tcp is done
     }
@@ -109,6 +125,8 @@ public class Client : MonoBehaviour
         /// <summary>Attempts to connect to the server via TCP.</summary>
         public void Connect ()
         {
+            instance.StartServerConnection ();
+
             socket = new TcpClient
             {
                 ReceiveBufferSize = dataBufferSize,
@@ -126,6 +144,7 @@ public class Client : MonoBehaviour
 
             if ( !socket.Connected )
             {
+                Debug.Log ( "TCP socket not connected." );
                 return;
             }
 
@@ -362,11 +381,48 @@ public class Client : MonoBehaviour
         Debug.Log ( "Initialized packets." );
     }
 
+    #region Setters
+
+    public void SetClientId ( int id )
+    {
+        myId = id;
+    }
+
+    #endregion
+
+    #region Server Connect Timeout
+
+    private void StartServerConnection ()
+    {
+        if ( m_serverConnectTimeout != null )
+        {
+            StopCoroutine ( m_serverConnectTimeout );
+        }
+        m_serverConnectTimeout = StartCoroutine ( ServerConnectTimeoutEnum () );
+        OnServerConnect?.Invoke ( 0 );
+    }
+
+    private IEnumerator ServerConnectTimeoutEnum ()
+    {
+        yield return new WaitForSeconds ( SERVER_CONNECT_TIMEOUT );
+
+        if ( isConnected && myId != 0 )
+        {
+            yield break;
+        }
+
+        // Timeout
+        Disconnect ();
+        OnServerConnect?.Invoke ( 2 );
+    }
+
+    #endregion
+
     #region Ping
 
     private void GetPing ()
     {
-        if ( isConnected )
+        if ( isConnected && myId != 0 )
         {
             if ( m_pingCheckTimer > 0f )
             {

@@ -6,6 +6,22 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    #region Models
+
+    private enum States
+    {
+        SERVER_CONNECT,
+        SERVER_CONNECTING,
+        PLAYER_START,
+        NONE
+    }
+
+    #endregion
+
+    private const string USERNAME_PLAYERPREF = "Username";
+    private const string SERVER_CONNECT_LABEL = "CONNECT";
+    private const string SERVER_CONNECTING_LABEL = "CONNECTING...";
+
     public static UIManager instance;
 
     [Header ( "UI Views" )]
@@ -13,11 +29,27 @@ public class UIManager : MonoBehaviour
     private GameObject serverConnectView = null;
     [SerializeField]
     private GameObject playerSpawnView = null;
+    private States m_currentState = States.SERVER_CONNECT;
 
     [Header ( "Server Connect View UI" )]
-    public InputField usernameField;
-    public InputField serverIPField;
+    [SerializeField]
+    private InputField m_usernameField = null;
+    [SerializeField]
+    private Button m_serverConnectButton = null;
+    [SerializeField]
+    private Text m_serverConnectButtonText = null;
 
+    public string Username { get; private set; }
+
+    private void OnEnable ()
+    {
+        Client.OnServerConnect += UpdateServerConnectionStatus;
+    }
+
+    private void OnDisable ()
+    {
+        Client.OnServerConnect -= UpdateServerConnectionStatus;
+    }
 
     private void Awake ()
     {
@@ -34,9 +66,12 @@ public class UIManager : MonoBehaviour
 
     private void Start ()
     {
-        usernameField.text = PlayerPrefs.GetString ( "Username" );
-        //serverIPField.text = PlayerPrefs.GetString ( "ServerIP" );
+        m_usernameField.text = PlayerPrefs.GetString ( USERNAME_PLAYERPREF );
+
+        TransitionUIState ( States.SERVER_CONNECT );
     }
+
+    #region Button Callbacks
 
     /// <summary>
     /// Connects to a game server with a pre-defined IP address and port.
@@ -49,7 +84,7 @@ public class UIManager : MonoBehaviour
         {
             serverIPAddress = match.Value;
             Debug.Log ( $"Valid IP address: {serverIPAddress}" );
-            PlayerPrefs.SetString ( "Username", usernameField.text );
+            PlayerPrefs.SetString ( "Username", Username = m_usernameField.text );
             PlayerPrefs.SetString ( "ServerIP", serverIPAddress );
         }
         else
@@ -58,14 +93,8 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        // Hide server connect view
-        serverConnectView.SetActive ( false );
-        usernameField.interactable = false;
-        serverIPField.interactable = false;
+        // Attempt to connect to the server
         Client.instance.ConnectToServer ();
-
-        // Display player loadout/spawn view
-        playerSpawnView.SetActive ( true );
     }
 
     /// <summary>
@@ -73,9 +102,75 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void SpawnPlayer ()
     {
-        ClientSend.SpawnPlayer ( usernameField.text );
-
         // Hide player loadout/spawn view
+        TransitionUIState ( States.NONE );
+
+        ClientSend.SpawnPlayer ( Username );
+    }
+
+    #endregion
+
+    #region UI Management
+
+    public void PlayerConnected ()
+    {
+        TransitionUIState ( States.PLAYER_START );
+    }
+
+    private void UpdateServerConnectionStatus ( int status )
+    {
+        switch ( status )
+        {
+            case 0: // Attempting to connect
+                TransitionUIState ( States.SERVER_CONNECTING );
+                break;
+            case 2: // Connection timed out/failed
+                TransitionUIState ( States.SERVER_CONNECT );
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void TransitionUIState ( States state )
+    {
+        // Clear UI
+        ClearUI ();
+
+        // Set current state
+        m_currentState = state;
+
+        // Display state
+        switch ( state )
+        {
+            case States.SERVER_CONNECT:
+                serverConnectView.SetActive ( true );
+                m_usernameField.interactable = true;
+                m_serverConnectButton.interactable = true;
+                m_serverConnectButtonText.text = SERVER_CONNECT_LABEL;
+                break;
+            case States.SERVER_CONNECTING:
+                serverConnectView.SetActive ( true );
+                m_usernameField.interactable = false;
+                m_serverConnectButton.interactable = false;
+                m_serverConnectButtonText.text = SERVER_CONNECTING_LABEL;
+                break;
+            case States.PLAYER_START:
+                playerSpawnView.SetActive ( true );
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ClearUI ()
+    {
+        // Server connect
+        serverConnectView.SetActive ( false );
+
+        // Player start
         playerSpawnView.SetActive ( false );
     }
+
+    #endregion
 }

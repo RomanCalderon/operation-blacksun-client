@@ -42,7 +42,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.3
+  m_Radius: 0.26
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -96,6 +96,7 @@ MonoBehaviour:
   m_fpCamera: {fileID: 0}
   m_weaponsController: {fileID: 0}
   m_cameraController: {fileID: 0}
+  m_hitmarkerController: {fileID: 0}
   m_ragdollController: {fileID: 4537672301568104187}
   m_ragdollCamera: {fileID: 0}
   m_ragdollParent: {fileID: 9033164965578197798}

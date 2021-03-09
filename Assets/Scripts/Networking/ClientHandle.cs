@@ -14,11 +14,14 @@ public class ClientHandle : MonoBehaviour
         int _myId = _packet.ReadInt ();
 
         Debug.Log ( $"Message from server: {_msg}" );
-        Client.instance.myId = _myId;
+        Client.instance.SetClientId ( _myId );
         ClientSend.WelcomeReceived ();
 
         // Now that we have the client's id, connect UDP
         Client.instance.udp.Connect ( ( ( IPEndPoint ) Client.instance.tcp.socket.Client.LocalEndPoint ).Port );
+
+        // Update UI
+        UIManager.instance.PlayerConnected ();
     }
 
     #region Player
@@ -91,14 +94,14 @@ public class ClientHandle : MonoBehaviour
             return;
         }
 
-        float _playerMovementX = _packet.ReadFloat ();
-        float _playerMovementY = _packet.ReadFloat ();
+        int moveInputX = _packet.ReadInt ();
+        int moveInputY = _packet.ReadInt ();
+        float moveSpeed = _packet.ReadFloat ();
         bool _playerRun = _packet.ReadBool ();
         bool _playerCrouch = _packet.ReadBool ();
-        bool _playerProne = _packet.ReadBool ();
 
         // Used for visual effects
-        GameManager.players [ _id ].SetMovementValues ( new Vector2 ( _playerMovementX, _playerMovementY ), _playerRun, _playerCrouch, _playerProne );
+        GameManager.players [ _id ].SetMovementValues ( moveInputX, moveInputY, moveSpeed, _playerRun, _playerCrouch );
     }
 
     public static void PlayerInputProcessed ( Packet _packet )
