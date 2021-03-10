@@ -20,7 +20,7 @@ public class Client : MonoBehaviour
 
     #region Members
 
-    private const float SERVER_CONNECT_TIMEOUT = 10f;
+    private const float SERVER_CONNECT_TIMEOUT = 15f;
     private const float PING_CHECK_INTERVAL = 1f;
 
     /// <summary>
