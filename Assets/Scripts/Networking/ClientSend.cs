@@ -34,10 +34,6 @@ public class ClientSend : MonoBehaviour
     {
         using ( Packet _packet = new Packet ( ( int ) ClientPackets.ping ) )
         {
-            string pingStartTime = DateTime.Now.ToString ( "o" );
-
-            _packet.Write ( pingStartTime );
-
             SendTCPData ( _packet );
         }
     }

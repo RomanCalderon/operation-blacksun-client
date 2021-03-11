@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class Client : MonoBehaviour
     private const string PUBLIC_IP_ADDRESS = "99.24.219.47";
 
     public static Client instance;
-    public static int dataBufferSize = 4096;
+    public static short dataBufferSize = 4096;
 
     [SerializeField]
     private IP_ADDRESSES m_activeIpAddress;
@@ -54,8 +55,9 @@ public class Client : MonoBehaviour
     private Coroutine m_serverConnectTimeout = null;
 
     // Ping
-    public float Ping { get; private set; } = 0f;
+    public long Ping { get; private set; } = 0L;
     private float m_pingCheckTimer = 0f;
+    private Stopwatch m_pingStopwatch;
 
     #endregion
 
@@ -68,13 +70,16 @@ public class Client : MonoBehaviour
         }
         else if ( instance != this )
         {
-            Debug.Log ( "Instance already exists, destroying object!" );
+            UnityEngine.Debug.Log ( "Instance already exists, destroying object!" );
             Destroy ( this );
         }
     }
 
     private void Start ()
     {
+        // Initialize ping stopwatch
+        m_pingStopwatch = new Stopwatch ();
+
         switch ( m_activeIpAddress )
         {
             case IP_ADDRESSES.LOCAL:
@@ -109,7 +114,7 @@ public class Client : MonoBehaviour
     public void ConnectToServer ()
     {
         InitializeClientData ();
-        
+
         isConnected = true;
         tcp.Connect (); // Connect tcp, udp gets connected once tcp is done
     }
@@ -144,7 +149,7 @@ public class Client : MonoBehaviour
 
             if ( !socket.Connected )
             {
-                Debug.Log ( "TCP socket not connected." );
+                UnityEngine.Debug.Log ( "TCP socket not connected." );
                 return;
             }
 
@@ -159,7 +164,7 @@ public class Client : MonoBehaviour
         /// <param name="_packet">The packet to send.</param>
         public void SendData ( Packet _packet )
         {
-            Debug.Assert ( _packet != null );
+            UnityEngine.Debug.Assert ( _packet != null );
             try
             {
                 if ( socket != null )
@@ -169,7 +174,7 @@ public class Client : MonoBehaviour
             }
             catch ( Exception _ex )
             {
-                Debug.Log ( $"Error sending data to server via TCP: {_ex}" );
+                UnityEngine.Debug.Log ( $"Error sending data to server via TCP: {_ex}" );
             }
         }
 
@@ -301,7 +306,7 @@ public class Client : MonoBehaviour
             }
             catch ( Exception _ex )
             {
-                Debug.Log ( $"Error sending data to server via UDP: {_ex}" );
+                UnityEngine.Debug.Log ( $"Error sending data to server via UDP: {_ex}" );
             }
         }
 
@@ -378,7 +383,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playAudioClip, ClientHandle.PlayAudioClip },
             { (int)ServerPackets.hitmarker, ClientHandle.Hitmarker }
         };
-        Debug.Log ( "Initialized packets." );
+        UnityEngine.Debug.Log ( "Initialized packets." );
     }
 
     #region Setters
@@ -424,26 +429,29 @@ public class Client : MonoBehaviour
     {
         if ( isConnected && myId != 0 )
         {
+            // Wait for ping check interval
             if ( m_pingCheckTimer > 0f )
             {
                 m_pingCheckTimer -= Time.deltaTime;
             }
             else
             {
-                m_pingCheckTimer = PING_CHECK_INTERVAL;
+                // Start watch
+                m_pingStopwatch.Start ();
+                // Ping the server
                 ClientSend.Ping ();
+                m_pingCheckTimer = PING_CHECK_INTERVAL;
             }
         }
     }
 
-    public void UpdatePing ( int newPing )
+    public void PingReceived ()
     {
-        if ( newPing < 0 )
-        {
-            newPing += 1000;
-        }
-
-        Ping = newPing;
+        // Stop ping stopwatch
+        m_pingStopwatch.Stop ();
+        Ping = m_pingStopwatch.ElapsedMilliseconds;
+        // Reset stopwatch
+        m_pingStopwatch.Reset ();
     }
 
     #endregion
@@ -460,7 +468,7 @@ public class Client : MonoBehaviour
                 udp.socket.Close ();
             }
 
-            Debug.Log ( "Disconnected from server." );
+            UnityEngine.Debug.Log ( "Disconnected from server." );
         }
     }
 }
