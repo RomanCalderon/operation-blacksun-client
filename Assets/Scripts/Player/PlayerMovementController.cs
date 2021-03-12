@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerInput;
@@ -55,8 +55,9 @@ public class PlayerMovementController : MonoBehaviour
     /// The velocity of the player's rigidbody.
     /// </summary>
     public Vector3 Velocity { get => m_rigidbody.velocity; }
-    private Vector3 m_gravity;
+    public bool IsGrounded { get => m_isGrounded; }
     private bool m_isGrounded;
+    private Vector3 m_gravity;
     private bool m_jumpCheck = false;
     [SerializeField]
     private LayerMask m_groundMask;
@@ -98,6 +99,13 @@ public class PlayerMovementController : MonoBehaviour
     public void SetRotation ( Quaternion newRotation )
     {
         m_rigidbody.MoveRotation ( newRotation );
+    }
+
+    public Collider GetGroundCollision ()
+    {
+        Vector3 groundCheckOrigin = ( transform.position + m_collider.center ) - Vector3.up * m_collider.height / 2f;
+        Collider [] colliders = Physics.OverlapSphere ( groundCheckOrigin, GROUND_CHECK_DISTANCE, m_groundMask );
+        return colliders.FirstOrDefault ();
     }
 
     #region Movement
