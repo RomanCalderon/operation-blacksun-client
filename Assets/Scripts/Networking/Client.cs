@@ -90,9 +90,6 @@ public class Client : MonoBehaviour
                 ip = LOCAL_IP_ADDRESS;
                 break;
         }
-
-        tcp = new TCP ();
-        udp = new UDP ();
     }
 
     private void Update ()
@@ -108,6 +105,9 @@ public class Client : MonoBehaviour
     /// <summary>Attempts to connect to the server.</summary>
     public void ConnectToServer ()
     {
+        tcp = new TCP ();
+        udp = new UDP ();
+
         InitializeClientData ();
         
         isConnected = true;
@@ -276,6 +276,7 @@ public class Client : MonoBehaviour
         /// <param name="_localPort">The port number to bind the UDP socket to.</param>
         public void Connect ( int _localPort )
         {
+            UnityEngine.Debug.Log ("UDP::Connect()");
             socket = new UdpClient ( _localPort );
 
             socket.Connect ( endPoint );
