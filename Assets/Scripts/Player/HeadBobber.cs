@@ -35,7 +35,7 @@ public class HeadBobber : MonoBehaviour
             // Use the timer value to set the position
             float bobAmount = Mathf.Sqrt ( playerSpeed ) * BOB_AMOUNT_MULTIPLIER;
             float deltaX = Mathf.Cos ( m_time ) * bobAmount / 4f;
-            float deltaY = m_restPosition.y + Mathf.Abs ( Mathf.Sin ( m_time ) * bobAmount ) - ( bobAmount / 2f );
+            float deltaY = m_restPosition.y + Mathf.Abs ( Mathf.Sin ( m_time ) * bobAmount ) - ( bobAmount / 1.5f );
             Vector3 newPosition = new Vector3 ( deltaX, deltaY, m_restPosition.z );
             m_camPos = Vector3.Lerp ( m_camPos, newPosition, deltaTime * TRANSITION_SPEED );
         }
