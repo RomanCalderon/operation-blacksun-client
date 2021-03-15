@@ -36,13 +36,7 @@ public class ClientHandle : MonoBehaviour
 
     public static void Ping ( Packet _packet )
     {
-        int elapsedTime = _packet.ReadInt ();
-        string serverBounceTime = _packet.ReadString ();
-
-        DateTime serverTime = DateTime.ParseExact ( serverBounceTime, "o", CultureInfo.CurrentCulture );
-        int travelTimeSpan = DateTime.Now.Millisecond - serverTime.Millisecond;
-        int rtt = travelTimeSpan + elapsedTime;
-        Client.instance.UpdatePing ( rtt );
+        Client.instance.PingReceived ();
     }
 
     public static void SpawnPlayer ( Packet _packet )
