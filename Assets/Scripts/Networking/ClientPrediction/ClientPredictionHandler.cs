@@ -57,45 +57,29 @@ public class ClientPredictionHandler : MonoBehaviour
         // Send the input to the server as byte array to be processed
         byte [] inputBytes = StateToBytes ( InputState );
         ClientSend.PlayerInput ( inputBytes );
-
-        // Process the input on the local client
-        m_playerMovementController.ProcessInputs ( InputState );
         
-        // Simulate physics
-        Physics.Simulate ( Time.fixedDeltaTime );
-
         // Reconciliate if there's a message from the server
         if ( m_serverSimulationState != null )
         {
             Reconciliate ();
         }
 
+        // Process the input on the local client
+        m_playerMovementController.ProcessInputs ( InputState );
+
+
+        // Simulate physics
+        Physics.Simulate ( Time.fixedDeltaTime );
+
         // Get the current simulation state
         SimulationState simulationState = CurrentSimulationState ( InputState );
-
         // Determine the cache index based on on modulus operator
         int cacheIndex = m_simulationFrame % STATE_CACHE_SIZE;
-
-        // Store the SimulationState into the simulationStateCache 
         m_simulationStateCache [ cacheIndex ] = simulationState;
-
-        // Store the ClientInputState into the inputStateCache
         m_inputStateCache [ cacheIndex ] = InputState;
 
         // Increase the client's simulation frame
         m_simulationFrame++;
-    }
-
-    public SimulationState CurrentSimulationState ( ClientInputState inputState = null )
-    {
-        return new SimulationState
-        {
-            Position = transform.position,
-            Rotation = transform.rotation,
-            Velocity = m_playerMovementController.Velocity,
-            SimulationFrame = inputState != null ? inputState.SimulationFrame : 0,
-            DeltaTime = inputState != null ? inputState.DeltaTime : Time.deltaTime
-        };
     }
 
     public void OnServerSimulationStateReceived ( byte [] simulationState )
@@ -137,24 +121,21 @@ public class ClientPredictionHandler : MonoBehaviour
 
             // Set the last corrected frame to equal the server's frame
             m_lastCorrectedFrame = m_serverSimulationState.SimulationFrame;
-
             return;
         }
 
-        // Find the difference between the vector's values. 
-        float differenceX = Mathf.Abs ( cachedSimulationState.Position.x - m_serverSimulationState.Position.x );
-        float differenceY = Mathf.Abs ( cachedSimulationState.Position.y - m_serverSimulationState.Position.y );
-        float differenceZ = Mathf.Abs ( cachedSimulationState.Position.z - m_serverSimulationState.Position.z );
+        // Find the difference between the vector's values
+        Vector3 positionError = cachedSimulationState.Position - m_serverSimulationState.Position;
 
-        //  The amount of distance in units that we will allow the client's
+        //  The distance in units that we will allow the client's
         //  prediction to drift from it's position on the server.
         //  Exceeding this threshold will warrant a correction.
-        float tolerance = 0.05f;
+        float tolerance = 0.075f;
 
         // A correction is necessary.
-        if ( differenceX > tolerance || differenceY > tolerance || differenceZ > tolerance )
+        if ( positionError.magnitude > tolerance )
         {
-            Debug.Log ( $"correction - diff: {new Vector3 ( differenceX, differenceY, differenceZ )}" );
+            //Debug.Log ( $"position error: {positionError.magnitude}" );
 
             // Set the player's position and velocity to match the server's state
             transform.position = m_serverSimulationState.Position;
@@ -170,7 +151,7 @@ public class ClientPredictionHandler : MonoBehaviour
                 // Determine the cache index 
                 int rewindCacheIndex = rewindFrame % STATE_CACHE_SIZE;
 
-                // Obtain the cached input and simulation states.
+                // Obtain the cached input and simulation states
                 ClientInputState rewindCachedInputState = m_inputStateCache [ rewindCacheIndex ];
                 SimulationState rewindCachedSimulationState = m_simulationStateCache [ rewindCacheIndex ];
 
@@ -204,6 +185,18 @@ public class ClientPredictionHandler : MonoBehaviour
     }
 
     #region Util
+    
+    public SimulationState CurrentSimulationState ( ClientInputState inputState = null )
+    {
+        return new SimulationState
+        {
+            Position = transform.position,
+            Rotation = transform.rotation,
+            Velocity = m_playerMovementController.Velocity,
+            SimulationFrame = inputState != null ? inputState.SimulationFrame : 0,
+            DeltaTime = inputState != null ? inputState.DeltaTime : Time.deltaTime
+        };
+    }
 
     private byte [] StateToBytes ( ClientInputState inputState )
     {
@@ -211,10 +204,8 @@ public class ClientPredictionHandler : MonoBehaviour
         {
             BinaryFormatter formatter = new BinaryFormatter ();
             SurrogateSelector surrogateSelector = new SurrogateSelector ();
-            //Vector3SerializationSurrogate vector3SS = new Vector3SerializationSurrogate ();
             QuaternionSerializationSurrogate quaternionSS = new QuaternionSerializationSurrogate ();
 
-            //surrogateSelector.AddSurrogate ( typeof ( Vector3 ), new StreamingContext ( StreamingContextStates.All ), vector3SS );
             surrogateSelector.AddSurrogate ( typeof ( Quaternion ), new StreamingContext ( StreamingContextStates.All ), quaternionSS );
             formatter.SurrogateSelector = surrogateSelector;
             formatter.Serialize ( ms, inputState );
