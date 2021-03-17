@@ -5,12 +5,19 @@ using UnityEngine;
 using PlayerInput;
 
 [RequireComponent ( typeof ( PlayerMovementController ) )]
+[RequireComponent ( typeof ( Rigidbody ) )]
 public class ClientPredictionHandler : MonoBehaviour
 {
     // State caching
     private const int STATE_CACHE_SIZE = 1024;
+    // Correction tolerance
+    private const float CORRECTION_TOLERANCE = 0.001f;
+    private const float CORRECTION_LERP_RATE = 0.25f;
+    // Minimum position snapping distance
+    private const float SNAP_THRESHOLD = 4f;
 
     private PlayerMovementController m_playerMovementController = null;
+    private Rigidbody m_rigidbody = null;
 
     // Input
     public static ClientInputState InputState { get; private set; } = null;
@@ -20,10 +27,12 @@ public class ClientPredictionHandler : MonoBehaviour
     private ClientInputState [] m_inputStateCache = new ClientInputState [ STATE_CACHE_SIZE ];
     private SimulationState m_serverSimulationState;
     private int m_lastCorrectedFrame;
+    private Vector3 m_clientPositionError;
 
     private void Awake ()
     {
         m_playerMovementController = GetComponent<PlayerMovementController> ();
+        m_rigidbody = GetComponent<Rigidbody> ();
     }
 
     // Start is called before the first frame update
@@ -44,7 +53,7 @@ public class ClientPredictionHandler : MonoBehaviour
             Jump = PlayerInputController.JumpInput,
             Run = PlayerInputController.RunInput,
             Crouch = PlayerInputController.CrouchInput,
-            Rotation = transform.rotation,
+            Rotation = m_rigidbody.rotation,
             DeltaTime = Time.deltaTime
         };
     }
@@ -57,7 +66,7 @@ public class ClientPredictionHandler : MonoBehaviour
         // Send the input to the server as byte array to be processed
         byte [] inputBytes = StateToBytes ( InputState );
         ClientSend.PlayerInput ( inputBytes );
-        
+
         // Reconciliate if there's a message from the server
         if ( m_serverSimulationState != null )
         {
@@ -66,7 +75,6 @@ public class ClientPredictionHandler : MonoBehaviour
 
         // Process the input on the local client
         m_playerMovementController.ProcessInputs ( InputState );
-
 
         // Simulate physics
         Physics.Simulate ( Time.fixedDeltaTime );
@@ -88,7 +96,6 @@ public class ClientPredictionHandler : MonoBehaviour
 
         if ( m_serverSimulationState == null )
         {
-            Debug.Log ( "m_serverSimulationState is null" );
             m_serverSimulationState = message;
             return;
         }
@@ -116,7 +123,7 @@ public class ClientPredictionHandler : MonoBehaviour
         // snap the player's position to match the server
         if ( cachedInputState == null || cachedSimulationState == null )
         {
-            transform.position = m_serverSimulationState.Position;
+            m_rigidbody.position = m_serverSimulationState.Position;
             m_playerMovementController.SetVelocty ( m_serverSimulationState.Velocity );
 
             // Set the last corrected frame to equal the server's frame
@@ -127,18 +134,14 @@ public class ClientPredictionHandler : MonoBehaviour
         // Find the difference between the vector's values
         Vector3 positionError = cachedSimulationState.Position - m_serverSimulationState.Position;
 
-        //  The distance in units that we will allow the client's
-        //  prediction to drift from it's position on the server.
-        //  Exceeding this threshold will warrant a correction.
-        float tolerance = 0.075f;
-
         // A correction is necessary.
-        if ( positionError.magnitude > tolerance )
+        if ( positionError.sqrMagnitude > CORRECTION_TOLERANCE )
         {
-            //Debug.Log ( $"position error: {positionError.magnitude}" );
+            // Capture the current predicted pos for smoothing
+            Vector3 previousPosition = m_rigidbody.position + m_clientPositionError;
 
             // Set the player's position and velocity to match the server's state
-            transform.position = m_serverSimulationState.Position;
+            m_rigidbody.position = m_serverSimulationState.Position;
             m_playerMovementController.SetVelocty ( m_serverSimulationState.Velocity );
 
             // Declare the rewindFrame as we're about to resimulate our cached inputs
@@ -177,6 +180,20 @@ public class ClientPredictionHandler : MonoBehaviour
                 // Increase the amount of frames that we've rewound
                 rewindFrame++;
             }
+
+            // If client is more than snap threshold, snap
+            if ( ( previousPosition - m_rigidbody.position ).sqrMagnitude >= SNAP_THRESHOLD )
+            {
+                m_clientPositionError = Vector3.zero;
+            }
+            else
+            {
+                m_clientPositionError = previousPosition - m_rigidbody.position;
+            }
+
+            // Player position correction smoothing
+            m_clientPositionError *= CORRECTION_LERP_RATE;
+            transform.position = m_rigidbody.position + m_clientPositionError;
         }
 
         // Once we're complete, update the lastCorrectedFrame to match
@@ -185,7 +202,7 @@ public class ClientPredictionHandler : MonoBehaviour
     }
 
     #region Util
-    
+
     public SimulationState CurrentSimulationState ( ClientInputState inputState = null )
     {
         return new SimulationState
