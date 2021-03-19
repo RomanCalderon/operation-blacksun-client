@@ -31,7 +31,7 @@ public class Client : MonoBehaviour
     /// </summary>
     private const string LOCAL_IP_ADDRESS = "127.0.0.1";
     private const string PRIVATE_IP_ADDRESS = "192.168.1.67";
-    private const string PUBLIC_IP_ADDRESS = "99.24.219.47";
+    private const string PUBLIC_IP_ADDRESS = "70.187.145.234"; //99.24.219.47
 
     public static Client instance;
     public static short dataBufferSize = 4096;
