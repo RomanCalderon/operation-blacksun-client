@@ -24,7 +24,6 @@ public class ClientPredictionHandler : MonoBehaviour
     public static ClientInputState InputState { get; private set; } = null;
 
     private uint m_simulationFrame = 0;
-    private uint m_lastReceivedFrame = 0;
     private SimulationState [] m_simulationStateCache = new SimulationState [ STATE_CACHE_SIZE ];
     private ClientInputState [] m_inputStateCache = new ClientInputState [ STATE_CACHE_SIZE ];
     private SimulationState m_serverSimulationState;
@@ -88,7 +87,6 @@ public class ClientPredictionHandler : MonoBehaviour
         if ( m_serverSimulationState == null )
         {
             m_serverSimulationState = message;
-            m_lastReceivedFrame = message.SimulationFrame;
             return;
         }
 
@@ -96,7 +94,6 @@ public class ClientPredictionHandler : MonoBehaviour
         if ( m_serverSimulationState?.SimulationFrame < message.SimulationFrame )
         {
             m_serverSimulationState = message;
-            m_lastReceivedFrame = message.SimulationFrame;
         }
     }
 
