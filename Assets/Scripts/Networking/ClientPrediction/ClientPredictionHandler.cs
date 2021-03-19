@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -9,7 +10,7 @@ using PlayerInput;
 public class ClientPredictionHandler : MonoBehaviour
 {
     // State caching
-    private const int STATE_CACHE_SIZE = 1024;
+    private const uint STATE_CACHE_SIZE = 1024;
     // Correction tolerance
     private const float CORRECTION_TOLERANCE = 0.001f;
     private const float CORRECTION_LERP_RATE = 0.25f;
@@ -22,11 +23,11 @@ public class ClientPredictionHandler : MonoBehaviour
     // Input
     public static ClientInputState InputState { get; private set; } = null;
 
-    private int m_simulationFrame;
+    private uint m_simulationFrame = 0;
     private SimulationState [] m_simulationStateCache = new SimulationState [ STATE_CACHE_SIZE ];
     private ClientInputState [] m_inputStateCache = new ClientInputState [ STATE_CACHE_SIZE ];
     private SimulationState m_serverSimulationState;
-    private int m_lastCorrectedFrame;
+    private uint m_lastCorrectedFrame;
     private Vector3 m_clientPositionError;
 
     private void Awake ()
@@ -44,18 +45,7 @@ public class ClientPredictionHandler : MonoBehaviour
     private void Update ()
     {
         // Capture input
-        InputState = new ClientInputState
-        {
-            MoveForward = PlayerInputController.ForwardInput,
-            MoveBackward = PlayerInputController.BackwardInput,
-            MoveRight = PlayerInputController.RightInput,
-            MoveLeft = PlayerInputController.LeftInput,
-            Jump = PlayerInputController.JumpInput,
-            Run = PlayerInputController.RunInput,
-            Crouch = PlayerInputController.CrouchInput,
-            Rotation = m_rigidbody.rotation,
-            DeltaTime = Time.deltaTime
-        };
+        InputState = SampleInputs ();
     }
 
     private void FixedUpdate ()
@@ -82,7 +72,7 @@ public class ClientPredictionHandler : MonoBehaviour
         // Get the current simulation state
         SimulationState simulationState = CurrentSimulationState ( InputState );
         // Determine the cache index based on on modulus operator
-        int cacheIndex = m_simulationFrame % STATE_CACHE_SIZE;
+        uint cacheIndex = m_simulationFrame % STATE_CACHE_SIZE;
         m_simulationStateCache [ cacheIndex ] = simulationState;
         m_inputStateCache [ cacheIndex ] = InputState;
 
@@ -113,7 +103,7 @@ public class ClientPredictionHandler : MonoBehaviour
         if ( m_serverSimulationState.SimulationFrame <= m_lastCorrectedFrame ) return;
 
         // Determine the cache index 
-        int cacheIndex = m_serverSimulationState.SimulationFrame % STATE_CACHE_SIZE;
+        uint cacheIndex = m_serverSimulationState.SimulationFrame % STATE_CACHE_SIZE;
 
         // Obtain the cached input and simulation states
         ClientInputState cachedInputState = m_inputStateCache [ cacheIndex ];
@@ -145,14 +135,14 @@ public class ClientPredictionHandler : MonoBehaviour
             m_playerMovementController.SetVelocty ( m_serverSimulationState.Velocity );
 
             // Declare the rewindFrame as we're about to resimulate our cached inputs
-            int rewindFrame = m_serverSimulationState.SimulationFrame;
+            uint rewindFrame = m_serverSimulationState.SimulationFrame;
 
             // Loop through and apply cached inputs until we're 
             // caught up to our current simulation frame
             while ( rewindFrame < m_simulationFrame )
             {
                 // Determine the cache index 
-                int rewindCacheIndex = rewindFrame % STATE_CACHE_SIZE;
+                uint rewindCacheIndex = rewindFrame % STATE_CACHE_SIZE;
 
                 // Obtain the cached input and simulation states
                 ClientInputState rewindCachedInputState = m_inputStateCache [ rewindCacheIndex ];
@@ -202,6 +192,22 @@ public class ClientPredictionHandler : MonoBehaviour
     }
 
     #region Util
+
+    private ClientInputState SampleInputs ()
+    {
+        return new ClientInputState ()
+        {
+            MoveForward = PlayerInputController.ForwardInput,
+            MoveBackward = PlayerInputController.BackwardInput,
+            MoveRight = PlayerInputController.RightInput,
+            MoveLeft = PlayerInputController.LeftInput,
+            Jump = PlayerInputController.JumpInput,
+            Run = PlayerInputController.RunInput,
+            Crouch = PlayerInputController.CrouchInput,
+            Rotation = m_rigidbody.rotation,
+            DeltaTime = Time.deltaTime
+        };
+    }
 
     public SimulationState CurrentSimulationState ( ClientInputState inputState = null )
     {
