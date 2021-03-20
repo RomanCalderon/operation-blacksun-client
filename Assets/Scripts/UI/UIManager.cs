@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     private const string USERNAME_PLAYERPREF = "Username";
+    private const string SERVER_IP_PLAYERPREF = "ServerIP";
     private const string SERVER_CONNECT_LABEL = "CONNECT";
     private const string SERVER_CONNECTING_LABEL = "CONNECTING...";
 
@@ -35,11 +36,14 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private InputField m_usernameField = null;
     [SerializeField]
+    private InputField m_serverIPField = null;
+    [SerializeField]
     private Button m_serverConnectButton = null;
     [SerializeField]
     private Text m_serverConnectButtonText = null;
 
     public string Username { get; private set; }
+    public string ServerIP { get; private set; }
 
     private void OnEnable ()
     {
@@ -67,6 +71,7 @@ public class UIManager : MonoBehaviour
     private void Start ()
     {
         m_usernameField.text = PlayerPrefs.GetString ( USERNAME_PLAYERPREF );
+        m_serverIPField.text = PlayerPrefs.GetString ( SERVER_IP_PLAYERPREF );
 
         TransitionUIState ( States.SERVER_CONNECT );
     }
@@ -74,18 +79,18 @@ public class UIManager : MonoBehaviour
     #region Button Callbacks
 
     /// <summary>
-    /// Connects to a game server with a pre-defined IP address and port.
+    /// Attempts to connect to a game server with a specified IP adress.
     /// </summary>
     public void ConnectToServer ()
     {
-        string serverIPAddress = Client.instance.ip;
+        string serverIPAddress = m_serverIPField.text; //Client.instance.ip;
         Match match = Regex.Match ( serverIPAddress, @"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b" );
         if ( match.Success )
         {
-            serverIPAddress = match.Value;
             Debug.Log ( $"Valid IP address: {serverIPAddress}" );
-            PlayerPrefs.SetString ( "Username", Username = m_usernameField.text );
-            PlayerPrefs.SetString ( "ServerIP", serverIPAddress );
+            serverIPAddress = match.Value;
+            PlayerPrefs.SetString ( USERNAME_PLAYERPREF, Username = m_usernameField.text );
+            PlayerPrefs.SetString ( SERVER_IP_PLAYERPREF, ServerIP = serverIPAddress );
         }
         else
         {
@@ -94,7 +99,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Attempt to connect to the server
-        Client.instance.ConnectToServer ();
+        Client.instance.ConnectToServer ( serverIPAddress );
     }
 
     /// <summary>
