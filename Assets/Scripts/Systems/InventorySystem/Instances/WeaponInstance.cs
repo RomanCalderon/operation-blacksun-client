@@ -92,6 +92,8 @@ public class WeaponInstance : PlayerItemInstance
     private bool m_didShoot = false;
     private float m_fireCooldown = 0f;
 
+    private Vector3 m_lookDirection;
+
 
     private void OnEnable ()
     {
@@ -141,6 +143,10 @@ public class WeaponInstance : PlayerItemInstance
         {
             m_fireCooldown = 0f;
         }
+
+        // Update look direction every frame
+        m_lookDirection = m_aimListener.GetAimVector ();
+        PlayerInput.PlayerInputController.SetLookDirection ( m_lookDirection );
     }
 
     public void UpdateAimController ()
@@ -273,9 +279,6 @@ public class WeaponInstance : PlayerItemInstance
             AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
             // Perform gunshot
-            Vector3 direction = m_aimListener.GetAimVector ();
-            PlayerInput.PlayerInputController.SetLookDirection ( direction );
-            //float damage = ( PlayerItem as Weapon ).BaseDamage;
             
             // Play animation
             if ( BulletCount == 0 )
