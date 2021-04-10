@@ -19,7 +19,7 @@ public class Client : MonoBehaviour
 
     #endregion
 
-    #region Members
+    #region Constants
 
     private const float SERVER_CONNECT_TIMEOUT = 15f;
     private const float PING_CHECK_INTERVAL = 1f;
@@ -31,14 +31,18 @@ public class Client : MonoBehaviour
     /// </summary>
     private const string LOCAL_IP_ADDRESS = "127.0.0.1";
     private const string PRIVATE_IP_ADDRESS = "192.168.1.67";
-    private const string PUBLIC_IP_ADDRESS = "99.24.219.47"; //70.187.145.234
+    private const string PUBLIC_IP_ADDRESS = "99.24.219.47";
+
+    #endregion
+
+    #region Members
 
     public static Client instance;
     public static short dataBufferSize = 4096;
 
     [SerializeField]
     private IP_ADDRESSES m_activeIpAddress;
-    public string ip { get; private set; } = "127.0.0.1";
+    public string ip { get; private set; } = LOCAL_IP_ADDRESS;
     public int port = 26950;
     public int myId { get; private set; } = 0;
 
@@ -47,6 +51,7 @@ public class Client : MonoBehaviour
     private bool isConnected = false;
     public delegate void ServerConnectionHandler ( int status );
     public static ServerConnectionHandler OnServerConnect;
+    public uint ServerTick;
 
     private delegate void PacketHandler ( Packet _packet );
     private static Dictionary<int, PacketHandler> packetHandlers;

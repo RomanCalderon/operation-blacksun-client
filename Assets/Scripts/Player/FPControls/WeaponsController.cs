@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Linq;
 using InventorySystem.Slots;
 using InventorySystem.PlayerItems;
+using PlayerInput;
 
 [RequireComponent ( typeof ( AimController ) )]
 public class WeaponsController : MonoBehaviour
@@ -26,7 +27,7 @@ public class WeaponsController : MonoBehaviour
 
     private AimController m_aimController = null;
 
-    private int m_activeHotbarIndex = 0;
+    private int m_activeWeaponIndex = 0;
 
     public Weapons ActiveWeaponSlot { get; private set; } = Weapons.Primary;
     public WeaponInstance ActiveWeapon
@@ -100,7 +101,7 @@ public class WeaponsController : MonoBehaviour
             // Weapon switching - Primary
             if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && ActiveWeaponSlot != Weapons.Primary )
             {
-                if ( m_activeHotbarIndex == 1 ) // Switching from secondary weapon
+                if ( m_activeWeaponIndex == 1 ) // Switching from secondary weapon
                 {
                     if ( m_secondaryEquipped != null ) // Play weapon holster animation to switch
                     {
@@ -115,7 +116,7 @@ public class WeaponsController : MonoBehaviour
             // Weapon switching - Secondary
             if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && ActiveWeaponSlot != Weapons.Secondary )
             {
-                if ( m_activeHotbarIndex == 0 ) // Switching from primary weapon
+                if ( m_activeWeaponIndex == 0 ) // Switching from primary weapon
                 {
                     if ( m_primaryEquipped != null ) // Play weapon holster animation to switch
                     {
@@ -134,13 +135,13 @@ public class WeaponsController : MonoBehaviour
                 switch ( ( ActiveWeapon.PlayerItem as Weapon ).FireMode )
                 {
                     case Weapon.FireModes.SemiAuto:
-                        if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+                        if ( PlayerInputController.GetKeyDown ( PlayerInputController.PrimaryButton ) )
                         {
                             ActiveWeapon.Shoot ();
                         }
                         break;
                     case Weapon.FireModes.FullAuto:
-                        if ( Input.GetKey ( KeyCode.Mouse0 ) )
+                        if ( PlayerInputController.ShootInput )
                         {
                             ActiveWeapon.Shoot ();
                         }
@@ -151,16 +152,24 @@ public class WeaponsController : MonoBehaviour
             }
 
             // Aiming
-            AimController.AimState = AimController.CanAim && Input.GetKey ( KeyCode.Mouse1 );
+            AimController.AimState = AimController.CanAim && Input.GetKey ( PlayerInputController.SecondaryButton );
 
             // Reloading
-            if ( Input.GetKeyDown ( KeyCode.R ) )
+            if ( PlayerInputController.GetKeyDown ( PlayerInputController.ReloadKey ) )
             {
-                if ( ActiveWeapon != null )
-                {
-                    ActiveWeapon.Reload ();
-                }
+                ReloadWeapon ();
             }
+        }
+    }
+
+    private void ReloadWeapon ()
+    {
+        if ( ActiveWeapon != null )
+        {
+            ActiveWeapon.Reload ();
+
+            // Send reload command to server
+            ClientSend.WeaponReload ();
         }
     }
 
@@ -237,10 +246,6 @@ public class WeaponsController : MonoBehaviour
     /// <param name="layerIndex"></param>
     private void EnteredAnimatorState ( AnimatorStateInfo stateInfo, int layerIndex )
     {
-        if ( stateInfo.IsName ( "Shoot" ) && !AimController.AimState )
-        {
-            AimController.CanAim = false;
-        }
         if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
         {
             AimController.CanAim = false;
@@ -295,20 +300,12 @@ public class WeaponsController : MonoBehaviour
         {
             AimController.CanAim = true;
         }
-        if ( stateInfo.IsName ( "ReloadPartial" ) )
-        {
-            AimController.CanAim = true;
-        }
-        if ( stateInfo.IsName ( "ReloadFull" ) )
-        {
-            AimController.CanAim = true;
-        }
     }
 
     private void UpdateIdleSpeed ( bool aimState )
     {
         float idleSpeed = aimState ? 0f : 1f;
-        if ( aimState && ActiveWeapon.BulletCount > 0 )
+        if ( aimState && ActiveWeapon && ActiveWeapon.BulletCount > 0 )
         {
             OnSetTrigger?.Invoke ( "ResetIdle" );
         }
@@ -344,7 +341,7 @@ public class WeaponsController : MonoBehaviour
         DisableWeapons ();
 
         ActiveWeaponSlot = weapon;
-        m_activeHotbarIndex = ( int ) weapon;
+        m_activeWeaponIndex = ( int ) weapon;
 
         if ( weapon == Weapons.Primary )
         {
@@ -354,6 +351,9 @@ public class WeaponsController : MonoBehaviour
         {
             m_secondaryWeaponHolder.SetActive ( true );
         }
+
+        // Send weapon switch to server
+        ClientSend.WeaponSwitch ( m_activeWeaponIndex );
     }
 
     private void DisableWeapons ()

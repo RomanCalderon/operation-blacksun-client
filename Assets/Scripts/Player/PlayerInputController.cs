@@ -28,6 +28,7 @@ namespace PlayerInput
         #region Members
 
         // KeyCodes
+        // Movement
         // TODO: Get keybinds from KeybindManager
         public static KeyCode MoveForwardKey = KeyCode.W;
         public static KeyCode MoveBackwardKey = KeyCode.S;
@@ -37,8 +38,13 @@ namespace PlayerInput
         public static KeyCode JumpKey = KeyCode.Space;
         public static KeyCode CrouchKeyToggle = KeyCode.C;
         public static KeyCode CrouchKeyHold = KeyCode.LeftControl;
+        // Actions
+        public static KeyCode PrimaryButton = KeyCode.Mouse0;
+        public static KeyCode SecondaryButton = KeyCode.Mouse1;
+        public static KeyCode ReloadKey = KeyCode.R;
 
         // Input
+        // Movement
         public static bool ForwardInput { get; private set; } = false;
         public static bool BackwardInput { get; private set; } = false;
         public static bool RightInput { get; private set; } = false;
@@ -46,6 +52,8 @@ namespace PlayerInput
         public static bool JumpInput { get; private set; } = false;
         public static bool RunInput { get; private set; } = false;
         public static bool CrouchInput { get; private set; } = false;
+        public static bool ShootInput { get; private set; } = false;
+        public static Vector3 LookDirection { get; private set; }
 
         // TODO: Update from KeybindManager
         private InputModes m_crouchInputMode = InputModes.HOLD;
@@ -68,6 +76,7 @@ namespace PlayerInput
             JumpInput = false;
             RunInput = false;
             CrouchInput = m_crouchToggle = false;
+            ShootInput = false;
         }
 
         private void Update ()
@@ -100,11 +109,24 @@ namespace PlayerInput
                 default:
                     break;
             }
+
+            // Shoot
+            ShootInput = !InventoryManager.Instance.IsDisplayed && Input.GetKey ( PrimaryButton );
         }
 
         public static bool GetKey ( KeyCode key )
         {
             return Input.GetKey ( key );
+        }
+
+        public static bool GetKeyDown ( KeyCode key )
+        {
+            return Input.GetKeyDown ( key );
+        }
+
+        public static void SetLookDirection ( Vector3 direction )
+        {
+            LookDirection = direction;
         }
     }
 }

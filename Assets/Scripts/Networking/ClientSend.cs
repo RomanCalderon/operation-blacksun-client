@@ -70,17 +70,20 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void PlayerShoot ( Vector3 _direction, float _damage, string _gunshotClip, float _gunshotVolume, float _minDistance, float _maxDistance )
+    public static void WeaponSwitch ( int activeWeaponIndex )
     {
-        using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerShoot ) )
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.weaponSwitch ) )
         {
-            _packet.Write ( _direction );
-            _packet.Write ( _damage );
-            _packet.Write ( _gunshotClip );
-            _packet.Write ( _gunshotVolume );
-            _packet.Write ( _minDistance );
-            _packet.Write ( _maxDistance );
+            _packet.Write ( activeWeaponIndex );
 
+            SendTCPData ( _packet );
+        }
+    }
+
+    public static void WeaponReload ()
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.weaponReload ) )
+        {
             SendTCPData ( _packet );
         }
     }

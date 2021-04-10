@@ -13,7 +13,7 @@ public class ClientPredictionHandler : MonoBehaviour
     private const uint STATE_CACHE_SIZE = 1024;
     // Correction tolerance
     private const float CORRECTION_TOLERANCE = 0.001f;
-    private const float CORRECTION_LERP_RATE = 0.25f;
+    private const float CORRECTION_LERP_RATE = 0.4f;
     // Minimum position snapping distance
     private const float SNAP_THRESHOLD = 4f;
 
@@ -52,8 +52,9 @@ public class ClientPredictionHandler : MonoBehaviour
     {
         // Set the InputState's simulation frame
         InputState.SimulationFrame = m_simulationFrame;
+        InputState.ServerTick = Client.instance.ServerTick;
 
-        // Send the input to the server as byte array to be processed
+        // Send player input to the server as byte array to be processed
         byte [] inputBytes = StateToBytes ( InputState );
         ClientSend.PlayerInput ( inputBytes );
 
@@ -76,13 +77,16 @@ public class ClientPredictionHandler : MonoBehaviour
         m_simulationStateCache [ cacheIndex ] = simulationState;
         m_inputStateCache [ cacheIndex ] = InputState;
 
-        // Increase the client's simulation frame
+        // Increment client simulation frame
         m_simulationFrame++;
     }
 
     public void OnServerSimulationStateReceived ( byte [] simulationState )
     {
         SimulationState message = BytesToState ( simulationState );
+
+        // Update client with last received server tick
+        Client.instance.ServerTick = message.ServerTick;
 
         if ( m_serverSimulationState == null )
         {
@@ -204,6 +208,7 @@ public class ClientPredictionHandler : MonoBehaviour
             Jump = PlayerInputController.JumpInput,
             Run = PlayerInputController.RunInput,
             Crouch = PlayerInputController.CrouchInput,
+            Shoot = PlayerInputController.ShootInput,
             Rotation = m_rigidbody.rotation,
             DeltaTime = Time.deltaTime
         };
@@ -227,8 +232,10 @@ public class ClientPredictionHandler : MonoBehaviour
         {
             BinaryFormatter formatter = new BinaryFormatter ();
             SurrogateSelector surrogateSelector = new SurrogateSelector ();
+            Vector3SerializationSurrogate vector3SS = new Vector3SerializationSurrogate ();
             QuaternionSerializationSurrogate quaternionSS = new QuaternionSerializationSurrogate ();
 
+            surrogateSelector.AddSurrogate ( typeof ( Vector3 ), new StreamingContext ( StreamingContextStates.All ), vector3SS );
             surrogateSelector.AddSurrogate ( typeof ( Quaternion ), new StreamingContext ( StreamingContextStates.All ), quaternionSS );
             formatter.SurrogateSelector = surrogateSelector;
             formatter.Serialize ( ms, inputState );

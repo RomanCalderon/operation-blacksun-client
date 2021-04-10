@@ -26,7 +26,7 @@ public class AimController : MonoBehaviour
             m_canAim = value;
         }
     }
-    private static bool m_canAim = true;
+    private static bool m_canAim = false;
 
     public static bool AimState
     {
@@ -51,6 +51,7 @@ public class AimController : MonoBehaviour
 
     public void UpdateAimFOV ( float aimFOV )
     {
+        CanAim = aimFOV > 0;
         OnTargetFOVUpdated?.Invoke ( aimFOV );
     }
 }

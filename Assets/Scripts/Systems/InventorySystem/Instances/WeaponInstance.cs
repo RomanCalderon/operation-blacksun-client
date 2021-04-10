@@ -26,6 +26,7 @@ public class WeaponInstance : PlayerItemInstance
 
     private CameraController m_cameraController = null;
     private AimController m_aimController = null;
+    public AimListener AimListener { get => m_aimListener; }
     [SerializeField]
     private AimListener m_aimListener = null;
 
@@ -88,6 +89,7 @@ public class WeaponInstance : PlayerItemInstance
     private bool m_isFullReload = false;
     private Coroutine m_reloadCoroutine = null;
 
+    private bool m_didShoot = false;
     private float m_fireCooldown = 0f;
 
 
@@ -109,6 +111,9 @@ public class WeaponInstance : PlayerItemInstance
 
         // Cancel reload if this gun gets disabled
         CancelReload ();
+
+        // Reset aim FOV target
+        AimController.CanAim = false;
     }
 
     // Start is called before the first frame update
@@ -140,12 +145,20 @@ public class WeaponInstance : PlayerItemInstance
 
     public void UpdateAimController ()
     {
-        if ( m_aimController != null && Sight != null )
+        if ( m_aimController != null )
         {
-            float aimSpeed = 10f / ( Mathf.Sqrt ( Sight.SightZoomStrength ) * 0.5f );
-            float aimZoomAmount = 72f / Sight.PlayerZoomModifier;
-            m_aimController.UpdateAimSpeed ( aimSpeed );
-            m_aimController.UpdateAimFOV ( aimZoomAmount );
+            if ( Sight != null )
+            {
+                float aimSpeed = 10f / ( Mathf.Sqrt ( Sight.SightZoomStrength ) * 0.5f );
+                float aimZoomAmount = 72f / Sight.PlayerZoomModifier;
+                m_aimController.UpdateAimSpeed ( aimSpeed );
+                m_aimController.UpdateAimFOV ( aimZoomAmount );
+            }
+            else
+            {
+                m_aimController.UpdateAimSpeed ( 20f );
+                m_aimController.UpdateAimFOV ( 72f );
+            }
         }
     }
 
@@ -261,9 +274,9 @@ public class WeaponInstance : PlayerItemInstance
 
             // Perform gunshot
             Vector3 direction = m_aimListener.GetAimVector ();
-            float damage = ( PlayerItem as Weapon ).BaseDamage;
-            ClientSend.PlayerShoot ( direction, damage, m_normalGunshotClip, m_normalGunshotVolume, Constants.GUNSHOT_MIN_DISTANCE, Constants.GUNSHOT_MAX_DISTANCE );
-
+            PlayerInput.PlayerInputController.SetLookDirection ( direction );
+            //float damage = ( PlayerItem as Weapon ).BaseDamage;
+            
             // Play animation
             if ( BulletCount == 0 )
             {
