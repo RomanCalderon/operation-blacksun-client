@@ -163,7 +163,7 @@ MonoBehaviour:
   m_aimListener: {fileID: 7697869007835537660}
   m_mixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
     type: 2}
-  m_normalGunshotClip: gunshot-smg45-standard
+  m_normalGunshotClip: gunshot-smg-45-standard
   m_normalGunshotVolume: 0.65
   m_normalSpatialBlend: 0.1
   m_suppressedGunshotClip: {fileID: 8300000, guid: 2fd59dbd67d1e794fa71e61182fddb3b,
