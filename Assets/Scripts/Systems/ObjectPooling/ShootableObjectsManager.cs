@@ -69,6 +69,12 @@ public class ShootableObjectsManager : MonoBehaviour
 
     public static ShootableObjectsManager Instance;
 
+    [Header ( "Pool Container" )]
+    [SerializeField]
+    private Transform m_shootableObjectsContainer = null;
+    [SerializeField]
+    private Transform m_hitObjectsContainer = null;
+
     [Header ( "Shootable Objects" ), SerializeField]
     private List<ShootableObjectPool> m_shootableObjectPools;
     private Dictionary<int, Queue<GameObject>> m_shootableObjectPool;
@@ -94,6 +100,18 @@ public class ShootableObjectsManager : MonoBehaviour
 
     private void InitializePools ()
     {
+        // Create containers
+        if ( m_shootableObjectsContainer == null )
+        {
+            m_shootableObjectsContainer = new GameObject ( "Shootable Objects Container" ).transform;
+            m_shootableObjectsContainer.SetParent ( transform );
+        }
+        if ( m_hitObjectsContainer == null )
+        {
+            m_hitObjectsContainer = new GameObject ( "Hit Objects Container" ).transform;
+            m_hitObjectsContainer.SetParent ( transform );
+        }
+
         m_shootableObjectPool = new Dictionary<int, Queue<GameObject>> ();
         m_hitObjectPool = new Dictionary<int, Queue<GameObject>> ();
 
@@ -108,7 +126,7 @@ public class ShootableObjectsManager : MonoBehaviour
             Queue<GameObject> objectPool = new Queue<GameObject> ();
             for ( int i = 0; i < pool.Size; i++ )
             {
-                GameObject obj = Instantiate ( pool.Prefab );
+                GameObject obj = Instantiate ( pool.Prefab, m_shootableObjectsContainer );
                 obj.SetActive ( false );
                 objectPool.Enqueue ( obj );
             }
@@ -126,7 +144,7 @@ public class ShootableObjectsManager : MonoBehaviour
             Queue<GameObject> objectPool = new Queue<GameObject> ();
             for ( int i = 0; i < pool.Size; i++ )
             {
-                GameObject obj = Instantiate ( pool.Prefab );
+                GameObject obj = Instantiate ( pool.Prefab, m_hitObjectsContainer );
                 obj.SetActive ( false );
                 objectPool.Enqueue ( obj );
             }
@@ -160,8 +178,6 @@ public class ShootableObjectsManager : MonoBehaviour
 
     public GameObject SpawnFromPool ( HitObjects tag, Vector3 position, Vector3 normal )
     {
-        //Debug.Log ("SpawnFromPool()");
-
         if ( !m_hitObjectPool.ContainsKey ( ( int ) tag ) )
         {
             Debug.LogWarning ( $"Hit Object Pool with tag [{tag}] doesn't exist." );
@@ -173,7 +189,7 @@ public class ShootableObjectsManager : MonoBehaviour
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = Quaternion.LookRotation ( normal, Vector3.up );
 
-        IPooledObject[] pooledObjects = objectToSpawn.GetComponents<IPooledObject> ();
+        IPooledObject [] pooledObjects = objectToSpawn.GetComponents<IPooledObject> ();
         foreach ( IPooledObject pooledObject in pooledObjects )
         {
             pooledObject.OnObjectSpawn ();
@@ -186,14 +202,20 @@ public class ShootableObjectsManager : MonoBehaviour
 
     private void OnValidate ()
     {
-        foreach ( ShootableObjectPool pool in m_shootableObjectPools )
+        if ( m_shootableObjectPools != null )
         {
-            pool.OnValidate ();
+            foreach ( ShootableObjectPool pool in m_shootableObjectPools )
+            {
+                pool.OnValidate ();
+            }
         }
 
-        foreach ( HitObjectsPool pool1 in m_hitObjectPools )
+        if ( m_hitObjectPools != null )
         {
-            pool1.OnValidate ();
+            foreach ( HitObjectsPool pool1 in m_hitObjectPools )
+            {
+                pool1.OnValidate ();
+            }
         }
     }
 }

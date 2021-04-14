@@ -808,6 +808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a3653a4857f4184d9be3b94ab7824d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_player: {fileID: 3190018344343389636}
   m_primaryWeaponHolder: {fileID: 1505376743937097583}
   m_primaryWeapons:
   - {fileID: 1670351923810448202}

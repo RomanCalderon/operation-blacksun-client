@@ -19,6 +19,7 @@ public class ClientSend : MonoBehaviour
     }
 
     #region Packets
+
     public static void WelcomeReceived ()
     {
         using ( Packet _packet = new Packet ( ( int ) ClientPackets.welcomeReceived ) )
@@ -65,8 +66,19 @@ public class ClientSend : MonoBehaviour
         {
             _packet.Write ( _inputs.Length );
             _packet.Write ( _inputs );
-            
+
             SendUDPData ( _packet );
+        }
+    }
+
+    public static void WeaponShoot ( uint tick, float clientSubFrame )
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.weaponShoot ) )
+        {
+            _packet.Write ( tick );
+            _packet.Write ( clientSubFrame );
+
+            SendTCPData ( _packet );
         }
     }
 
@@ -83,6 +95,14 @@ public class ClientSend : MonoBehaviour
     public static void WeaponReload ()
     {
         using ( Packet _packet = new Packet ( ( int ) ClientPackets.weaponReload ) )
+        {
+            SendTCPData ( _packet );
+        }
+    }
+
+    public static void WeaponCancelReload ()
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.weaponCancelReload ) )
         {
             SendTCPData ( _packet );
         }

@@ -25,6 +25,8 @@ public class WeaponsController : MonoBehaviour
     public delegate void WeaponSwitchHandler ();
     public static WeaponSwitchHandler OnSwitchWeapon;
 
+    [SerializeField]
+    private Player m_player = null;
     private AimController m_aimController = null;
 
     private int m_activeWeaponIndex = 0;
@@ -325,6 +327,7 @@ public class WeaponsController : MonoBehaviour
                 StopCoroutine ( m_weaponSwitchCoroutine );
             }
             m_weaponSwitchCoroutine = StartCoroutine ( SwitchWeaponsDelay ( stateInfo.length ) );
+            ClientSend.WeaponCancelReload ();
         }
     }
 
@@ -401,7 +404,7 @@ public class WeaponsController : MonoBehaviour
                 ClearWeapon ( Weapons.Primary );
                 m_primaryEquipped = weapon;
                 m_primaryEquipped.SetActive ( true );
-                m_primaryEquipped.Initialize ( m_aimController );
+                m_primaryEquipped.Initialize ( m_player, m_aimController );
             }
             else
             {
@@ -429,7 +432,7 @@ public class WeaponsController : MonoBehaviour
                 ClearWeapon ( Weapons.Secondary );
                 m_secondaryEquipped = weapon;
                 m_secondaryEquipped.SetActive ( true );
-                m_secondaryEquipped.Initialize ( m_aimController );
+                m_secondaryEquipped.Initialize ( m_player, m_aimController );
             }
             else
             {

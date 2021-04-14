@@ -13,6 +13,8 @@ public class WeaponInstance : PlayerItemInstance
     public delegate void AimZoomHandler ( float zoomAmount );
     public static AimZoomHandler OnUpdatedAimZoomAmount;
 
+    private Player m_player = null;
+
     public Barrel Barrel { get; private set; } = null;
     public Magazine Magazine { get; private set; } = null;
     public Sight Sight { get; private set; } = null;
@@ -125,8 +127,9 @@ public class WeaponInstance : PlayerItemInstance
         m_attachmentsController.Initialize ( m_ironsightIndex );
     }
 
-    public void Initialize ( AimController aimController )
+    public void Initialize ( Player player, AimController aimController )
     {
+        m_player = player;
         m_aimController = aimController;
         UpdateAttachments ();
         UpdateAimController ();
@@ -279,7 +282,10 @@ public class WeaponInstance : PlayerItemInstance
             AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
             // Perform gunshot
-            
+
+            // Send shoot command to server
+            ClientSend.WeaponShoot ( Client.instance.ServerTick, m_player.PositionLerpProgress );
+
             // Play animation
             if ( BulletCount == 0 )
             {

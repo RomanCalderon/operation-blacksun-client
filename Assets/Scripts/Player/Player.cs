@@ -45,9 +45,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Interpolation targets
+    // Interpolation data
+    public float PositionLerpProgress { get; private set; } = 0f;
+    public float RotationLerpProgress { get; private set; } = 0f;
     private Vector3 m_targetPosition;
-    private Quaternion m_targetRotation;
+    private Quaternion m_targetRotation = Quaternion.identity;
 
 
     private void Awake ()
@@ -66,14 +68,7 @@ public class Player : MonoBehaviour
 
     private void Update ()
     {
-        float deltaTime = Time.deltaTime;
-
-        // Interpolate remote player position and rotation
-        if ( Client.instance.myId != m_id )
-        {
-            transform.position = Vector3.Lerp ( transform.position, m_targetPosition, deltaTime * Constants.INTERP_POSITION_SPEED );
-            transform.rotation = Quaternion.Lerp ( transform.rotation, m_targetRotation, deltaTime * Constants.INTERP_ROTATION_SPEED );
-        }
+        InterpolateTransform ( Time.deltaTime );
     }
 
     public void Initialize ( int _id, string _username )
@@ -106,12 +101,33 @@ public class Player : MonoBehaviour
 
     public void SetUpdatedPosition ( Vector3 pos )
     {
+        PositionLerpProgress = 0f;
         m_targetPosition = pos;
     }
 
     public void SetUpdatedRotation ( Quaternion rot )
     {
+        RotationLerpProgress = 0f;
         m_targetRotation = rot;
+    }
+
+    private void InterpolateTransform ( float deltaTime )
+    {
+        // Increment progress trackers
+        PositionLerpProgress += deltaTime * Constants.INTERP_POSITION_SPEED;
+        RotationLerpProgress += deltaTime * Constants.INTERP_ROTATION_SPEED;
+
+        // Clamp values since the player will only move up to
+        // the most recent state receive from server
+        PositionLerpProgress = Mathf.Clamp01 ( PositionLerpProgress );
+        RotationLerpProgress = Mathf.Clamp01 ( RotationLerpProgress );
+
+        // Interpolate remote player position and rotation
+        if ( Client.instance.myId != m_id )
+        {
+            transform.position = Vector3.Lerp ( transform.position, m_targetPosition, PositionLerpProgress );
+            transform.rotation = Quaternion.Lerp ( transform.rotation, m_targetRotation, RotationLerpProgress );
+        }
     }
 
     public void SetMovementAnimationValues ( int moveInputX, int moveInputY, float moveSpeed, bool runInput, bool crouchInput )
