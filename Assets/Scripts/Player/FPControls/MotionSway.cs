@@ -36,17 +36,18 @@ public class MotionSway : MonoBehaviour
 
     private void Update ()
     {
-        if ( !InventoryManager.Instance.IsDisplayed )
+        float deltaTime = Time.deltaTime;
+        if ( !InventoryManager.Instance.IsDisplayed && !m_isAiming )
         {
-            UpdateSway ( Input.GetAxis ( "Mouse X" ), Input.GetAxis ( "Mouse Y" ) );
+            UpdateSway ( Input.GetAxis ( "Mouse X" ), Input.GetAxis ( "Mouse Y" ), deltaTime );
         }
         else
         {
-            UpdateSway ( 0f, 0f );
+            UpdateSway ( 0f, 0f, deltaTime * 3f );
         }
     }
 
-    public void UpdateSway ( float x, float y )
+    public void UpdateSway ( float x, float y, float deltaTime )
     {
         float factorX = -x;
         float factorY = -y;
@@ -71,11 +72,11 @@ public class MotionSway : MonoBehaviour
 
         // Position
         Vector3 final = new Vector3 ( def.x + factorX, def.y + factorY, def.z );
-        transform.localPosition = Vector3.Lerp ( transform.localPosition, final, Time.deltaTime * SwaySmooth );
+        transform.localPosition = Vector3.Lerp ( transform.localPosition, final, deltaTime * SwaySmooth );
 
         // Rotation
         Quaternion target = Quaternion.Euler ( tiltAroundX, tiltAroundZ, 0 );
-        transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, Time.deltaTime * SmoothRotation );
+        transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, deltaTime * SmoothRotation );
     }
 
     private void AimUpdated ( bool state )

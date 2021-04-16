@@ -1,11 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.Video;
 
 public class AimListener : MonoBehaviour
 {
+    private const float ADS_POSITION_SPEED = 18f;
+    private const float ADS_ROTATION_SPEED = 80;
+    private const float AIM_OUT_SPEED_RATIO = 0.75f;
+
     [SerializeField]
     private Transform m_ADSPoint = null;
     [SerializeField]
@@ -15,31 +16,30 @@ public class AimListener : MonoBehaviour
     private TransformAlignmentUtil m_adsTransformAlignment = null;
     [SerializeField]
     private FollowTransform m_adsFollowTransform = null;
+    private bool m_isAiming = false;
 
     [SerializeField]
     private Transform m_model = null;
+    [SerializeField]
+    private Transform m_modelContainer = null;
     private Vector3 m_originalPosition = Vector3.zero;
-    private Quaternion m_originalRotation = Quaternion.identity;
     private Vector3 m_offset = Vector3.zero;
     private Vector3 m_targetPosition = Vector3.zero;
-    private Vector3 m_currVelocity = Vector3.zero;
-    [SerializeField]
-    private float m_smoothTime = 5f;
+    private Quaternion m_originalRotation = Quaternion.identity;
+    private Quaternion m_targetRotation = Quaternion.identity;
+    private Coroutine m_weaponAimCoroutine = null;
 
     private void Awake ()
     {
-        Debug.Assert ( m_ADSPoint != null, "Please assign an ADS Point." );
-
         m_originalPosition = m_model.localPosition;
         m_originalRotation = m_model.localRotation;
-        m_offset.z = Vector3.Distance ( m_ADSPoint.position, transform.position );
+
+        UpdateADSPointTarget ();
     }
 
     private void OnEnable ()
     {
         AimController.OnAimStateUpdated += AimUpdate;
-
-        UpdateADSPointTarget ();
     }
 
     private void OnDisable ()
@@ -50,22 +50,24 @@ public class AimListener : MonoBehaviour
     // Update is called once per frame
     private void Update ()
     {
-        // Position
-        m_model.localPosition = Vector3.SmoothDamp ( m_model.localPosition, m_targetPosition, ref m_currVelocity, m_smoothTime * Time.deltaTime );
-    }
+        float deltaTime = Time.deltaTime;
 
-    private void FixedUpdate ()
-    {
-        if ( AimController.AimState )
+        // Position
+        if ( m_isAiming )
         {
-            Vector3 adsDiff = ( transform.localPosition + m_offset ) - m_ADSPoint.localPosition;
-            m_targetPosition = m_model.localPosition + adsDiff;
+            m_modelContainer.localPosition = Vector3.Lerp ( m_modelContainer.localPosition, m_targetPosition, deltaTime * ADS_POSITION_SPEED );
+            m_modelContainer.localRotation = Quaternion.RotateTowards ( m_modelContainer.localRotation, m_targetRotation, deltaTime * ADS_ROTATION_SPEED );
+        }
+        else
+        {
+            m_model.localPosition = Vector3.Lerp ( m_model.localPosition, m_originalPosition, deltaTime * ADS_POSITION_SPEED * AIM_OUT_SPEED_RATIO );
+            m_model.localRotation = Quaternion.RotateTowards ( m_model.localRotation, m_originalRotation, deltaTime * ADS_ROTATION_SPEED * AIM_OUT_SPEED_RATIO );
         }
     }
 
     public Vector3 GetAimVector ()
     {
-        return m_ADSPoint.forward;
+        return transform.forward; //m_ADSPoint.forward;
     }
 
     public void UpdateADSPointTarget ()
@@ -88,7 +90,6 @@ public class AimListener : MonoBehaviour
             m_adsFollowTransform.SetTarget ( target.transform );
             m_adsTransformAlignment.SetTarget ( target.transform );
             RealignADSPoint ();
-            AimUpdate ( AimController.AimState );
         }
         else
         {
@@ -110,33 +111,58 @@ public class AimListener : MonoBehaviour
         m_adsTransformAlignment.AlignPosition ();
         m_adsTransformAlignment.AlignRotation ();
         m_adsFollowTransform.enabled = true;
-        m_offset.z = Vector3.Distance ( m_ADSPoint.position, transform.position );
     }
 
     private void AimUpdate ( bool aimState )
     {
         if ( aimState )
         {
-            RealignADSPoint ();
-
-            // Rotation
-            float angle = Vector3.Angle ( m_ADSPoint.up, m_model.transform.up );
-            m_model.RotateAround ( m_ADSPoint.position, m_ADSPoint.forward, -angle );
-
-            // Position
-            Vector3 adsDiff = ( transform.localPosition + m_offset ) - m_ADSPoint.localPosition;
-            m_targetPosition = m_model.localPosition + adsDiff;
+            if ( m_weaponAimCoroutine != null )
+                StopCoroutine ( m_weaponAimCoroutine );
+            m_weaponAimCoroutine = StartCoroutine ( AimWeapon () );
         }
         else
         {
-            m_targetPosition = m_originalPosition;
-            m_model.localRotation = m_originalRotation;
+            m_isAiming = false;
+            m_model.SetParent ( transform );
         }
+    }
+
+    private IEnumerator AimWeapon ()
+    {
+        // Wait one frame
+        yield return new WaitForEndOfFrame ();
+
+        SetAimRotation ();
+        SetAimPosition ();
+        m_isAiming = true;
+    }
+
+    private void SetAimPosition ()
+    {
+        // Set target position
+        Vector3 adsDiff = transform.InverseTransformDirection ( transform.position - m_modelContainer.position );
+        m_offset = Vector3.zero;
+        m_offset.z = Vector3.Distance ( m_ADSPoint.position, transform.position );
+        m_targetPosition = m_modelContainer.localPosition + adsDiff + m_offset;
+    }
+
+    private void SetAimRotation ()
+    {
+        m_model.SetParent ( transform );
+        m_modelContainer.SetPositionAndRotation ( m_ADSPoint.position, m_ADSPoint.rotation );
+        m_model.SetParent ( m_modelContainer );
+        Quaternion difference = m_modelContainer.localRotation * Quaternion.Inverse ( transform.localRotation );
+        m_targetRotation = difference * Quaternion.Inverse ( m_modelContainer.localRotation );
     }
 
     private void OnDrawGizmos ()
     {
         Gizmos.color = new Color ( 1, 0, 0, 0.75f );
-        Gizmos.DrawSphere ( transform.position + m_offset, 0.001f );
+        Gizmos.DrawSphere ( m_ADSPoint.position, 0.001f );
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay ( m_modelContainer.position, m_modelContainer.forward );
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay ( transform.position, transform.forward );
     }
 }

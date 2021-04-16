@@ -58,6 +58,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_target: {fileID: 0}
+  m_followPosition: 1
+  m_followRotation: 1
   m_keepOffset: 1
 --- !u!95 &4960951583290074730
 Animator:
@@ -111,6 +113,7 @@ Transform:
   - {fileID: 592065366497971634}
   - {fileID: 6691218581491709778}
   - {fileID: 3446016039489569049}
+  - {fileID: 5504363364521879283}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -144,7 +147,7 @@ MonoBehaviour:
   m_adsTransformAlignment: {fileID: 1104110420454683933}
   m_adsFollowTransform: {fileID: 3775350194032981909}
   m_model: {fileID: 592065366497971634}
-  m_smoothTime: 8.5
+  m_modelContainer: {fileID: 5504363364521879283}
 --- !u!114 &5015134670353747047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +187,36 @@ MonoBehaviour:
   m_dryfireVolume: 0.3
   m_partialReloadTime: 1.61
   m_fullReloadTime: 2.86
+--- !u!1 &5703504540412186953
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5504363364521879283}
+  m_Layer: 10
+  m_Name: Model Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5504363364521879283
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5703504540412186953}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 660991568163575068}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6459283790390658447
 GameObject:
   m_ObjectHideFlags: 0

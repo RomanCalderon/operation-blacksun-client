@@ -143,7 +143,7 @@ public class WeaponsController : MonoBehaviour
                         }
                         break;
                     case Weapon.FireModes.FullAuto:
-                        if ( PlayerInputController.ShootInput )
+                        if ( PlayerInputController.GetKey ( PlayerInputController.PrimaryButton ) )
                         {
                             ActiveWeapon.Shoot ();
                         }
@@ -248,15 +248,19 @@ public class WeaponsController : MonoBehaviour
     /// <param name="layerIndex"></param>
     private void EnteredAnimatorState ( AnimatorStateInfo stateInfo, int layerIndex )
     {
+        if ( stateInfo.IsName ( "Draw" ) )
+        {
+            AimController.CanAim = false;
+        }
         if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
         {
             AimController.CanAim = false;
         }
-        if ( stateInfo.IsName ( "ReloadPartial" ) )
+        if ( stateInfo.IsName ( "ReloadPartial" ) && !AimController.AimState )
         {
             AimController.CanAim = false;
         }
-        if ( stateInfo.IsName ( "ReloadFull" ) )
+        if ( stateInfo.IsName ( "ReloadFull" ) && !AimController.AimState )
         {
             AimController.CanAim = false;
         }
@@ -273,11 +277,15 @@ public class WeaponsController : MonoBehaviour
     /// <param name="layerIndex"></param>
     private void UpdatedAnimatorState ( AnimatorStateInfo stateInfo, int layerIndex )
     {
-        if ( stateInfo.IsName ( "Shoot" ) && !AimController.AimState )
+        if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
         {
             AimController.CanAim = false;
         }
-        if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
+        if ( stateInfo.IsName ( "ReloadPartial" ) && !AimController.AimState )
+        {
+            AimController.CanAim = false;
+        }
+        if ( stateInfo.IsName ( "ReloadFull" ) && !AimController.AimState )
         {
             AimController.CanAim = false;
         }
@@ -294,11 +302,16 @@ public class WeaponsController : MonoBehaviour
         {
             AimController.CanAim = true;
         }
-        if ( stateInfo.IsName ( "Shoot" ) )
+        if ( stateInfo.IsName ( "BoltCharge" ) )
         {
             AimController.CanAim = true;
         }
-        if ( stateInfo.IsName ( "BoltCharge" ) )
+        if ( stateInfo.IsName ( "ReloadPartial" ) )
+        {
+            AimController.CanAim = true;
+            
+        }
+        if ( stateInfo.IsName ( "ReloadFull" ) )
         {
             AimController.CanAim = true;
         }
@@ -306,12 +319,11 @@ public class WeaponsController : MonoBehaviour
 
     private void UpdateIdleSpeed ( bool aimState )
     {
-        float idleSpeed = aimState ? 0f : 1f;
-        if ( aimState && ActiveWeapon && ActiveWeapon.BulletCount > 0 )
+        OnSetFloat?.Invoke ( "IdleSpeed", aimState ? 0f : 1f );
+        if ( aimState && ActiveWeapon )
         {
             OnSetTrigger?.Invoke ( "ResetIdle" );
         }
-        OnSetFloat?.Invoke ( "IdleSpeed", idleSpeed );
     }
 
     #endregion

@@ -7,6 +7,7 @@ public class HeadBobber : MonoBehaviour
     private const float TRANSITION_SPEED = 6f;
     private const float PLAYER_SPEED_MULTIPLIER = 2f;
     private const float BOB_AMOUNT_MULTIPLIER = 0.008f;
+    private const float AIM_BOB_MULTIPLIER = 0.1f;
 
     [SerializeField]
     private PlayerMovementController m_playerMovementController = null;
@@ -14,8 +15,19 @@ public class HeadBobber : MonoBehaviour
     // Local position where your camera would rest when it's not bobbing
     private Vector3 m_restPosition;
     private float m_time = 0f;
+    private float m_aimingModifier = 1f;
     private Vector3 m_camPos;
 
+
+    private void OnEnable ()
+    {
+        AimController.OnAimStateUpdated += AimUpdated;
+    }
+
+    private void OnDisable ()
+    {
+        AimController.OnAimStateUpdated -= AimUpdated;
+    }
 
     void Awake ()
     {
@@ -33,7 +45,7 @@ public class HeadBobber : MonoBehaviour
             m_time += playerSpeed * deltaTime;
 
             // Use the timer value to set the position
-            float bobAmount = Mathf.Sqrt ( playerSpeed ) * BOB_AMOUNT_MULTIPLIER;
+            float bobAmount = Mathf.Sqrt ( playerSpeed ) * BOB_AMOUNT_MULTIPLIER * m_aimingModifier;
             float deltaX = Mathf.Cos ( m_time ) * bobAmount / 4f;
             float deltaY = m_restPosition.y + Mathf.Abs ( Mathf.Sin ( m_time ) * bobAmount ) - ( bobAmount / 1.5f );
             Vector3 newPosition = new Vector3 ( deltaX, deltaY, m_restPosition.z );
@@ -58,5 +70,10 @@ public class HeadBobber : MonoBehaviour
         {
             m_time = 0;
         }
+    }
+
+    private void AimUpdated ( bool aimState )
+    {
+        m_aimingModifier = aimState ? AIM_BOB_MULTIPLIER : 1f;
     }
 }
