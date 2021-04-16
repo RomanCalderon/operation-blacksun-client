@@ -8,7 +8,6 @@ public class CameraController : MonoBehaviour
 {
     private const float CROUCH_SPEED = 4f;
     private const float CROUCH_TARGET_HEIGHT = -0.5f;
-    private const float CROUCH_HEAD_TILT = 0.5f;
     private const float SLIDE_SHAKE_THRESHOLD = 5.0f;
     private const float SLIDE_SHAKE_FADEIN = 0.2f;
 
@@ -24,8 +23,10 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_clampAngle = 85f;
     private Vector3 m_headPositionTarget;
-    private float m_headTilt = 0f;
-    private float m_headTiltTarget = 0f;
+    private float m_horizontalHeadTilt = 0f;
+    private float m_verticalHeadTilt = 0f;
+    private float m_horizontalHeadTiltTarget = 0f;
+    private float m_verticalHeadTiltTarget = 0f;
     private Vector3 m_headOffset;
 
     private float m_sensitivity;
@@ -95,12 +96,15 @@ public class CameraController : MonoBehaviour
 
         if ( Cursor.lockState == CursorLockMode.Locked && m_canControl )
         {
+            m_horizontalHeadTilt = Mathf.Lerp ( m_horizontalHeadTilt, m_horizontalHeadTiltTarget, deltaTime * 80f );
+            m_verticalHeadTilt = Mathf.Lerp ( m_verticalHeadTilt, m_verticalHeadTiltTarget, deltaTime * 80f );
+            m_horizontalHeadTiltTarget = Mathf.Max ( 0, m_horizontalHeadTiltTarget - deltaTime * 10 );
+            m_verticalHeadTiltTarget = Mathf.Max ( 0, m_verticalHeadTiltTarget - deltaTime * 10 );
             Look ( deltaTime );
         }
 
-        // Set crouch height
-        bool crouching = PlayerInputController.CrouchInput;
-        UpdateMovementChanges ( crouching, deltaTime );
+        // Update crouch height
+        UpdateMovementChanges ( PlayerInputController.CrouchInput, deltaTime );
     }
 
     private void Look ( float deltaTime )
@@ -108,13 +112,11 @@ public class CameraController : MonoBehaviour
         float mouseHorizontalInput = Input.GetAxis ( Constants.MOUSE_HORIZONTAL_INPUT );
         float mouseVerticalInput = -Input.GetAxis ( Constants.MOUSE_VERTICAL_INPUT );
 
-        m_horizontalRotation += mouseHorizontalInput * m_sensitivity * deltaTime;
-        m_verticalRotation += mouseVerticalInput * m_sensitivity * deltaTime;
-
+        m_horizontalRotation += ( mouseHorizontalInput - m_horizontalHeadTilt ) * m_sensitivity * deltaTime;
+        m_verticalRotation += ( mouseVerticalInput - m_verticalHeadTilt ) * m_sensitivity * deltaTime;
         m_verticalRotation = Mathf.Clamp ( m_verticalRotation, -m_clampAngle, m_clampAngle );
 
-        m_headTilt = Mathf.Lerp ( m_headTilt, m_headTiltTarget, deltaTime * 16f );
-        transform.localRotation = Quaternion.Euler ( m_verticalRotation - m_headTilt, 0f, 0f );
+        transform.localRotation = Quaternion.Euler ( m_verticalRotation, 0f, 0f );
         m_movementController.SetRotation ( Quaternion.Euler ( 0f, m_horizontalRotation, 0f ) );
     }
 
@@ -143,8 +145,8 @@ public class CameraController : MonoBehaviour
 
     public void AddRecoil ( float verticalRecoil, float horizontalRecoil )
     {
-        m_verticalRotation -= verticalRecoil;
-        m_horizontalRotation -= horizontalRecoil;
+        m_verticalHeadTiltTarget += verticalRecoil;
+        m_horizontalHeadTiltTarget += horizontalRecoil;
     }
 
     public void UpdateMovementChanges ( bool crouch, float deltaTime )
@@ -160,13 +162,10 @@ public class CameraController : MonoBehaviour
         if ( crouch ) // Crouch
         {
             m_headPositionTarget = new Vector3 ( 0, CROUCH_TARGET_HEIGHT, 0 );
-            m_headTiltTarget = CROUCH_HEAD_TILT;
-            m_headTiltTarget = CROUCH_HEAD_TILT;
         }
         else // Standing
         {
             m_headPositionTarget = Vector3.zero;
-            m_headTiltTarget = 0f;
         }
 
         // Update head positioning

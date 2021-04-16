@@ -40,6 +40,7 @@ public class AimListener : MonoBehaviour
     private void OnEnable ()
     {
         AimController.OnAimStateUpdated += AimUpdate;
+        UpdateADSPointTarget ();
     }
 
     private void OnDisable ()
@@ -123,23 +124,25 @@ public class AimListener : MonoBehaviour
         }
         else
         {
-            m_isAiming = false;
             m_model.SetParent ( transform );
+            m_isAiming = false;
         }
     }
 
     private IEnumerator AimWeapon ()
     {
-        // Wait one frame
         yield return new WaitForEndOfFrame ();
 
-        SetAimRotation ();
         SetAimPosition ();
+        SetAimRotation ();
         m_isAiming = true;
     }
 
     private void SetAimPosition ()
     {
+        m_modelContainer.SetPositionAndRotation ( m_ADSPoint.position, m_ADSPoint.rotation );
+        m_model.SetParent ( m_modelContainer );
+
         // Set target position
         Vector3 adsDiff = transform.InverseTransformDirection ( transform.position - m_modelContainer.position );
         m_offset = Vector3.zero;
@@ -149,9 +152,6 @@ public class AimListener : MonoBehaviour
 
     private void SetAimRotation ()
     {
-        m_model.SetParent ( transform );
-        m_modelContainer.SetPositionAndRotation ( m_ADSPoint.position, m_ADSPoint.rotation );
-        m_model.SetParent ( m_modelContainer );
         Quaternion difference = m_modelContainer.localRotation * Quaternion.Inverse ( transform.localRotation );
         m_targetRotation = difference * Quaternion.Inverse ( m_modelContainer.localRotation );
     }

@@ -36,9 +36,10 @@ public class AimController : MonoBehaviour
         }
         set
         {
-            if ( value != m_aimState && CanAim )
+            if ( m_canAim && value != m_aimState )
             {
-                OnAimStateUpdated?.Invoke ( m_aimState = value );
+                m_aimState = value;
+                OnAimStateUpdated?.Invoke ( value );
             }
         }
     }
@@ -51,7 +52,6 @@ public class AimController : MonoBehaviour
 
     public void UpdateAimFOV ( float aimFOV )
     {
-        CanAim = aimFOV > 0;
         OnTargetFOVUpdated?.Invoke ( aimFOV );
     }
 }

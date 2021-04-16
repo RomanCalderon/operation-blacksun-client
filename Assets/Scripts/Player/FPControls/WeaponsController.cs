@@ -183,7 +183,7 @@ public class WeaponsController : MonoBehaviour
     public static float CalculateRecoilStrength ( Weapon.WeaponClasses weaponClass, Ammunition.Calibers caliber, out float aspect )
     {
         float strength = 0f;
-        aspect = UnityEngine.Random.Range ( 0.25f, 0.5f );
+        aspect = UnityEngine.Random.Range ( 0.5f, 0.8f );
 
         switch ( weaponClass )
         {
@@ -191,13 +191,13 @@ public class WeaponsController : MonoBehaviour
                 strength += 0.12f;
                 break;
             case Weapon.WeaponClasses.SMG:
-                strength += 0.2f;
+                strength += 0.3f;
                 break;
             case Weapon.WeaponClasses.Shotgun:
                 strength += 1.4f;
                 break;
             case Weapon.WeaponClasses.Pistol:
-                strength += 0.1f;
+                strength += 0.25f;
                 break;
             case Weapon.WeaponClasses.Sniper:
                 strength += 0.75f;
@@ -256,11 +256,11 @@ public class WeaponsController : MonoBehaviour
         {
             AimController.CanAim = false;
         }
-        if ( stateInfo.IsName ( "ReloadPartial" ) && !AimController.AimState )
+        if ( stateInfo.IsName ( "ReloadPartial" ) )
         {
             AimController.CanAim = false;
         }
-        if ( stateInfo.IsName ( "ReloadFull" ) && !AimController.AimState )
+        if ( stateInfo.IsName ( "ReloadFull" ) )
         {
             AimController.CanAim = false;
         }
@@ -278,14 +278,6 @@ public class WeaponsController : MonoBehaviour
     private void UpdatedAnimatorState ( AnimatorStateInfo stateInfo, int layerIndex )
     {
         if ( stateInfo.IsName ( "BoltCharge" ) && !AimController.AimState )
-        {
-            AimController.CanAim = false;
-        }
-        if ( stateInfo.IsName ( "ReloadPartial" ) && !AimController.AimState )
-        {
-            AimController.CanAim = false;
-        }
-        if ( stateInfo.IsName ( "ReloadFull" ) && !AimController.AimState )
         {
             AimController.CanAim = false;
         }
@@ -309,7 +301,6 @@ public class WeaponsController : MonoBehaviour
         if ( stateInfo.IsName ( "ReloadPartial" ) )
         {
             AimController.CanAim = true;
-            
         }
         if ( stateInfo.IsName ( "ReloadFull" ) )
         {

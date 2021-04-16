@@ -32,7 +32,9 @@ public class WeaponInstance : PlayerItemInstance
     [SerializeField]
     private AimListener m_aimListener = null;
 
+    // Ammo
     public int BulletCount { get; private set; } = 0;
+    private string m_ammoId;
 
     #region Audio Properties
 
@@ -91,7 +93,6 @@ public class WeaponInstance : PlayerItemInstance
     private bool m_isFullReload = false;
     private Coroutine m_reloadCoroutine = null;
 
-    private bool m_didShoot = false;
     private float m_fireCooldown = 0f;
 
     private Vector3 m_lookDirection;
@@ -130,6 +131,9 @@ public class WeaponInstance : PlayerItemInstance
     public void Initialize ( Player player, AimController aimController )
     {
         m_player = player;
+
+        m_ammoId = m_player.InventoryManager.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
+
         m_aimController = aimController;
         UpdateAttachments ();
         UpdateAimController ();
@@ -320,7 +324,7 @@ public class WeaponInstance : PlayerItemInstance
 
     private void DryFire ()
     {
-        if ( Input.GetKeyDown ( KeyCode.Mouse0 ) )
+        if ( Input.GetKeyDown ( PlayerInput.PlayerInputController.PrimaryButton ) )
         {
             AudioManager.PlaySound ( m_dryFireClip, m_mixerGroup, m_dryfireVolume, false );
         }
@@ -347,8 +351,7 @@ public class WeaponInstance : PlayerItemInstance
         {
             return;
         }
-        string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
-        int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
+        int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( m_ammoId );
         if ( inventoryAmmoCount == 0 ) // Out of compatible ammo in inventory
         {
             return;
@@ -363,34 +366,31 @@ public class WeaponInstance : PlayerItemInstance
         if ( m_isFullReload )
         {
             WeaponsController.OnSetTrigger?.Invoke ( "ReloadFull" );
-            m_reloadCoroutine = StartCoroutine ( ReloadCoroutine ( m_fullReloadTime ) );
+            m_reloadCoroutine = StartCoroutine ( ReloadCoroutine ( m_fullReloadTime, inventoryAmmoCount ) );
         }
         else
         {
             WeaponsController.OnSetTrigger?.Invoke ( "ReloadPartial" );
-            m_reloadCoroutine = StartCoroutine ( ReloadCoroutine ( m_partialReloadTime ) );
+            m_reloadCoroutine = StartCoroutine ( ReloadCoroutine ( m_partialReloadTime, inventoryAmmoCount ) );
         }
     }
 
-    private IEnumerator ReloadCoroutine ( float reloadTime )
+    private IEnumerator ReloadCoroutine ( float reloadTime, int inventoryAmmoCount )
     {
         yield return new WaitForSeconds ( reloadTime );
 
-        FinishReload ();
+        FinishReload ( inventoryAmmoCount );
     }
 
-    private void FinishReload ()
+    private void FinishReload ( int inventoryAmmoCount )
     {
         if ( !m_isReloading )
         {
             return;
         }
 
-        string ammoId = InventoryManager.Instance.PlayerItemDatabase.GetAmmoByCaliber ( ( PlayerItem as Weapon ).Caliber );
-        int inventoryAmmoCount = InventoryManager.Instance.GetItemCount ( ammoId );
         int shotsFired = Magazine.AmmoCapacity - BulletCount;
         int refillAmount = Mathf.Min ( shotsFired, inventoryAmmoCount );
-        ClientSend.PlayerInventoryReduceItem ( ammoId, shotsFired );
         BulletCount += refillAmount;
 
         // Reset reload flags
