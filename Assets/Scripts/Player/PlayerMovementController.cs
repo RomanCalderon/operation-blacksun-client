@@ -135,7 +135,7 @@ public class PlayerMovementController : MonoBehaviour
         float inputZ = moveForward ? 1 : moveBackward ? -1 : 0;
 
         // Calculate movement speed
-        float movementSpeed = WALK_SPEED * ( crouching ? CROUCH_SPEED_MULTIPLIER : running ? RUN_SPEED_MULTIPLIER : 1f );
+        float movementSpeed = WALK_SPEED * ( crouching ? CROUCH_SPEED_MULTIPLIER : running && moveForward ? RUN_SPEED_MULTIPLIER : 1f );
 
         // Set target velocity
         Vector3 targetVelocity = ( transform.right * inputX + transform.forward * inputZ ).normalized * movementSpeed;
