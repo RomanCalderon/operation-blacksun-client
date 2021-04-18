@@ -1076,7 +1076,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerMovementController: {fileID: 3620798914732993513}
-  m_bobAmount: 0.008
+  m_bobAmount: 0.5
+  m_playerSpeedBobInfluence: 0.1
+  m_speedMultiplier: 2.5
+  m_playerSpeedInfluence: 1
 --- !u!1 &3489386374535929984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,7 +1260,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerMovementController: {fileID: 3620798914732993513}
-  m_bobAmount: 0.05
+  m_bobAmount: 4
+  m_playerSpeedBobInfluence: 0.5
+  m_speedMultiplier: 2.5
+  m_playerSpeedInfluence: 1
 --- !u!1 &3536008476512634685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,12 +1458,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73bbb9d4a467bd948a3911c52d67efd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerMovementController: {fileID: 3620798914732993513}
   SwayAmountX: 0.007
   SwayAmountY: 0.02
   MaxSwayAmount: 0.02
   SwaySmooth: 8
-  SmoothRotation: 3
+  SmoothRotation: 8
   TiltAngle: 1.5
+  m_showGizmos: 0
+  m_runPositionOffset: {x: -0.01, y: -0.01, z: 0.08}
+  m_runRotationOffset: {x: -0.46, y: -0.43, z: 1.17}
 --- !u!1 &4210096164678171902
 GameObject:
   m_ObjectHideFlags: 0

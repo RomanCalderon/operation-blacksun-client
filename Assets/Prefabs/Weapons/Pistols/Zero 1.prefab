@@ -88,9 +88,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_target: {fileID: 0}
-  m_followPosition: 1
-  m_followRotation: 1
   m_keepOffset: 1
+  m_lateUpdate: 0
 --- !u!95 &1807236567218424213
 Animator:
   serializedVersion: 3

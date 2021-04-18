@@ -6,16 +6,26 @@ public class MotionSway : MonoBehaviour
 {
     private const float SWAY_REDUCTION_FACTOR = 16f;
 
+    [SerializeField]
+    private PlayerMovementController m_playerMovementController = null;
+
     [Header ( "Values" )]
     public float SwayAmountX = 0.007f;
     public float SwayAmountY = 0.02f;
     public float MaxSwayAmount = 0.02f;
     public float SwaySmooth = 8f;
     [Space]
-    public float SmoothRotation = 3f;
+    public float SmoothRotation = 8;
     public float TiltAngle = 1.5f;
 
-    private Vector3 def;
+    private Vector3 m_default;
+    [SerializeField]
+    private bool m_showGizmos = false;
+    [SerializeField]
+    private Vector3 m_runPositionOffset;
+    [SerializeField]
+    private Vector3 m_runRotationOffset = Vector3.forward;
+
     private bool m_isAiming = false;
 
 
@@ -31,7 +41,7 @@ public class MotionSway : MonoBehaviour
 
     private void Start ()
     {
-        def = transform.localPosition;
+        m_default = transform.localPosition;
     }
 
     private void Update ()
@@ -51,8 +61,10 @@ public class MotionSway : MonoBehaviour
     {
         float factorX = -x;
         float factorY = -y;
-        float tiltAroundZ = -x * TiltAngle;
         float tiltAroundX = y * TiltAngle * 2f;
+        float tiltAroundY = -x * TiltAngle;
+        float playerSpeed = m_playerMovementController.Velocity.magnitude;
+        float tiltAroundZ = -x * TiltAngle * playerSpeed / 4f;
 
         factorX *= SwayAmountX;
         factorY *= SwayAmountY;
@@ -61,8 +73,9 @@ public class MotionSway : MonoBehaviour
         {
             factorX = Mathf.Clamp ( factorX / SWAY_REDUCTION_FACTOR, -MaxSwayAmount / SWAY_REDUCTION_FACTOR, MaxSwayAmount / SWAY_REDUCTION_FACTOR );
             factorY = Mathf.Clamp ( factorY / SWAY_REDUCTION_FACTOR, -MaxSwayAmount / SWAY_REDUCTION_FACTOR, MaxSwayAmount / SWAY_REDUCTION_FACTOR );
-            tiltAroundZ /= SWAY_REDUCTION_FACTOR;
+            tiltAroundY /= SWAY_REDUCTION_FACTOR;
             tiltAroundX /= SWAY_REDUCTION_FACTOR;
+            tiltAroundZ /= SWAY_REDUCTION_FACTOR;
         }
         else
         {
@@ -71,16 +84,35 @@ public class MotionSway : MonoBehaviour
         }
 
         // Position
-        Vector3 final = new Vector3 ( def.x + factorX, def.y + factorY, def.z );
+        bool useRunOffset = m_playerMovementController.IsRunning &&
+            m_playerMovementController.IsGrounded &&
+            !m_playerMovementController.IsSliding &&
+            !m_isAiming;
+        Vector3 final = new Vector3 ( m_default.x + factorX, m_default.y + factorY, m_default.z ) + ( useRunOffset ? m_runPositionOffset : Vector3.zero );
         transform.localPosition = Vector3.Lerp ( transform.localPosition, final, deltaTime * SwaySmooth );
 
         // Rotation
-        Quaternion target = Quaternion.Euler ( tiltAroundX, tiltAroundZ, 0 );
+        Quaternion target = Quaternion.Euler ( tiltAroundX, tiltAroundY, tiltAroundZ );
+        if ( useRunOffset )
+        {
+            target *= Quaternion.LookRotation ( m_runRotationOffset, Vector3.up );
+        }
         transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, deltaTime * SmoothRotation );
     }
 
     private void AimUpdated ( bool state )
     {
         m_isAiming = state;
+    }
+
+    private void OnDrawGizmos ()
+    {
+        if ( !m_showGizmos )
+            return;
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay ( transform.position, m_runPositionOffset );
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay ( transform.position + m_runPositionOffset, m_runRotationOffset.normalized );
     }
 }

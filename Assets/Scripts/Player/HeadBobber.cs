@@ -5,14 +5,22 @@ using UnityEngine;
 public class HeadBobber : MonoBehaviour
 {
     private const float TRANSITION_SPEED = 6f;
-    private const float PLAYER_SPEED_MULTIPLIER = 2f;
     private const float AIM_BOB_MULTIPLIER = 0.1f;
+    private const float BOB_REDUCTION = 100f;
 
     [SerializeField]
     private PlayerMovementController m_playerMovementController = null;
 
-    [SerializeField, Space]
+    [Header ( "Bob Amount" )]
+    [SerializeField]
     private float m_bobAmount = 0.05f;
+    [SerializeField, Range ( 0f, 1f )]
+    private float m_playerSpeedBobInfluence = 0f;
+    [Header ( "Bob Speed" )]
+    [SerializeField]
+    private float m_speedMultiplier = 8f;
+    [SerializeField, Range ( 0f, 1f )]
+    private float m_playerSpeedInfluence = 0f;
 
     // Local position where your camera would rest when it's not bobbing
     private Vector3 m_restPosition;
@@ -39,15 +47,17 @@ public class HeadBobber : MonoBehaviour
     void Update ()
     {
         float deltaTime = Time.deltaTime;
-        float playerSpeed = m_playerMovementController.Velocity.magnitude * PLAYER_SPEED_MULTIPLIER;
+        float playerSpeed = m_playerMovementController.Velocity.magnitude;
+        bool playerSliding = m_playerMovementController.IsSliding;
         bool grounded = m_playerMovementController.IsGrounded;
 
         if ( playerSpeed > 0f && grounded ) // Moving
         {
-            m_time += playerSpeed * deltaTime;
+            m_time += deltaTime * ( m_speedMultiplier + m_playerSpeedInfluence * playerSpeed );
 
             // Use the timer value to set the position
-            float bobAmount = Mathf.Sqrt ( playerSpeed ) * m_bobAmount * m_aimingModifier;
+            float playerSlideMultiplier = ( playerSliding ? 0.1f : 1f );
+            float bobAmount = ( m_bobAmount + m_playerSpeedBobInfluence * playerSpeed * playerSpeed ) / BOB_REDUCTION * m_aimingModifier * playerSlideMultiplier;
             float deltaX = Mathf.Cos ( m_time ) * bobAmount / 4f;
             float deltaY = m_restPosition.y + Mathf.Abs ( Mathf.Sin ( m_time ) * bobAmount ) - ( bobAmount / 1.5f );
             Vector3 newPosition = new Vector3 ( deltaX, deltaY, m_restPosition.z );

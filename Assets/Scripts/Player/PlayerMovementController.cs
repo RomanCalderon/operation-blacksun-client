@@ -25,7 +25,7 @@ public class PlayerMovementController : MonoBehaviour
     // Movement
     private const float WALK_SPEED = 4f; // Base movement speed
     private const float RUN_SPEED_MULTIPLIER = 2.25f;
-    private const float RUN_SPEED_BUFFER = 0.25f;
+    private const float RUN_SPEED_BUFFER = 3f;
     private const float CROUCH_SPEED_MULTIPLIER = 0.5f;
     private const float CROUCH_POSITION_MODIFIER = 0.5f;
     private const float CROUCH_SMOOTH_TIME = 2.5f;
@@ -56,8 +56,9 @@ public class PlayerMovementController : MonoBehaviour
     /// The velocity of the player's rigidbody.
     /// </summary>
     public Vector3 Velocity { get => m_rigidbody.velocity; }
-    public bool IsRunning { get => Velocity.magnitude > WALK_SPEED + RUN_SPEED_BUFFER; }
+    public bool IsRunning { get => Velocity.magnitude > ( WALK_SPEED * RUN_SPEED_MULTIPLIER ) - RUN_SPEED_BUFFER; }
     public bool IsGrounded { get => m_isGrounded; }
+    public bool IsSliding { get => m_isSliding; }
     private bool m_isGrounded;
     private Vector3 m_gravity;
     private bool m_jumpCheck = false;
@@ -151,7 +152,7 @@ public class PlayerMovementController : MonoBehaviour
         Vector3 velocityChange = ( new Vector3 ( smoothTargetVelocityX, 0, smoothTargetVelocityZ ) - velocity );
         velocityChange = Vector3.ClampMagnitude ( velocityChange, MAX_VELOCITY_CHANGE );
         velocityChange.y = 0;
-        
+
         // Applies drag on rigidbody based on movement state
         ApplyDrag ( moveForward || moveBackward || moveRight || moveLeft || jumping );
 
