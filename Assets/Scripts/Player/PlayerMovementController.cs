@@ -25,6 +25,7 @@ public class PlayerMovementController : MonoBehaviour
     // Movement
     private const float WALK_SPEED = 4f; // Base movement speed
     private const float RUN_SPEED_MULTIPLIER = 2.25f;
+    private const float RUN_SPEED_BUFFER = 0.25f;
     private const float CROUCH_SPEED_MULTIPLIER = 0.5f;
     private const float CROUCH_POSITION_MODIFIER = 0.5f;
     private const float CROUCH_SMOOTH_TIME = 2.5f;
@@ -55,6 +56,7 @@ public class PlayerMovementController : MonoBehaviour
     /// The velocity of the player's rigidbody.
     /// </summary>
     public Vector3 Velocity { get => m_rigidbody.velocity; }
+    public bool IsRunning { get => Velocity.magnitude > WALK_SPEED + RUN_SPEED_BUFFER; }
     public bool IsGrounded { get => m_isGrounded; }
     private bool m_isGrounded;
     private Vector3 m_gravity;
@@ -129,13 +131,15 @@ public class PlayerMovementController : MonoBehaviour
         bool jumping = state.Jump;
         bool running = state.Run;
         bool crouching = state.Crouch;
+        bool aiming = state.Aiming;
+        bool shooting = state.Shoot;
 
         // Convert movement input to linear values
         float inputX = moveRight ? 1 : moveLeft ? -1 : 0;
         float inputZ = moveForward ? 1 : moveBackward ? -1 : 0;
 
         // Calculate movement speed
-        float movementSpeed = WALK_SPEED * ( crouching ? CROUCH_SPEED_MULTIPLIER : running && moveForward ? RUN_SPEED_MULTIPLIER : 1f );
+        float movementSpeed = WALK_SPEED * ( crouching ? CROUCH_SPEED_MULTIPLIER : running && moveForward && !aiming && !shooting ? RUN_SPEED_MULTIPLIER : 1f );
 
         // Set target velocity
         Vector3 targetVelocity = ( transform.right * inputX + transform.forward * inputZ ).normalized * movementSpeed;

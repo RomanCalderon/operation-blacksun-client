@@ -209,6 +209,7 @@ public class ClientPredictionHandler : MonoBehaviour
             Run = PlayerInputController.RunInput,
             Crouch = PlayerInputController.CrouchInput,
             Shoot = PlayerInputController.ShootInput,
+            Aiming = PlayerInputController.Aiming,
             LookDirection = PlayerInputController.LookDirection,
             Rotation = m_rigidbody.rotation,
             DeltaTime = Time.deltaTime

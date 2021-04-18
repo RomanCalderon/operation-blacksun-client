@@ -118,15 +118,25 @@ public class AimListener : MonoBehaviour
     {
         if ( aimState )
         {
-            if ( m_weaponAimCoroutine != null )
-                StopCoroutine ( m_weaponAimCoroutine );
-            m_weaponAimCoroutine = StartCoroutine ( AimWeapon () );
+            StartAim ();
         }
         else
         {
-            m_model.SetParent ( transform );
-            m_isAiming = false;
+            StopAim ();
         }
+    }
+
+    private void StartAim ()
+    {
+        if ( m_weaponAimCoroutine != null )
+            StopCoroutine ( m_weaponAimCoroutine );
+        m_weaponAimCoroutine = StartCoroutine ( AimWeapon () );
+    }
+
+    private void StopAim ()
+    {
+        m_model.SetParent ( transform );
+        m_isAiming = false;
     }
 
     private IEnumerator AimWeapon ()

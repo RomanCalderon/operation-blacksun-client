@@ -53,6 +53,7 @@ namespace PlayerInput
         public static bool RunInput { get; private set; } = false;
         public static bool CrouchInput { get; private set; } = false;
         public static bool ShootInput { get; private set; } = false;
+        public static bool Aiming { get; private set; } = false;
         public static Vector3 LookDirection { get; private set; }
 
         // TODO: Update from KeybindManager
@@ -60,7 +61,6 @@ namespace PlayerInput
         private static bool m_crouchToggle = false;
 
         #endregion
-
 
         private void Awake ()
         {
@@ -122,6 +122,11 @@ namespace PlayerInput
         public static bool GetKeyDown ( KeyCode key )
         {
             return Input.GetKeyDown ( key );
+        }
+
+        public static void SetAim ( bool aimState )
+        {
+            Aiming = aimState;
         }
 
         public static void SetLookDirection ( Vector3 direction )

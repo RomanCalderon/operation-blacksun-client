@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using PlayerInput;
 
 public class AimController : MonoBehaviour
 {
@@ -40,6 +39,7 @@ public class AimController : MonoBehaviour
             {
                 m_aimState = value;
                 OnAimStateUpdated?.Invoke ( value );
+                PlayerInputController.SetAim ( value );
             }
         }
     }
