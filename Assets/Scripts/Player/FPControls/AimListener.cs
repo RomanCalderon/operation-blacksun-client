@@ -133,26 +133,20 @@ public class AimListener : MonoBehaviour
         m_weaponAimCoroutine = StartCoroutine ( AimWeapon () );
     }
 
-    private void StopAim ()
-    {
-        m_model.SetParent ( transform );
-        m_isAiming = false;
-    }
-
     private IEnumerator AimWeapon ()
     {
-        yield return new WaitForEndOfFrame ();
+        yield return null;
 
-        SetAimPosition ();
+        m_modelContainer.SetPositionAndRotation ( m_ADSPoint.position, m_ADSPoint.rotation );
+        m_model.SetParent ( m_modelContainer );
+
         SetAimRotation ();
+        SetAimPosition ();
         m_isAiming = true;
     }
 
     private void SetAimPosition ()
     {
-        m_modelContainer.SetPositionAndRotation ( m_ADSPoint.position, m_ADSPoint.rotation );
-        m_model.SetParent ( m_modelContainer );
-
         // Set target position
         Vector3 adsDiff = transform.InverseTransformDirection ( transform.position - m_modelContainer.position );
         m_offset = Vector3.zero;
@@ -164,6 +158,12 @@ public class AimListener : MonoBehaviour
     {
         Quaternion difference = m_modelContainer.localRotation * Quaternion.Inverse ( transform.localRotation );
         m_targetRotation = difference * Quaternion.Inverse ( m_modelContainer.localRotation );
+    }
+
+    private void StopAim ()
+    {
+        m_model.SetParent ( transform );
+        m_isAiming = false;
     }
 
     private void OnDrawGizmos ()

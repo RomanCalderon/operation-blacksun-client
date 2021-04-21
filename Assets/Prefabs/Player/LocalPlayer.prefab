@@ -1460,9 +1460,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerMovementController: {fileID: 3620798914732993513}
   SwayAmountX: 0.007
-  SwayAmountY: 0.02
-  MaxSwayAmount: 0.02
-  SwaySmooth: 8
+  SwayAmountY: 0.015
+  MaxSwayAmount: 0.015
+  SwaySmooth: 16
   SmoothRotation: 8
   TiltAngle: 1.5
   m_showGizmos: 0

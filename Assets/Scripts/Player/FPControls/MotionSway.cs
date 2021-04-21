@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MotionSway : MonoBehaviour
 {
-    private const float SWAY_REDUCTION_FACTOR = 16f;
+    private const float SWAY_STRENGTH = 0.2f;
 
     [SerializeField]
     private PlayerMovementController m_playerMovementController = null;
@@ -13,7 +13,7 @@ public class MotionSway : MonoBehaviour
     public float SwayAmountX = 0.007f;
     public float SwayAmountY = 0.02f;
     public float MaxSwayAmount = 0.02f;
-    public float SwaySmooth = 8f;
+    public float SwaySmooth = 16f;
     [Space]
     public float SmoothRotation = 8;
     public float TiltAngle = 1.5f;
@@ -71,11 +71,11 @@ public class MotionSway : MonoBehaviour
 
         if ( m_isAiming )
         {
-            factorX = Mathf.Clamp ( factorX / SWAY_REDUCTION_FACTOR, -MaxSwayAmount / SWAY_REDUCTION_FACTOR, MaxSwayAmount / SWAY_REDUCTION_FACTOR );
-            factorY = Mathf.Clamp ( factorY / SWAY_REDUCTION_FACTOR, -MaxSwayAmount / SWAY_REDUCTION_FACTOR, MaxSwayAmount / SWAY_REDUCTION_FACTOR );
-            tiltAroundY /= SWAY_REDUCTION_FACTOR;
-            tiltAroundX /= SWAY_REDUCTION_FACTOR;
-            tiltAroundZ /= SWAY_REDUCTION_FACTOR;
+            factorX = Mathf.Clamp ( factorX * SWAY_STRENGTH, -MaxSwayAmount * SWAY_STRENGTH, MaxSwayAmount * SWAY_STRENGTH );
+            factorY = Mathf.Clamp ( factorY * SWAY_STRENGTH, -MaxSwayAmount * SWAY_STRENGTH, MaxSwayAmount * SWAY_STRENGTH );
+            tiltAroundX = tiltAroundX * SWAY_STRENGTH;
+            tiltAroundY = tiltAroundY * SWAY_STRENGTH;
+            tiltAroundZ = tiltAroundZ * SWAY_STRENGTH;
         }
         else
         {

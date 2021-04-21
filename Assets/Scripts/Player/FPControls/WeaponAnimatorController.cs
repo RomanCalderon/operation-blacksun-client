@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WeaponAnimatorController : MonoBehaviour
 {
@@ -71,21 +68,5 @@ public class WeaponAnimatorController : MonoBehaviour
             }
         }
         return false;
-    }
-
-    private float GetAnimationClipLength ( string clipName )
-    {
-        //Animator.StringToHash ( "" )
-
-        RuntimeAnimatorController animController = m_animator.runtimeAnimatorController;
-        for ( int i = 0; i < animController.animationClips.Length; i++ )
-        {
-            if ( animController.animationClips [ i ].name == clipName )
-            {
-                return animController.animationClips [ i ].length;
-            }
-        }
-        Debug.LogWarning ( $"Couldn't find clip with name [{clipName}]" );
-        return 0f;
     }
 }
