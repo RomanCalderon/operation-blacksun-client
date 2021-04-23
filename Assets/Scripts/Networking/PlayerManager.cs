@@ -33,8 +33,11 @@ public class PlayerManager
         Player.Initialize ( Id, Username );
         SetHealth ( MAX_HEALTH );
 
-        // Tell the server that this player has spawned
-        ClientSend.PlayerReady ();
+        if ( Client.instance.myId == Id )
+        {
+            // Tell the server that this player has spawned
+            ClientSend.PlayerReady ();
+        }
     }
 
     public void UpdatePlayerPosition ( Vector3 position )

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayerInput;
 
-[RequireComponent ( typeof ( ClientPredictionHandler ) )]
-[RequireComponent ( typeof ( PlayerMovementController ) )]
-[RequireComponent ( typeof ( PlayerInputController ) )]
-[RequireComponent ( typeof ( PlayerModelController ) )]
-[RequireComponent ( typeof ( InventoryManager ) )]
-[RequireComponent ( typeof ( HitmarkerController ) )]
+//[RequireComponent ( typeof ( ClientPredictionHandler ) )]
+//[RequireComponent ( typeof ( PlayerMovementController ) )]
+//[RequireComponent ( typeof ( PlayerInputController ) )]
+//[RequireComponent ( typeof ( PlayerModelController ) )]
+//[RequireComponent ( typeof ( InventoryManager ) )]
+//[RequireComponent ( typeof ( HitmarkerController ) )]
 public class Player : MonoBehaviour
 {
     private int m_id;
