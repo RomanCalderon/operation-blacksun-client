@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using InventorySystem.PlayerItems;
 using InventorySystem.Slots.Results;
 
@@ -20,6 +19,7 @@ namespace InventorySystem.Slots
         {
             Id = id;
             PlayerItem = weapon;
+            StackSize = 1;
         }
 
         #endregion
