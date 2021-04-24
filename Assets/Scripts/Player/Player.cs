@@ -11,6 +11,9 @@ using PlayerInput;
 //[RequireComponent ( typeof ( HitmarkerController ) )]
 public class Player : MonoBehaviour
 {
+    public delegate void PlayerDeathHandler ();
+    public PlayerDeathHandler OnPlayerDeath;
+
     private int m_id;
     private string m_username;
     public bool IsDead { get; private set; }
@@ -159,6 +162,7 @@ public class Player : MonoBehaviour
 
     public void Die ()
     {
+        OnPlayerDeath?.Invoke ();
         IsDead = true;
         m_modelController.ShowModel ( false );
         if ( Client.instance.myId == m_id )

@@ -40,6 +40,14 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
+    public bool CanUseWeapons
+    {
+        get
+        {
+            return !m_player.IsDead && ActiveWeapon != null;
+        }
+    }
+
     [Space]
     [Header ( "Primary" ), SerializeField]
     private GameObject m_primaryWeaponHolder = null;
@@ -68,6 +76,8 @@ public class WeaponsController : MonoBehaviour
         WeaponStateBehaviour.OnStateEntered += EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated += UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited += ExitedAnimatorState;
+
+        m_player.OnPlayerDeath += OnPlayerDeath;
     }
 
     private void OnDisable ()
@@ -81,10 +91,13 @@ public class WeaponsController : MonoBehaviour
         WeaponStateBehaviour.OnStateEntered -= EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated -= UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited -= ExitedAnimatorState;
+
+        m_player.OnPlayerDeath -= OnPlayerDeath;
     }
 
     private void Awake ()
     {
+        Debug.Assert ( m_player != null, "m_player is null." );
         m_aimController = GetComponent<AimController> ();
     }
 
@@ -98,68 +111,81 @@ public class WeaponsController : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
-        if ( !InventoryManager.Instance.IsDisplayed )
+        WeaponInteractions ();
+        WeaponSwitching ();
+    }
+
+    private void WeaponInteractions ()
+    {
+        if ( !CanUseWeapons || InventoryManager.Instance.IsDisplayed )
         {
-            // Weapon switching - Primary
-            if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && ActiveWeaponSlot != Weapons.Primary )
-            {
-                if ( m_activeWeaponIndex == 1 ) // Switching from secondary weapon
+            return;
+        }
+
+        // Shooting
+        switch ( ( ActiveWeapon.PlayerItem as Weapon ).FireMode )
+        {
+            case Weapon.FireModes.SemiAuto:
+                if ( PlayerInputController.GetKeyDown ( PlayerInputController.PrimaryButton ) )
                 {
-                    if ( m_secondaryEquipped != null ) // Play weapon holster animation to switch
-                    {
-                        OnSetTrigger?.Invoke ( "Holster" );
-                    }
-                    else
-                    {
-                        ActivateWeapon ( Weapons.Primary );
-                    }
+                    ActiveWeapon.Shoot ();
+                }
+                break;
+            case Weapon.FireModes.FullAuto:
+                if ( PlayerInputController.GetKey ( PlayerInputController.PrimaryButton ) )
+                {
+                    ActiveWeapon.Shoot ();
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Aiming
+        AimController.AimState = AimController.CanAim && Input.GetKey ( PlayerInputController.SecondaryButton );
+
+        // Reloading
+        if ( PlayerInputController.GetKeyDown ( PlayerInputController.ReloadKey ) )
+        {
+            ReloadWeapon ();
+        }
+    }
+
+    private void WeaponSwitching ()
+    {
+        if ( m_player.IsDead || InventoryManager.Instance.IsDisplayed )
+        {
+            return;
+        }
+
+        // Weapon switching - Primary
+        if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && ActiveWeaponSlot != Weapons.Primary )
+        {
+            if ( m_activeWeaponIndex == 1 ) // Switching from secondary weapon
+            {
+                if ( m_secondaryEquipped != null ) // Play weapon holster animation to switch
+                {
+                    OnSetTrigger?.Invoke ( "Holster" );
+                }
+                else
+                {
+                    ActivateWeapon ( Weapons.Primary );
                 }
             }
-            // Weapon switching - Secondary
-            if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && ActiveWeaponSlot != Weapons.Secondary )
+        }
+        // Weapon switching - Secondary
+        if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && ActiveWeaponSlot != Weapons.Secondary )
+        {
+            if ( m_activeWeaponIndex == 0 ) // Switching from primary weapon
             {
-                if ( m_activeWeaponIndex == 0 ) // Switching from primary weapon
+                if ( m_primaryEquipped != null ) // Play weapon holster animation to switch
                 {
-                    if ( m_primaryEquipped != null ) // Play weapon holster animation to switch
-                    {
-                        OnSetTrigger?.Invoke ( "Holster" );
-                    }
-                    else
-                    {
-                        ActivateWeapon ( Weapons.Secondary );
-                    }
+                    OnSetTrigger?.Invoke ( "Holster" );
                 }
-            }
-
-            // Shooting
-            if ( ActiveWeapon != null )
-            {
-                switch ( ( ActiveWeapon.PlayerItem as Weapon ).FireMode )
+                else
                 {
-                    case Weapon.FireModes.SemiAuto:
-                        if ( PlayerInputController.GetKeyDown ( PlayerInputController.PrimaryButton ) )
-                        {
-                            ActiveWeapon.Shoot ();
-                        }
-                        break;
-                    case Weapon.FireModes.FullAuto:
-                        if ( PlayerInputController.GetKey ( PlayerInputController.PrimaryButton ) )
-                        {
-                            ActiveWeapon.Shoot ();
-                        }
-                        break;
-                    default:
-                        break;
+                    ActivateWeapon ( Weapons.Secondary );
                 }
-            }
-
-            // Aiming
-            AimController.AimState = AimController.CanAim && Input.GetKey ( PlayerInputController.SecondaryButton );
-
-            // Reloading
-            if ( PlayerInputController.GetKeyDown ( PlayerInputController.ReloadKey ) )
-            {
-                ReloadWeapon ();
             }
         }
     }
@@ -528,6 +554,15 @@ public class WeaponsController : MonoBehaviour
                 m_secondaryEquipped.EquipAttachment ( ( Stock ) slot.PlayerItem );
             }
         }
+    }
+
+    #endregion
+
+    #region Player Death Handler
+
+    private void OnPlayerDeath ()
+    {
+        ClientSend.WeaponCancelReload ();
     }
 
     #endregion
