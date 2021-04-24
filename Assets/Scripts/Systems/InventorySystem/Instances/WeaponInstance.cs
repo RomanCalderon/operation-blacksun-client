@@ -179,6 +179,7 @@ public class WeaponInstance : PlayerItemInstance
 
     public void UpdateAttachments ()
     {
+        m_attachmentsController.Initialize ( m_ironsightIndex );
         m_attachmentsController.UpdateAttachment ( Barrel );
         m_attachmentsController.UpdateAttachment ( Magazine );
         m_attachmentsController.UpdateAttachment ( Sight );

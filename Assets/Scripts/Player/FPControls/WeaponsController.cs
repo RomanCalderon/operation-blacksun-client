@@ -490,7 +490,8 @@ public class WeaponsController : MonoBehaviour
             return;
         }
 
-        if ( slotId.Contains ( "primary" ) ) // Primary weapon attachment
+        // Primary weapon attachment
+        if ( slotId.Contains ( "primary" ) )
         {
             // Get the Slot from the Inventory
             Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
@@ -522,7 +523,8 @@ public class WeaponsController : MonoBehaviour
                 m_primaryEquipped.EquipAttachment ( ( Stock ) slot.PlayerItem );
             }
         }
-        else if ( slotId.Contains ( "secondary" ) ) // Secondary weapon attachment
+        // Secondary weapon attachment
+        else if ( slotId.Contains ( "secondary" ) )
         {
             // Get the Slot from the Inventory
             Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
