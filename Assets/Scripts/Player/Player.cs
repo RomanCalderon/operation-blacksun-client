@@ -72,6 +72,12 @@ public class Player : MonoBehaviour
     private void Update ()
     {
         InterpolateTransform ( Time.deltaTime );
+
+        // DEBUG
+        if ( Input.GetKeyDown ( KeyCode.K ) )
+        {
+            ClientSend.PlayerKillSelf ();
+        }
     }
 
     public void Initialize ( int _id, string _username )
@@ -162,11 +168,17 @@ public class Player : MonoBehaviour
 
     public void Die ()
     {
-        OnPlayerDeath?.Invoke ();
         IsDead = true;
         m_modelController.ShowModel ( false );
+
         if ( Client.instance.myId == m_id )
         {
+            OnPlayerDeath?.Invoke ();
+
+            // Disable aiming
+            AimController.CanAim = false;
+            AimController.AimState = false;
+
             m_playerCamera.enabled = false;
             m_playerAudioListener.enabled = false;
             m_cameraController.CanControl ( false );
@@ -184,8 +196,13 @@ public class Player : MonoBehaviour
     {
         IsDead = false;
         m_modelController.ShowModel ( true );
+
         if ( Client.instance.myId == m_id )
         {
+            // Reset aiming
+            AimController.CanAim = true;
+            AimController.AimState = false;
+
             m_playerCamera.enabled = true;
             m_playerAudioListener.enabled = true;
             m_cameraController.CanControl ( true );
