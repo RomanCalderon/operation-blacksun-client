@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2720040062189735131}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.64505, y: 14.51252, z: -3.5362177}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -68,3 +68,90 @@ MonoBehaviour:
     AudioClip: {fileID: 8300000, guid: f932708169ca4cf40b6eaed7e08a69ba, type: 3}
     MixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
       type: 2}
+  m_playerItems:
+  - Name: 12 Gauge
+    PlayerItem: {fileID: 11400000, guid: 7da1bea9f9421aa4bbe542aa53b796ad, type: 2}
+    Object: {fileID: 0}
+  - Name: 5.56 NATO
+    PlayerItem: {fileID: 11400000, guid: 789102ec94fcff24a8a50ea4dff6741a, type: 2}
+    Object: {fileID: 0}
+  - Name: AAC
+    PlayerItem: {fileID: 11400000, guid: 9147eca41b5da2e48a5816176803d8f4, type: 2}
+    Object: {fileID: 0}
+  - Name: ACP Ultra
+    PlayerItem: {fileID: 11400000, guid: 879dfc462633c8d47aaa88faaf4e47f5, type: 2}
+    Object: {fileID: 0}
+  - Name: Boar 75
+    PlayerItem: {fileID: 11400000, guid: 3f212a334ba305248b17d90c72a997e5, type: 2}
+    Object: {fileID: 0}
+  - Name: C3
+    PlayerItem: {fileID: 11400000, guid: 1ff2bf4c93009dd4d9c2a138a7e2dd81, type: 2}
+    Object: {fileID: 0}
+  - Name: Vanquisher
+    PlayerItem: {fileID: 11400000, guid: 03c500fadd69a97429eb2fe8dabfcf71, type: 2}
+    Object: {fileID: 0}
+  - Name: Wilson 9mm
+    PlayerItem: {fileID: 11400000, guid: 74dfd6db20ba2e0489b00e96408e9592, type: 2}
+    Object: {fileID: 0}
+  - Name: CB Comp
+    PlayerItem: {fileID: 11400000, guid: 3900433c2cd9f6f45952cba95398c005, type: 2}
+    Object: {fileID: 0}
+  - Name: S.HUSH
+    PlayerItem: {fileID: 11400000, guid: 56f1a4ac4a8f32147b3b3117bc427cab, type: 2}
+    Object: {fileID: 0}
+  - Name: 8 Rnd C3
+    PlayerItem: {fileID: 11400000, guid: bb26647185b04854499f419aa0e8bf6f, type: 2}
+    Object: {fileID: 0}
+  - Name: 16 Rnd 9mm
+    PlayerItem: {fileID: 11400000, guid: 08ae076a907243d409e5aca62c7a8d25, type: 2}
+    Object: {fileID: 0}
+  - Name: 28 Rnd ACP
+    PlayerItem: {fileID: 11400000, guid: 8abd58a58c11ddb4d9d54379eb6b5b35, type: 2}
+    Object: {fileID: 0}
+  - Name: 30 Rnd 9mm
+    PlayerItem: {fileID: 11400000, guid: bbf7f2c1a34a25c408f59e077f77c0f9, type: 2}
+    Object: {fileID: 0}
+  - Name: 60 Rnd 5.56 NATO
+    PlayerItem: {fileID: 11400000, guid: 9f744447365952d418b5edf330c556c9, type: 2}
+    Object: {fileID: 0}
+  - Name: 6x Scope
+    PlayerItem: {fileID: 11400000, guid: 82303a004b08de840a5ee4f269a9111b, type: 2}
+    Object: {fileID: -927199367670048503, guid: 3400719b7a31ea840899f226ce9fafdf,
+      type: 3}
+  - Name: ACOG
+    PlayerItem: {fileID: 11400000, guid: db1c7f23f5010324b8124f9a96468aa5, type: 2}
+    Object: {fileID: 0}
+  - Name: Holographic
+    PlayerItem: {fileID: 11400000, guid: 7d358ddffe23ab54482e5421910e4b56, type: 2}
+    Object: {fileID: -927199367670048503, guid: 4bd3e6092fd99f24b89df68d3651cfc5,
+      type: 3}
+  - Name: Micro Reflex
+    PlayerItem: {fileID: 11400000, guid: e8c88e880a2780a44a3dc77f81d18d4e, type: 2}
+    Object: {fileID: 0}
+  - Name: Reflex
+    PlayerItem: {fileID: 11400000, guid: 68d8c2a541e9a9548a5463fc24bc491f, type: 2}
+    Object: {fileID: 0}
+  - Name: Standard SMG
+    PlayerItem: {fileID: 11400000, guid: 5b4c7ed734b6542499a1e56a7fe4eca0, type: 2}
+    Object: {fileID: 0}
+  - Name: Frag
+    PlayerItem: {fileID: 11400000, guid: de0d343f2e922ff41960bd9d515cda6d, type: 2}
+    Object: {fileID: 0}
+  - Name: Rangefinder
+    PlayerItem: {fileID: 11400000, guid: 841d8c69111ab5a44a7bb3400d87256a, type: 2}
+    Object: {fileID: 0}
+  - Name: Signal Flare
+    PlayerItem: {fileID: 11400000, guid: d4aad1822216f084aaf1cf072a15880f, type: 2}
+    Object: {fileID: 0}
+  - Name: Smoke Grenade
+    PlayerItem: {fileID: 11400000, guid: fc8be0ee5e325ca4eb9a5c9013da0b53, type: 2}
+    Object: {fileID: 0}
+  - Name: Eveningstar
+    PlayerItem: {fileID: 11400000, guid: 52584332347cc044e81d48363b8b88e3, type: 2}
+    Object: {fileID: 0}
+  - Name: SMG-45
+    PlayerItem: {fileID: 11400000, guid: 61109460dffeeaf469dddce79743a4bd, type: 2}
+    Object: {fileID: 0}
+  - Name: Zero 1
+    PlayerItem: {fileID: 11400000, guid: 4c574b0b4a581d44a9449e88ddc9ecc7, type: 2}
+    Object: {fileID: 0}

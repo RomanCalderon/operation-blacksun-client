@@ -179,4 +179,22 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.players [ _id ].Player.Hitmarker ( _hitmarkerType );
     }
+
+    public static void CreateItemSpawner ( Packet _packet )
+    {
+        int _spawnerId = _packet.ReadInt ();
+        Vector3 _spawnerPosition = _packet.ReadVector3 ();
+        Vector3 _spawnerRotation = _packet.ReadVector3 ();
+        string _itemId = _packet.ReadString ();
+        int _quantity = _packet.ReadInt ();
+
+        ItemSpawnerManager.Instance.CreateItemSpawner ( _spawnerId, _spawnerPosition, _spawnerRotation, _itemId, _quantity );
+    }
+
+    public static void DestroyItem ( Packet _packet )
+    {
+        int _spawnerId = _packet.ReadInt ();
+
+        ItemSpawnerManager.ItemSpawners [ _spawnerId ].DestroyItem ();
+    }
 }

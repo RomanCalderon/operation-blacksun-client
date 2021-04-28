@@ -211,6 +211,7 @@ public class ClientPredictionHandler : MonoBehaviour
             Shoot = PlayerInputController.ShootInput,
             Aiming = PlayerInputController.Aiming,
             LookDirection = PlayerInputController.LookDirection,
+            Interact = PlayerInputController.Interact,
             Rotation = m_rigidbody.rotation,
             DeltaTime = Time.deltaTime
         };

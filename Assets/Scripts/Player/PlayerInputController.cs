@@ -42,6 +42,7 @@ namespace PlayerInput
         public static KeyCode PrimaryButton = KeyCode.Mouse0;
         public static KeyCode SecondaryButton = KeyCode.Mouse1;
         public static KeyCode ReloadKey = KeyCode.R;
+        public static KeyCode InteractKey = KeyCode.E;
 
         // Input
         // Movement
@@ -55,6 +56,7 @@ namespace PlayerInput
         public static bool ShootInput { get; private set; } = false;
         public static bool Aiming { get; private set; } = false;
         public static Vector3 LookDirection { get; private set; }
+        public static bool Interact { get; private set; } = false;
 
         // TODO: Update from KeybindManager
         private InputModes m_crouchInputMode = InputModes.HOLD;
@@ -112,6 +114,9 @@ namespace PlayerInput
 
             // Shoot
             ShootInput = !InventoryManager.Instance.IsDisplayed && Input.GetKey ( PrimaryButton );
+
+            // Interact
+            Interact = !InventoryManager.Instance.IsDisplayed && Input.GetKey ( InteractKey );
         }
 
         public static bool GetKey ( KeyCode key )
@@ -122,6 +127,11 @@ namespace PlayerInput
         public static bool GetKeyDown ( KeyCode key )
         {
             return Input.GetKeyDown ( key );
+        }
+
+        public static bool GetKeyUp ( KeyCode key )
+        {
+            return Input.GetKeyUp ( key );
         }
 
         public static void SetAim ( bool aimState )

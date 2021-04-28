@@ -33,7 +33,7 @@ TagManager:
   - FPSCamera
   - Ragdoll
   - PlayerCollider
-  - 
+  - Interactable
   - 
   - 
   - 

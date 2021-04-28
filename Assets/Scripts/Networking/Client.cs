@@ -389,7 +389,9 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerUpdateInventorySlot, ClientHandle.PlayerUpdateInventorySlot },
             { (int)ServerPackets.spawnHitObject, ClientHandle.SpawnHitObject },
             { (int)ServerPackets.playAudioClip, ClientHandle.PlayAudioClip },
-            { (int)ServerPackets.hitmarker, ClientHandle.Hitmarker }
+            { (int)ServerPackets.hitmarker, ClientHandle.Hitmarker },
+            { (int)ServerPackets.createItemSpawner, ClientHandle.CreateItemSpawner },
+            { (int)ServerPackets.itemSpawned, ClientHandle.DestroyItem }
         };
         UnityEngine.Debug.Log ( "Initialized packets." );
     }
