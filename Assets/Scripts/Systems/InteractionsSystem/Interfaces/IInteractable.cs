@@ -8,7 +8,7 @@ internal interface IInteractable
 
     string AccessKey { get; set; }
 
-    void Initialize ( bool isInteractable = true, string accessKey = null );
+    void Initialize ( byte [] interactableData );
 
     void StartHover ();
 

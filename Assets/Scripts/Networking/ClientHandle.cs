@@ -182,13 +182,10 @@ public class ClientHandle : MonoBehaviour
 
     public static void CreateItemSpawner ( Packet _packet )
     {
-        int _spawnerId = _packet.ReadInt ();
-        Vector3 _spawnerPosition = _packet.ReadVector3 ();
-        Vector3 _spawnerRotation = _packet.ReadVector3 ();
-        string _itemId = _packet.ReadString ();
-        int _quantity = _packet.ReadInt ();
+        int _spawnerDataLength = _packet.ReadInt ();
+        byte [] _spawnerData = _packet.ReadBytes ( _spawnerDataLength );
 
-        ItemSpawnerManager.Instance.CreateItemSpawner ( _spawnerId, _spawnerPosition, _spawnerRotation, _itemId, _quantity );
+        ItemSpawnerManager.Instance.CreateItemSpawner ( _spawnerData );
     }
 
     public static void DestroyItem ( Packet _packet )

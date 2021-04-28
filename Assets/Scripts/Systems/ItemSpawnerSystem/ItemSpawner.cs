@@ -1,8 +1,55 @@
+using System;
+using System.IO;
 using UnityEngine;
-using InventorySystem.PlayerItems;
 
 public class ItemSpawner : MonoBehaviour
 {
+    #region Models
+
+    [Serializable]
+    public struct SpawnerData
+    {
+        public int SpawnerId;
+        public Vector3 SpawnerPosition;
+        public Vector3 SpawnerRotation;
+        public string ItemId;
+        public int ItemQuantity;
+        public byte [] InteractableData;
+
+        public byte [] ToArray ()
+        {
+            MemoryStream stream = new MemoryStream ();
+            BinaryWriterExtended writer = new BinaryWriterExtended ( stream );
+
+            writer.Write ( SpawnerId );
+            writer.Write ( SpawnerPosition );
+            writer.Write ( SpawnerRotation );
+            writer.Write ( ItemId );
+            writer.Write ( ItemQuantity );
+            writer.Write ( InteractableData.Length );
+            writer.Write ( InteractableData );
+
+            return stream.ToArray ();
+        }
+
+        public static SpawnerData FromArray ( byte [] bytes )
+        {
+            BinaryReaderExtended reader = new BinaryReaderExtended ( new MemoryStream ( bytes ) );
+            SpawnerData s = default;
+
+            s.SpawnerId = reader.ReadInt32 ();
+            s.SpawnerPosition = reader.ReadVector3 ();
+            s.SpawnerRotation = reader.ReadVector3 ();
+            s.ItemId = reader.ReadString ();
+            s.ItemQuantity = reader.ReadInt32 ();
+            s.InteractableData = reader.ReadBytes ( reader.ReadInt32 () );
+
+            return s;
+        }
+    }
+
+    #endregion
+
     public int SpawnerId { get => m_spawnerId; }
     public int ItemQuantity { get => m_quantity; }
 
@@ -15,26 +62,26 @@ public class ItemSpawner : MonoBehaviour
 
     private PickupInstance m_instance = null;
 
-    public void Initialize ( int spawnerId, string itemId, int quantity )
+    public void Initialize ( SpawnerData spawnerData )
     {
-        m_spawnerId = spawnerId;
-        m_itemId = itemId;
-        m_quantity = quantity;
+        m_spawnerId = spawnerData.SpawnerId;
+        m_itemId = spawnerData.ItemId;
+        m_quantity = spawnerData.ItemQuantity;
 
-        SpawnItem ();
+        SpawnItem ( spawnerData.InteractableData );
     }
 
     public void DestroyItem ()
     {
         if ( m_instance != null )
         {
-            Destroy ( m_instance );
+            Destroy ( m_instance.gameObject );
         }
     }
 
-    private void SpawnItem ()
+    private void SpawnItem ( byte [] interactableData )
     {
         m_instance = Instantiate ( m_pickupInstancePrefab, transform.position, transform.rotation, transform );
-        m_instance.Initialize ( m_itemId, m_quantity );
+        m_instance.Initialize ( interactableData, m_itemId, m_quantity );
     }
 }

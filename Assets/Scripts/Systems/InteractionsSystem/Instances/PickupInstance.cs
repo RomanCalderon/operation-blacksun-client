@@ -18,13 +18,15 @@ public class PickupInstance : Interactable
         m_boxCollider = GetComponent<BoxCollider> ();
     }
 
-    public void Initialize ( string itemId, int quantity )
+    public void Initialize ( byte [] interactableData, string itemId, int quantity )
     {
         if ( string.IsNullOrEmpty ( itemId ) )
         {
             Debug.LogWarning ( "itemId is null or empty." );
             return;
         }
+
+        base.Initialize ( interactableData );
 
         // Get PlayerItem from database
         m_playerItem = GameAssets.Instance.GetPlayerItem ( itemId );
@@ -71,11 +73,7 @@ public class PickupInstance : Interactable
 
     protected override void OnInteract ()
     {
-        // Add PlayerItem to Inventory
         Debug.Log ( $"Interactable [{m_playerItem}] - OnInteract" );
-
-        // Destroy this PickupInstance
-        Destroy ( gameObject );
     }
 
     public override void StopInteract ()
@@ -88,6 +86,8 @@ public class PickupInstance : Interactable
 
     public override void StopHover ()
     {
+        base.StopInteract ();
+
         // Hide Interactable UI
         Debug.Log ( $"Interactable [{m_playerItem}] - StopHover" );
     }

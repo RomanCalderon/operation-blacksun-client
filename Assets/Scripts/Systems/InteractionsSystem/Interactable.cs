@@ -1,7 +1,48 @@
+using System;
+using System.IO;
 using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour, IInteractable
 {
+    #region Models
+
+    [Serializable]
+    public struct InteractableData
+    {
+        public bool IsInteractable;
+        public string AccessKey;
+
+        public InteractableData ( bool isInteractable = true, string accessKey = null )
+        {
+            IsInteractable = isInteractable;
+            AccessKey = accessKey;
+        }
+
+        public byte [] ToArray ()
+        {
+            MemoryStream stream = new MemoryStream ();
+            BinaryWriter writer = new BinaryWriter ( stream );
+
+            writer.Write ( IsInteractable );
+            writer.Write ( AccessKey );
+
+            return stream.ToArray ();
+        }
+
+        public static InteractableData FromArray ( byte [] bytes )
+        {
+            BinaryReader reader = new BinaryReader ( new MemoryStream ( bytes ) );
+            InteractableData s = default;
+
+            s.IsInteractable = reader.ReadBoolean ();
+            s.AccessKey = reader.ReadString ();
+
+            return s;
+        }
+    }
+
+    #endregion
+
     public bool IsInteractable { get; set; } = false;
     public bool IsInteracting { get => m_isInteracting; }
     public int ClientId { get => m_clientId; }
@@ -17,14 +58,14 @@ public abstract class Interactable : MonoBehaviour, IInteractable
     #region Interface
 
     /// <summary>
-    /// Initializes Interactable with an optional <paramref name="isInteractable"/> flag and <paramref name="accessKey"/>.
+    /// Initializes Interactable with InteractableData <paramref name="data"/>.
     /// </summary>
-    /// <param name="isInteractable">Is this Interactable interactable? Default is true.</param>
-    /// <param name="accessKey">A prerequisite 'passcode' in the form of a string. Omitting a value (null) disables this prerequisite. Default is null.</param>
-    public virtual void Initialize ( bool isInteractable = true, string accessKey = null )
+    /// <param name="data">Interactable data containing interactability flag and access key.</param>
+    public virtual void Initialize ( byte [] data )
     {
-        IsInteractable = isInteractable;
-        AccessKey = accessKey;
+        InteractableData interactableData = InteractableData.FromArray ( data );
+        IsInteractable = interactableData.IsInteractable;
+        AccessKey = interactableData.AccessKey;
     }
 
     /// <summary>
@@ -39,12 +80,16 @@ public abstract class Interactable : MonoBehaviour, IInteractable
     /// <param name="accessKey">An access key used to compare against Interactable's AccessKey.</param>
     public virtual void StartInteract ( int clientId, string accessKey = null )
     {
+        if ( !IsInteractable )
+        {
+            return;
+        }
         if ( m_isInteracting )
         {
             StopInteract ();
             return;
         }
-        if ( !string.IsNullOrEmpty ( AccessKey ) && !accessKey.Equals ( AccessKey ) )
+        if ( !string.IsNullOrEmpty ( AccessKey ) && accessKey != AccessKey )
         {
             StopInteract ();
             return;
@@ -87,7 +132,6 @@ public abstract class Interactable : MonoBehaviour, IInteractable
     /// </summary>
     protected abstract void OnInteract ();
 
-
     /// <summary>
     /// Called when Interactable interaction has ended or got interrupted.
     /// </summary>
@@ -129,6 +173,12 @@ public abstract class Interactable : MonoBehaviour, IInteractable
             OnInteract ();
             m_hasInteracted = true;
         }
+    }
+
+    private void OnDestroy ()
+    {
+        StopInteract ();
+        StopHover ();
     }
 
     #endregion
