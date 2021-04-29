@@ -4,7 +4,7 @@ internal interface IInteractable
 
     bool IsInteracting { get; }
 
-    int ClientId { get; }
+    float InteractTime { get; set; }
 
     string AccessKey { get; set; }
 

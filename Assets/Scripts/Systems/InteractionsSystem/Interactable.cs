@@ -10,11 +10,13 @@ public abstract class Interactable : MonoBehaviour, IInteractable
     public struct InteractableData
     {
         public bool IsInteractable;
+        public float InteractTime;
         public string AccessKey;
 
-        public InteractableData ( bool isInteractable = true, string accessKey = null )
+        public InteractableData ( bool isInteractable, float interactTime, string accessKey )
         {
             IsInteractable = isInteractable;
+            InteractTime = interactTime;
             AccessKey = accessKey;
         }
 
@@ -24,6 +26,7 @@ public abstract class Interactable : MonoBehaviour, IInteractable
             BinaryWriter writer = new BinaryWriter ( stream );
 
             writer.Write ( IsInteractable );
+            writer.Write ( InteractTime );
             writer.Write ( AccessKey );
 
             return stream.ToArray ();
@@ -35,6 +38,7 @@ public abstract class Interactable : MonoBehaviour, IInteractable
             InteractableData s = default;
 
             s.IsInteractable = reader.ReadBoolean ();
+            s.InteractTime = reader.ReadSingle ();
             s.AccessKey = reader.ReadString ();
 
             return s;
@@ -45,8 +49,9 @@ public abstract class Interactable : MonoBehaviour, IInteractable
 
     public bool IsInteractable { get; set; } = false;
     public bool IsInteracting { get => m_isInteracting; }
-    public int ClientId { get => m_clientId; }
+    public float InteractTime { get; set; }
     public string AccessKey { get; set; }
+    public int ClientId { get => m_clientId; }
     public float InteractTimer { get => m_interactTimer; }
 
     private const float m_interactTimeThreshold = 0.5f;
@@ -65,6 +70,7 @@ public abstract class Interactable : MonoBehaviour, IInteractable
     {
         InteractableData interactableData = InteractableData.FromArray ( data );
         IsInteractable = interactableData.IsInteractable;
+        InteractTime = interactableData.InteractTime;
         AccessKey = interactableData.AccessKey;
     }
 
