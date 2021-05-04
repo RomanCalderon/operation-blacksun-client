@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 60-rnd-556-nato
   Name: 60 Rnd 5.56 NATO
+  Rarity: 1
   StackLimit: 1
+  Image: {fileID: 0}
   AmmoCapacity: 60
   CompatibleAmmoCaliber: 2

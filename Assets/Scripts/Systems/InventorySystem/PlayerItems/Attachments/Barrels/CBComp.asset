@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: cb-comp
   Name: CB Comp
+  Rarity: 1
   StackLimit: 1
+  Image: {fileID: 0}
   BarrelType: 0

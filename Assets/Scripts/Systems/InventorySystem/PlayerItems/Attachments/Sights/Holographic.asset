@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: holographic
   Name: Holographic
+  Rarity: 1
   StackLimit: 1
   Image: {fileID: 21300000, guid: ba8d759f9402c684d8797fd35701e176, type: 3}
   SightZoomStrength: 1

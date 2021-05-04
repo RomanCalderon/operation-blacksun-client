@@ -35,64 +35,7 @@ public class PickupInstance : Interactable
         Instantiate ( itemObject, m_container.position, m_container.rotation, m_container );
 
         SetColliderBounds ( gameObject );
-
-        //m_detailsPopup.UpdateDetails ( playerItem );
     }
-
-    #region Interactable
-
-    public override void StartHover ()
-    {
-        // Display Interactable access UI
-        Debug.Log ( $"Interactable [{m_playerItem}] - StartHover" );
-    }
-
-    public override void StartInteract ( int clientId, string accessKey = null )
-    {
-        base.StartInteract ( clientId, accessKey );
-        if ( !IsInteracting )
-        {
-            return;
-        }
-
-        // Display Interactable interaction UI
-        Debug.Log ( $"Interactable [{m_playerItem}] - StartInteract" );
-    }
-
-    public override void StartInteract ( int clientId, string [] accessKeys )
-    {
-        base.StartInteract ( clientId, accessKeys );
-        if ( !IsInteracting )
-        {
-            return;
-        }
-
-        // Display Interactable interaction UI
-        Debug.Log ( $"Interactable [{m_playerItem}] - StartInteract" );
-    }
-
-    protected override void OnInteract ()
-    {
-        Debug.Log ( $"Interactable [{m_playerItem}] - OnInteract" );
-    }
-
-    public override void StopInteract ()
-    {
-        base.StopInteract ();
-
-        // Hide Interactable interaction UI
-        Debug.Log ( $"Interactable [{m_playerItem}] - StopInteract" );
-    }
-
-    public override void StopHover ()
-    {
-        base.StopInteract ();
-
-        // Hide Interactable UI
-        Debug.Log ( $"Interactable [{m_playerItem}] - StopHover" );
-    }
-
-    #endregion
 
     #region Util
 

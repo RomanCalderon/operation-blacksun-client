@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: s-hush
   Name: S.HUSH
+  Rarity: 0
   StackLimit: 1
+  Image: {fileID: 0}
   BarrelType: 1

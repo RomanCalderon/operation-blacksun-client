@@ -1,9 +1,12 @@
-﻿public class Constants
-{
-    #region Timestep
+﻿using UnityEngine;
+using InventorySystem.PlayerItems;
 
-    public const int TICKS_PER_SECOND = 60;
-    public const int MS_PER_TICK = 1000 / TICKS_PER_SECOND;
+public class Constants
+{
+    #region Audio
+
+    public const float GUNSHOT_MIN_DISTANCE = 10f;
+    public const float GUNSHOT_MAX_DISTANCE = 500f;
 
     #endregion
 
@@ -29,6 +32,14 @@
 
     #endregion
 
+    #region Inventory
+
+    public const int INVENTORY_RIG_SIZE = 6;
+    public const int INVENTORY_BACKPACK_SIZE = 10;
+    public const int SLOT_MAX_STACK_SIZE = 256;
+
+    #endregion
+
     #region Interpolation
 
     // Remote (other) players
@@ -37,11 +48,29 @@
 
     #endregion
 
-    #region Inventory
+    #region Items
 
-    public const int INVENTORY_RIG_SIZE = 6;
-    public const int INVENTORY_BACKPACK_SIZE = 10;
-    public const int SLOT_MAX_STACK_SIZE = 256;
+    public static Color StandardRarityColor { get => new Color ( 0.745f, 0.768f, 0.811f, 1f ); }
+    public static Color AdvancedRarityColor { get => new Color ( 0.298f, 0.49f, 0.603f, 1f ); }
+    public static Color EpicRarityColor { get => new Color ( 0.945f, 0.878f, 0.439f, 1f ); }
+    public static Color CosmicRarityColor { get => new Color ( 0.725f, 0.266f, 0.388f, 1f ); }
+
+    public static string RarityColorToHex ( Rarity rarity )
+    {
+        switch ( rarity )
+        {
+            case Rarity.STANDARD:
+                return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
+            case Rarity.ADVANCED:
+                return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
+            case Rarity.EPIC:
+                return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
+            case Rarity.COSMIC:
+                return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
+            default:
+                return ColorUtility.ToHtmlStringRGBA ( Color.white );
+        }
+    }
 
     #endregion
 
@@ -52,10 +81,10 @@
 
     #endregion
 
-    #region Audio
+    #region Timestep
 
-    public const float GUNSHOT_MIN_DISTANCE = 10f;
-    public const float GUNSHOT_MAX_DISTANCE = 500f;
+    public const int TICKS_PER_SECOND = 60;
+    public const int MS_PER_TICK = 1000 / TICKS_PER_SECOND;
 
     #endregion
 }

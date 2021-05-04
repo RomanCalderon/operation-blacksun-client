@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: e8e7f4f5ea48fab4597d0fe7b3bcd356
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - SF Chaerilidae
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 034fb50340285c84bbe6f35dd8683428, type: 3}
+  - {fileID: 12800000, guid: d0a192a36b9ff0247bc56400f67e40fe, type: 3}
+  - {fileID: 12800000, guid: 22b92f3bd2ac14a42bd2d5767620ac20, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

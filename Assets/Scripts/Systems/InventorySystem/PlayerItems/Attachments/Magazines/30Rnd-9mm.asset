@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 30-rnd-9mm
   Name: 30 Rnd 9mm
+  Rarity: 1
   StackLimit: 1
+  Image: {fileID: 0}
   AmmoCapacity: 30
   CompatibleAmmoCaliber: 0

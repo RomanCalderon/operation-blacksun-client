@@ -1,20 +1,24 @@
-internal interface IInteractable
+using UnityEngine;
+
+public interface IInteractable
 {
-    bool IsInteractable { get; set; }
+    int InteractionType { get; }
+
+    bool IsInteractable { get; }
+
+    string InteractionLabel { get; }
 
     bool IsInteracting { get; }
 
-    float InteractTime { get; set; }
+    float InteractTime { get; }
 
-    string AccessKey { get; set; }
+    bool HasAccessKey { get; }
 
     void Initialize ( byte [] interactableData );
 
     void StartHover ();
 
-    void StartInteract ( int clientId, string accessKey = null );
-
-    void StartInteract ( int clientId, string [] accessKeys );
+    void StartInteract ( int clientId );
 
     void StopInteract ();
 

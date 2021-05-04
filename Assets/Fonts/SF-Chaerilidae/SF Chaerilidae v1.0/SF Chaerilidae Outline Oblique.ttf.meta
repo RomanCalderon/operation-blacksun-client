@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 497bc525015d9644cac696aa2b223274
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - SF Chaerilidae Outline
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 2310ac6857685234e878c26cb5a28068, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

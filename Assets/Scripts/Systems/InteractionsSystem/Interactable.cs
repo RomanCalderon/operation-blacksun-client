@@ -2,44 +2,52 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public abstract class Interactable : MonoBehaviour, IInteractable
+public class Interactable : MonoBehaviour, IInteractable
 {
     #region Models
 
     [Serializable]
     public struct InteractableData
     {
+        public int InteractionType;
         public bool IsInteractable;
+        public string InteractionLabel;
         public float InteractTime;
-        public string AccessKey;
+        public bool HasAccessKey;
 
-        public InteractableData ( bool isInteractable, float interactTime, string accessKey )
+        public InteractableData ( int interactionType, bool isInteractable, string interactionLabel, float interactTime, bool hasAccessKey )
         {
+            InteractionType = interactionType;
             IsInteractable = isInteractable;
+            InteractionLabel = interactionLabel;
             InteractTime = interactTime;
-            AccessKey = accessKey;
+            HasAccessKey = hasAccessKey;
         }
 
         public byte [] ToArray ()
         {
             MemoryStream stream = new MemoryStream ();
-            BinaryWriter writer = new BinaryWriter ( stream );
+            BinaryWriterExtended writer = new BinaryWriterExtended ( stream );
 
+            writer.Write ( InteractionType );
             writer.Write ( IsInteractable );
+            writer.Write ( InteractionLabel );
             writer.Write ( InteractTime );
-            writer.Write ( AccessKey );
+            writer.Write ( HasAccessKey );
 
             return stream.ToArray ();
         }
 
         public static InteractableData FromArray ( byte [] bytes )
         {
-            BinaryReader reader = new BinaryReader ( new MemoryStream ( bytes ) );
+            BinaryReaderExtended reader = new BinaryReaderExtended ( new MemoryStream ( bytes ) );
             InteractableData s = default;
 
+            s.InteractionType = reader.ReadInt32 ();
             s.IsInteractable = reader.ReadBoolean ();
+            s.InteractionLabel = reader.ReadString ();
             s.InteractTime = reader.ReadSingle ();
-            s.AccessKey = reader.ReadString ();
+            s.HasAccessKey = reader.ReadBoolean ();
 
             return s;
         }
@@ -47,16 +55,33 @@ public abstract class Interactable : MonoBehaviour, IInteractable
 
     #endregion
 
-    public bool IsInteractable { get; set; } = false;
+    #region Delegates
+
+    public delegate void InteractionEventHandler ();
+    public static InteractionEventHandler OnStartedHover;
+    public static InteractionEventHandler OnStartedInteraction;
+    public static InteractionEventHandler OnInteracted;
+    public static InteractionEventHandler OnStoppedInteraction;
+    public static InteractionEventHandler OnStoppedHover;
+
+    #endregion
+
+    public int InteractionType { get => m_interactionType; }
+    public bool IsInteractable { get => m_isInteractable; }
+    public string InteractionLabel { get => m_interactionLabel; }
     public bool IsInteracting { get => m_isInteracting; }
-    public float InteractTime { get; set; }
-    public string AccessKey { get; set; }
+    public float InteractTime { get => m_interactTime; }
+    public bool HasAccessKey { get => m_hasAccessKey; }
     public int ClientId { get => m_clientId; }
     public float InteractTimer { get => m_interactTimer; }
 
-    private const float m_interactTimeThreshold = 0.5f;
-    private int m_clientId = 0;
+    private int m_interactionType = 0;
+    private bool m_isInteractable = false;
+    private string m_interactionLabel;
     private bool m_isInteracting = false;
+    private float m_interactTime = 0f;
+    private bool m_hasAccessKey = false;
+    private int m_clientId = 0;
     private bool m_hasInteracted = false;
     private float m_interactTimer = 0f;
 
@@ -69,22 +94,27 @@ public abstract class Interactable : MonoBehaviour, IInteractable
     public virtual void Initialize ( byte [] data )
     {
         InteractableData interactableData = InteractableData.FromArray ( data );
-        IsInteractable = interactableData.IsInteractable;
-        InteractTime = interactableData.InteractTime;
-        AccessKey = interactableData.AccessKey;
+        m_interactionType = interactableData.InteractionType;
+        m_isInteractable = interactableData.IsInteractable;
+        m_interactionLabel = interactableData.InteractionLabel;
+        m_interactTime = interactableData.InteractTime;
+        m_hasAccessKey = interactableData.HasAccessKey;
     }
 
     /// <summary>
     /// Called when Interactable becomes accessible.
     /// </summary>
-    public abstract void StartHover ();
+    public virtual void StartHover ()
+    {
+        OnStartedHover?.Invoke ();
+    }
 
     /// <summary>
     /// Called when Interactable begins interaction.
     /// </summary>
     /// <param name="clientId">The ID of the client interacting with Interactable.</param>
     /// <param name="accessKey">An access key used to compare against Interactable's AccessKey.</param>
-    public virtual void StartInteract ( int clientId, string accessKey = null )
+    public virtual void StartInteract ( int clientId )
     {
         if ( !IsInteractable )
         {
@@ -95,48 +125,24 @@ public abstract class Interactable : MonoBehaviour, IInteractable
             StopInteract ();
             return;
         }
-        if ( !string.IsNullOrEmpty ( AccessKey ) && accessKey != AccessKey )
+        if ( !HasAccessKey )
         {
             StopInteract ();
             return;
         }
         m_clientId = clientId;
         m_isInteracting = true;
-        m_interactTimer = m_interactTimeThreshold;
-    }
-
-    /// <summary>
-    /// Called when Interactable begins interaction.
-    /// </summary>
-    /// <param name="clientId">The ID of the client interacting with Interactable.</param>
-    /// <param name="accessKeys">An array of access keys used to compare against Interactable's AccessKey.</param>
-    public virtual void StartInteract ( int clientId, string [] accessKeys )
-    {
-        if ( m_isInteracting || accessKeys == null )
-        {
-            StopInteract ();
-            return;
-        }
-        if ( !string.IsNullOrEmpty ( AccessKey ) )
-        {
-            foreach ( string accessKey in accessKeys )
-            {
-                if ( accessKey.Equals ( AccessKey ) )
-                {
-                    m_clientId = clientId;
-                    m_isInteracting = true;
-                    m_interactTimer = m_interactTimeThreshold;
-                    return;
-                }
-            }
-            StopInteract ();
-        }
+        m_interactTimer = m_interactTime;
+        OnStartedInteraction?.Invoke ();
     }
 
     /// <summary>
     /// Called when Interactable interaction timer is complete.
     /// </summary>
-    protected abstract void OnInteract ();
+    protected virtual void OnInteract ()
+    {
+        OnInteracted?.Invoke ();
+    }
 
     /// <summary>
     /// Called when Interactable interaction has ended or got interrupted.
@@ -145,12 +151,16 @@ public abstract class Interactable : MonoBehaviour, IInteractable
     {
         m_isInteracting = m_hasInteracted = false;
         m_interactTimer = 0f;
+        OnStoppedInteraction?.Invoke ();
     }
 
     /// <summary>
     /// Called when Interactable becomes inaccessible.
     /// </summary>
-    public abstract void StopHover ();
+    public virtual void StopHover ()
+    {
+        OnStoppedHover?.Invoke ();
+    }
 
     #endregion
 

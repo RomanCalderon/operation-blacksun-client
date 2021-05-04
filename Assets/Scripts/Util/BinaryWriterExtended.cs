@@ -11,4 +11,12 @@ public class BinaryWriterExtended : BinaryWriter
         Write ( value.y );
         Write ( value.z );
     }
+
+    public void Write ( Vector4 value )
+    {
+        Write ( value.x );
+        Write ( value.y );
+        Write ( value.z );
+        Write ( value.w );
+    }
 }
