@@ -66,6 +66,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
             SetSlotColor ( m_occupiedColor );
             m_contentImage.enabled = true;
             m_contentImage.sprite = slot.PlayerItem.Image;
+            m_contentImage.color = Constants.RarityToColor ( slot.PlayerItem.Rarity );
             m_contentNameText.text = slot.PlayerItem.Name;
             if ( slot.IsStackable )
             {
@@ -103,16 +104,18 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
                 }
                 break;
             case PointerEventData.InputButton.Middle: // Moving half the stack size
-                m_contentStackSizeText.text = $"{Mathf.FloorToInt ( Slot.StackSize / 2f )}/{Slot.PlayerItem.StackLimit}"; // Display half the stack size
+                if ( Slot.IsStackable && Slot.StackSize > 1 )
+                {
+                    m_contentStackSizeText.text = $"{Mathf.FloorToInt ( Slot.StackSize / 2f )}/{Slot.PlayerItem.StackLimit}"; // Display half the stack size
+                }
+                else
+                {
+                    DisplayContents ( false ); // Hide all contents
+                }
                 break;
             default:
                 break;
         }
-    }
-
-    public Sprite GetContentImage ()
-    {
-        return m_contentImage.sprite;
     }
 
     public void OnPointerEnter ( PointerEventData eventData )

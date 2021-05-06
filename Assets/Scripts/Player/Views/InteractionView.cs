@@ -20,21 +20,23 @@ public class InteractionView : MonoBehaviour
 
     private const string INACCESSIBLE_MESSAGE = "LOCKED";
     private const string REVIVE_INTERACTION_PREFIX = "REVIVE";
+    private const string REVIVE_PREFIX_COLOR_HEX = "60ef74";
     private const float INTERACT_TIME_THRESHOLD = 0.01f;
 
     [SerializeField]
     private GameObject m_interactionViewUI = null;
     [SerializeField, Tooltip ( "Text which indiates how to interact." )]
-    private Text m_intetractableText = null;
-    [SerializeField, Tooltip ( "Text which indicates the target interaction." )]
-    private Text m_interactionLabel = null;
+    private Text m_intetractionLabel = null;
+    [SerializeField, Tooltip ( "Text which indicates the target interaction context." )]
+    private Text m_interactionContextText = null;
+    [SerializeField, Tooltip ( "Image displayed for target interactable." )]
+    private Image m_interactionContextImage = null;
     [SerializeField, Tooltip ( "Visual indicator for interaction progress." )]
     private Image m_interactionStatusBar = null;
 
     private InteractionStates m_state = InteractionStates.NONE;
     private IInteractable m_target = null;
     private string m_interactKeybind = null;
-    private string m_interactionLabelColor = null;
 
     // Runtime
     private float m_interactionTime = 0f;
@@ -96,18 +98,19 @@ public class InteractionView : MonoBehaviour
 
         if ( m_target.HasAccessKey )
         {
-            UpdateInteractionLabel ();
+            UpdateInteractionContext ();
 
-            m_intetractableText.text = ( m_target.InteractTime < INTERACT_TIME_THRESHOLD ? "PRESS " : "HOLD " ) + m_interactKeybind;
-            m_intetractableText.enabled = true;
+            m_intetractionLabel.text = ( m_target.InteractTime < INTERACT_TIME_THRESHOLD ? "PRESS " : "HOLD " ) + m_interactKeybind;
+            m_intetractionLabel.enabled = true;
         }
         else
         {
-            m_intetractableText.text = string.Empty;
-            m_interactionLabel.text = INACCESSIBLE_MESSAGE;
+            m_intetractionLabel.text = string.Empty;
+            m_interactionContextText.text = INACCESSIBLE_MESSAGE;
 
-            m_intetractableText.enabled = false;
-            m_interactionLabel.enabled = true;
+            m_intetractionLabel.enabled = false;
+            m_interactionContextText.enabled = true;
+            m_interactionContextImage.enabled = false;
         }
     }
 
@@ -133,30 +136,54 @@ public class InteractionView : MonoBehaviour
         m_interactionProgress = 0f;
     }
 
-    private void UpdateInteractionLabel ()
+    private void UpdateInteractionContext ()
     {
         switch ( m_target.InteractionType )
         {
-            case 0: // Standard interaction
+            // Standard interaction
+            case 0:
                 if ( m_target is PickupInstance pickup )
                 {
-                    string labelColor = Constants.RarityColorToHex ( pickup.PlayerItem.Rarity );
-                    string label = $"<color=#{labelColor}>{m_target.InteractionLabel}</color>";
-                    m_interactionLabel.text = label.ToUpper ();
+                    Color labelColor = Constants.RarityToColor ( pickup.PlayerItem.Rarity );
+                    SetInteractionContext ( m_target.InteractionContext, labelColor, pickup.PlayerItem.Image );
                 }
                 else
                 {
-                    m_interactionLabel.text = $"<color=#b94463>{m_target.InteractionLabel}</color>";
+                    SetInteractionContext ( m_target.InteractionContext );
                 }
                 break;
-            case 1: // Revive interaction
-                m_interactionLabel.text = $"{REVIVE_INTERACTION_PREFIX} - {m_target.InteractionLabel}";
+            // Revive interaction
+            case 1:
+                SetInteractionContext ( $"<color=#{REVIVE_PREFIX_COLOR_HEX}>{REVIVE_INTERACTION_PREFIX}</color> {m_target.InteractionContext}" );
                 break;
             default:
                 break;
         }
 
-        m_interactionLabel.enabled = true;
+        m_interactionContextText.enabled = true;
+    }
+
+    private void SetInteractionContext ( string value )
+    {
+        if ( !string.IsNullOrEmpty ( value ) )
+        {
+            m_interactionContextText.color = Color.white;
+            m_interactionContextText.text = value.ToUpper ();
+            m_interactionContextImage.enabled = false;
+        }
+    }
+
+    private void SetInteractionContext ( string value, Color color, Sprite sprite = null )
+    {
+        if ( !string.IsNullOrEmpty ( value ) )
+        {
+            m_interactionContextText.color = color;
+            m_interactionContextText.text = value.ToUpper ();
+        }
+
+        m_interactionContextImage.enabled = sprite != null;
+        m_interactionContextImage.sprite = sprite;
+        m_interactionContextImage.color = color;
     }
 
     #endregion

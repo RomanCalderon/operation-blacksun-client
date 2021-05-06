@@ -151,7 +151,6 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        Sprite contentImage = m_selectedSlotUI.GetContentImage ();
         int contentDragAmount;
 
         m_isDraggingSlot = true;
@@ -177,7 +176,7 @@ public class InventoryManager : MonoBehaviour
 
         // Assign SlotDragContent
         m_slotDragContentsInstance = Instantiate ( m_slotDragContentsPrefab, m_inventoryView.transform ).GetComponent<SlotDragContents> ();
-        m_slotDragContentsInstance.Initialize ( contentImage, contentDragAmount );
+        m_slotDragContentsInstance.Initialize ( m_selectedSlotUI.Slot.PlayerItem, contentDragAmount );
     }
 
     public void SlotDrag ( Vector2 dragPosition )
@@ -226,7 +225,6 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            Debug.Log ( $"Move contents from slot [{m_selectedSlotUI.Id}] to slot [{droppedSlotId}]" );
             ClientSend.PlayerTransferSlotContents ( m_selectedSlotUI.Id, droppedSlotId, ( int ) eventData.button );
         }
     }

@@ -1,60 +1,10 @@
 using System;
 using System.IO;
 using UnityEngine;
+using InteractionData;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
-    #region Models
-
-    [Serializable]
-    public struct InteractableData
-    {
-        public int InteractionType;
-        public bool IsInteractable;
-        public string InteractionLabel;
-        public float InteractTime;
-        public bool HasAccessKey;
-
-        public InteractableData ( int interactionType, bool isInteractable, string interactionLabel, float interactTime, bool hasAccessKey )
-        {
-            InteractionType = interactionType;
-            IsInteractable = isInteractable;
-            InteractionLabel = interactionLabel;
-            InteractTime = interactTime;
-            HasAccessKey = hasAccessKey;
-        }
-
-        public byte [] ToArray ()
-        {
-            MemoryStream stream = new MemoryStream ();
-            BinaryWriterExtended writer = new BinaryWriterExtended ( stream );
-
-            writer.Write ( InteractionType );
-            writer.Write ( IsInteractable );
-            writer.Write ( InteractionLabel );
-            writer.Write ( InteractTime );
-            writer.Write ( HasAccessKey );
-
-            return stream.ToArray ();
-        }
-
-        public static InteractableData FromArray ( byte [] bytes )
-        {
-            BinaryReaderExtended reader = new BinaryReaderExtended ( new MemoryStream ( bytes ) );
-            InteractableData s = default;
-
-            s.InteractionType = reader.ReadInt32 ();
-            s.IsInteractable = reader.ReadBoolean ();
-            s.InteractionLabel = reader.ReadString ();
-            s.InteractTime = reader.ReadSingle ();
-            s.HasAccessKey = reader.ReadBoolean ();
-
-            return s;
-        }
-    }
-
-    #endregion
-
     #region Delegates
 
     public delegate void InteractionEventHandler ();
@@ -68,7 +18,8 @@ public class Interactable : MonoBehaviour, IInteractable
 
     public int InteractionType { get => m_interactionType; }
     public bool IsInteractable { get => m_isInteractable; }
-    public string InteractionLabel { get => m_interactionLabel; }
+    public string InteractionContext { get => m_interactionContext; }
+    public Color InteractionColor { get => m_interactionLabelColor; }
     public bool IsInteracting { get => m_isInteracting; }
     public float InteractTime { get => m_interactTime; }
     public bool HasAccessKey { get => m_hasAccessKey; }
@@ -77,7 +28,8 @@ public class Interactable : MonoBehaviour, IInteractable
 
     private int m_interactionType = 0;
     private bool m_isInteractable = false;
-    private string m_interactionLabel;
+    private string m_interactionContext;
+    private Color m_interactionLabelColor;
     private bool m_isInteracting = false;
     private float m_interactTime = 0f;
     private bool m_hasAccessKey = false;
@@ -96,7 +48,8 @@ public class Interactable : MonoBehaviour, IInteractable
         InteractableData interactableData = InteractableData.FromArray ( data );
         m_interactionType = interactableData.InteractionType;
         m_isInteractable = interactableData.IsInteractable;
-        m_interactionLabel = interactableData.InteractionLabel;
+        m_interactionContext = interactableData.InteractionContext;
+        m_interactionLabelColor = interactableData.InteractionLabelColor;
         m_interactTime = interactableData.InteractTime;
         m_hasAccessKey = interactableData.HasAccessKey;
     }
@@ -159,6 +112,8 @@ public class Interactable : MonoBehaviour, IInteractable
     /// </summary>
     public virtual void StopHover ()
     {
+        m_isInteracting = m_hasInteracted = false;
+        m_interactTimer = 0f;
         OnStoppedHover?.Invoke ();
     }
 

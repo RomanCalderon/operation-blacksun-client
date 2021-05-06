@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using InventorySystem.PlayerItems;
 
 public class SlotDragContents : MonoBehaviour
 {
     public Image ContentImage;
     public Text ContentDragAmountText;
 
-    public void Initialize ( Sprite contentImage, int contentDragAmount = 1 )
+    public void Initialize ( PlayerItem playerItem, int contentDragAmount = 1 )
     {
-        ContentImage.sprite = contentImage;
+        ContentImage.sprite = playerItem.Image;
+        ContentImage.color = Constants.RarityToColor ( playerItem.Rarity );
 
         contentDragAmount = Mathf.Max ( 1, contentDragAmount );
 

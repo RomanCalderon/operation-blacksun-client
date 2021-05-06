@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using InteractionData;
 
 public class BinaryReaderExtended : BinaryReader
 {
@@ -13,12 +14,12 @@ public class BinaryReaderExtended : BinaryReader
         return new Vector3 ( x, y, z );
     }
 
-    public Vector4 ReadVector4 ()
+    public Color ReadColor ()
     {
-        float x = ReadSingle ();
-        float y = ReadSingle ();
-        float z = ReadSingle ();
-        float w = ReadSingle ();
-        return new Vector4 ( x, y, z, w );
+        byte r = ReadByte ();
+        byte g = ReadByte ();
+        byte b = ReadByte ();
+        byte a = ReadByte ();
+        return ColorVector.ToColor ( r, g, b, a );
     }
 }

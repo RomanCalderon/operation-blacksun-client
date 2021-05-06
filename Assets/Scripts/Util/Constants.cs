@@ -50,23 +50,40 @@ public class Constants
 
     #region Items
 
-    public static Color StandardRarityColor { get => new Color ( 0.745f, 0.768f, 0.811f, 1f ); }
+    public static Color StandardRarityColor { get => Color.white; }
     public static Color AdvancedRarityColor { get => new Color ( 0.298f, 0.49f, 0.603f, 1f ); }
     public static Color EpicRarityColor { get => new Color ( 0.945f, 0.878f, 0.439f, 1f ); }
     public static Color CosmicRarityColor { get => new Color ( 0.725f, 0.266f, 0.388f, 1f ); }
 
-    public static string RarityColorToHex ( Rarity rarity )
+    public static Color RarityToColor ( Rarity rarity )
+    {
+        switch ( rarity )
+        {
+            case Rarity.STANDARD:
+                return StandardRarityColor;
+            case Rarity.ADVANCED:
+                return AdvancedRarityColor;
+            case Rarity.EPIC:
+                return EpicRarityColor;
+            case Rarity.COSMIC:
+                return CosmicRarityColor;
+            default:
+                return StandardRarityColor;
+        }
+    }
+
+    public static string RarityToColorHex ( Rarity rarity )
     {
         switch ( rarity )
         {
             case Rarity.STANDARD:
                 return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
             case Rarity.ADVANCED:
-                return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
+                return ColorUtility.ToHtmlStringRGBA ( AdvancedRarityColor );
             case Rarity.EPIC:
-                return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
+                return ColorUtility.ToHtmlStringRGBA ( EpicRarityColor );
             case Rarity.COSMIC:
-                return ColorUtility.ToHtmlStringRGBA ( StandardRarityColor );
+                return ColorUtility.ToHtmlStringRGBA ( CosmicRarityColor );
             default:
                 return ColorUtility.ToHtmlStringRGBA ( Color.white );
         }

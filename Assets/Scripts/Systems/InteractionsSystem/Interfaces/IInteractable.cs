@@ -6,7 +6,9 @@ public interface IInteractable
 
     bool IsInteractable { get; }
 
-    string InteractionLabel { get; }
+    string InteractionContext { get; }
+
+    Color InteractionColor { get; }
 
     bool IsInteracting { get; }
 

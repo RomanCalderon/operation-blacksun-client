@@ -73,6 +73,28 @@ public class InteractionController : MonoBehaviour
         }
     }
 
+    private void CheckClientInput ()
+    {
+        if ( m_target == null )
+        {
+            return;
+        }
+
+        if ( PlayerInputController.GetKey ( PlayerInputController.InteractKey ) )
+        {
+            if ( !m_target.IsInteracting )
+            {
+                Debug.Log ( "Start Interacting" );
+                m_target.StartInteract ( m_clientId );
+            }
+        }
+        else if ( m_target.IsInteracting )
+        {
+            Debug.Log ("Stop Interacting");
+            m_target.StopInteract ();
+        }
+    }
+
     private void LookForTarget ()
     {
         // Check if the player can interact
@@ -152,23 +174,6 @@ public class InteractionController : MonoBehaviour
     #endregion
 
     #region Util
-
-    private void CheckClientInput ()
-    {
-        if ( m_target == null )
-        {
-            return;
-        }
-
-        if ( PlayerInputController.GetKeyDown ( PlayerInputController.InteractKey ) )
-        {
-            m_target.StartInteract ( m_clientId );
-        }
-        else if ( PlayerInputController.GetKeyUp ( PlayerInputController.InteractKey ) )
-        {
-            m_target.StopInteract ();
-        }
-    }
 
     private bool IsNewTarget ( IInteractable target )
     {
