@@ -84,13 +84,11 @@ public class InteractionController : MonoBehaviour
         {
             if ( !m_target.IsInteracting )
             {
-                Debug.Log ( "Start Interacting" );
                 m_target.StartInteract ( m_clientId );
             }
         }
         else if ( m_target.IsInteracting )
         {
-            Debug.Log ("Stop Interacting");
             m_target.StopInteract ();
         }
     }
