@@ -30,7 +30,7 @@ namespace build_manager
 
         #region Initialization
 
-        [MenuItem ( "Window/Build Manager" )]
+        [MenuItem ( "Window/SDG/Build Manager" )]
         public static void ShowWindow ()
         {
             Initialize ();
