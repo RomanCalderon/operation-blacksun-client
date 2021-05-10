@@ -7,6 +7,26 @@ using InventorySystem.PlayerItems;
 
 public class GameAssets : MonoBehaviour
 {
+    #region Models
+
+    [System.Serializable]
+    public struct AudioClipReference
+    {
+        public string Name;
+        public AudioClip AudioClip;
+        public AudioMixerGroup MixerGroup;
+    }
+
+    [System.Serializable]
+    public struct PlayerItemData
+    {
+        public string Name;
+        public PlayerItem PlayerItem;
+        public GameObject Object;
+    }
+
+    #endregion
+
     private static GameAssets m_instance;
     public static GameAssets Instance
     {
@@ -86,24 +106,3 @@ public class GameAssets : MonoBehaviour
 
     #endregion
 }
-
-#region Models
-
-[System.Serializable]
-public struct AudioClipReference
-{
-    public string Name;
-    public AudioClip AudioClip;
-    public AudioMixerGroup MixerGroup;
-}
-
-[System.Serializable]
-public struct PlayerItemData
-{
-    public string Name;
-    public PlayerItem PlayerItem;
-    public GameObject Object;
-}
-
-#endregion
-
