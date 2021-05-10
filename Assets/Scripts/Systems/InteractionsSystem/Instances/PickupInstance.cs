@@ -34,25 +34,25 @@ public class PickupInstance : Interactable
         GameObject itemObject = GameAssets.Instance.GetPlayerItemObject ( itemId );
         Instantiate ( itemObject, m_container.position, m_container.rotation, m_container );
 
-        SetColliderBounds ( gameObject );
+        SetColliderBounds ();
     }
 
     #region Util
 
-    protected void SetColliderBounds ( GameObject assetModel )
+    protected void SetColliderBounds ()
     {
-        var pos = assetModel.transform.localPosition;
-        var rot = assetModel.transform.localRotation;
-        var scale = assetModel.transform.localScale;
+        var pos = transform.localPosition;
+        var rot = transform.localRotation;
+        var scale = transform.localScale;
 
         // Need to clear out transforms while encapsulating bounds
-        assetModel.transform.localPosition = Vector3.zero;
-        assetModel.transform.localRotation = Quaternion.identity;
-        assetModel.transform.localScale = Vector3.one;
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        transform.localScale = Vector3.one;
 
         // Start with root object's bounds
         var bounds = new Bounds ( Vector3.zero, Vector3.zero );
-        if ( assetModel.transform.TryGetComponent<Renderer> ( out var mainRenderer ) )
+        if ( transform.TryGetComponent<Renderer> ( out var mainRenderer ) )
         {
             // New Bounds() will include 0,0,0 which you may not want to Encapsulate
             // because the vertices of the mesh may be way off the model's origin,
@@ -60,7 +60,7 @@ public class PickupInstance : Interactable
             bounds = mainRenderer.bounds;
         }
 
-        var descendants = assetModel.GetComponentsInChildren<Transform> ();
+        var descendants = GetComponentsInChildren<Transform> ();
         foreach ( Transform desc in descendants )
         {
             if ( desc.TryGetComponent<Renderer> ( out var childRenderer ) )
@@ -72,13 +72,13 @@ public class PickupInstance : Interactable
         }
 
         // Apply bounds to box collider
-        m_boxCollider.center = bounds.center - assetModel.transform.position;
+        m_boxCollider.center = bounds.center - transform.position;
         m_boxCollider.size = bounds.size;
 
         // Restore transforms
-        assetModel.transform.localPosition = pos;
-        assetModel.transform.localRotation = rot;
-        assetModel.transform.localScale = scale;
+        transform.localPosition = pos;
+        transform.localRotation = rot;
+        transform.localScale = scale;
     }
 
     #endregion
