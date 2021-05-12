@@ -2,6 +2,7 @@
 using InventorySystem.PlayerItems;
 
 [RequireComponent ( typeof ( BoxCollider ) )]
+[RequireComponent ( typeof ( NetworkedRigidbody ) )]
 public class PickupInstance : Interactable
 {
     public PlayerItem PlayerItem { get => m_playerItem; }
@@ -12,10 +13,12 @@ public class PickupInstance : Interactable
     [SerializeField]
     private Transform m_container = null;
     private BoxCollider m_boxCollider = null;
+    private NetworkedRigidbody m_networkedRigidbody = null;
 
     private void Awake ()
     {
         m_boxCollider = GetComponent<BoxCollider> ();
+        m_networkedRigidbody = GetComponent<NetworkedRigidbody> ();
     }
 
     public void Initialize ( byte [] interactableData, string itemId, int quantity )
@@ -34,7 +37,11 @@ public class PickupInstance : Interactable
         GameObject itemObject = GameAssets.Instance.GetPlayerItemObject ( itemId );
         Instantiate ( itemObject, m_container.position, m_container.rotation, m_container );
 
+        // Initialize instance Bounds
         SetColliderBounds ();
+
+        // Initialize NetworkedRigidbody
+        m_networkedRigidbody.Initialize ( InstanceId );
     }
 
     #region Util

@@ -16,6 +16,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     #endregion
 
+    public string InstanceId { get => m_instanceId; }
     public int InteractionType { get => m_interactionType; }
     public bool IsInteractable { get => m_isInteractable; }
     public string InteractionContext { get => m_interactionContext; }
@@ -26,6 +27,7 @@ public class Interactable : MonoBehaviour, IInteractable
     public int ClientId { get => m_clientId; }
     public float InteractTimer { get => m_interactTimer; }
 
+    private string m_instanceId = null;
     private int m_interactionType = 0;
     private bool m_isInteractable = false;
     private string m_interactionContext;
@@ -46,6 +48,7 @@ public class Interactable : MonoBehaviour, IInteractable
     public virtual void Initialize ( byte [] data )
     {
         InteractableData interactableData = InteractableData.FromArray ( data );
+        m_instanceId = interactableData.InstanceId;
         m_interactionType = interactableData.InteractionType;
         m_isInteractable = interactableData.IsInteractable;
         m_interactionContext = interactableData.InteractionContext;

@@ -391,7 +391,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playAudioClip, ClientHandle.PlayAudioClip },
             { (int)ServerPackets.hitmarker, ClientHandle.Hitmarker },
             { (int)ServerPackets.createItemSpawner, ClientHandle.CreateItemSpawner },
-            { (int)ServerPackets.itemSpawned, ClientHandle.DestroyItem }
+            { (int)ServerPackets.itemSpawned, ClientHandle.DestroyItem },
+            { (int)ServerPackets.networkedRigidbodyData, ClientHandle.NetworkedRigidbodyData }
         };
         UnityEngine.Debug.Log ( "Initialized packets." );
     }

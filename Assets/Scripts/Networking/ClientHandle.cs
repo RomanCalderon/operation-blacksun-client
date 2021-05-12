@@ -180,6 +180,8 @@ public class ClientHandle : MonoBehaviour
         GameManager.players [ _id ].Player.Hitmarker ( _hitmarkerType );
     }
 
+    #region Item Spawner
+
     public static void CreateItemSpawner ( Packet _packet )
     {
         int _spawnerDataLength = _packet.ReadInt ();
@@ -194,4 +196,18 @@ public class ClientHandle : MonoBehaviour
 
         ItemSpawnerManager.ItemSpawners [ _spawnerId ].DestroyItem ();
     }
+
+    #endregion
+
+    #region Networked Rigidbody
+
+    public static void NetworkedRigidbodyData ( Packet _packet )
+    {
+        int _dataLength = _packet.ReadInt ();
+        byte [] _data = _packet.ReadBytes ( _dataLength );
+
+        NetworkedRigidbodyManager.Instance.UpdateBody ( _data );
+    }
+
+    #endregion
 }

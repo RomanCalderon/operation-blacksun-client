@@ -23,7 +23,8 @@ public enum ServerPackets
     playAudioClip,
     hitmarker,
     createItemSpawner,
-    itemSpawned
+    itemSpawned,
+    networkedRigidbodyData
 }
 
 /// <summary>Sent from client to server.</summary>
