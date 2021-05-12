@@ -48,20 +48,27 @@ public class NetworkedRigidbody : MonoBehaviour
 
     #region Members
 
-    private const float INTERP_POSITION_SPEED = 10f;
-    private const float INTERP_ROTATION_SPEED = 10f;
+    private const float SNAP_THRESHOLD = 5f;
+    private const float INTERP_POSITION_SPEED = 1f;
+    private const float INTERP_ROTATION_SPEED = 45f;
 
     private string m_id = null;
     private bool m_isInitialized = false;
 
     private Vector3 m_targetPosition;
     private Vector3 m_targetRotation;
+    private float m_maxRadianDelta;
 
     #endregion
 
     #region Methods
 
     #region Initialization
+
+    private void Start ()
+    {
+        m_maxRadianDelta = Mathf.Deg2Rad * INTERP_ROTATION_SPEED;
+    }
 
     public void Initialize ( string id )
     {
@@ -83,8 +90,14 @@ public class NetworkedRigidbody : MonoBehaviour
 
     private void InterpolateTransform ( float deltaTime )
     {
-        transform.position = Vector3.Lerp ( transform.position, m_targetPosition, deltaTime * INTERP_POSITION_SPEED );
-        transform.eulerAngles = Vector3.Lerp ( transform.eulerAngles, m_targetRotation, deltaTime * INTERP_ROTATION_SPEED );
+        if ( ( m_targetPosition - transform.position ).sqrMagnitude > SNAP_THRESHOLD * SNAP_THRESHOLD )
+        {
+            transform.position = m_targetPosition;
+            transform.eulerAngles = m_targetRotation;
+            return;
+        }
+        transform.position = Vector3.MoveTowards ( transform.position, m_targetPosition, INTERP_POSITION_SPEED );
+        transform.eulerAngles = Vector3.RotateTowards ( transform.eulerAngles, m_targetRotation, deltaTime * m_maxRadianDelta, INTERP_ROTATION_SPEED );
     }
 
     #endregion
