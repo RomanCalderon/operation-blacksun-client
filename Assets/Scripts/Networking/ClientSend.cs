@@ -135,6 +135,17 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void PlayerDropItem ( string fromSlotId, int transferMode )
+    {
+        using ( Packet _packet = new Packet ( ( int ) ClientPackets.playerDropItem ) )
+        {
+            _packet.Write ( fromSlotId );
+            _packet.Write ( transferMode );
+
+            SendTCPData ( _packet );
+        }
+    }
+
     #endregion
 
     public static void PlayerKillSelf ()

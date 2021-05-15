@@ -27,17 +27,14 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     private List<SlotUI> m_slotUI = new List<SlotUI> ();
     private SlotUI m_selectedSlotUI = null;
-    private bool IsSlotSelected
-    {
-        get
-        {
-            return m_selectedSlotUI != null;
-        }
-    }
+    public bool IsSlotSelected { get => m_selectedSlotUI != null; }
+    
     [SerializeField]
     private GameObject m_slotDragContentsPrefab = null;
     private SlotDragContents m_slotDragContentsInstance = null;
     private bool m_isDraggingSlot = false;
+
+    #region Initialization
 
     private void Awake ()
     {
@@ -58,6 +55,19 @@ public class InventoryManager : MonoBehaviour
     {
         m_inventoryView.SetActive ( false );
     }
+
+    private void InitializeSlots ()
+    {
+        foreach ( SlotUI slotUI in m_slotUI )
+        {
+            Slot slot = m_inventory.GetSlot ( slotUI.Id );
+            slotUI.UpdateSlot ( slot );
+        }
+    }
+
+    #endregion
+
+    #region Runtime
 
     private void Update ()
     {
@@ -81,14 +91,9 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void InitializeSlots ()
-    {
-        foreach ( SlotUI slotUI in m_slotUI )
-        {
-            Slot slot = m_inventory.GetSlot ( slotUI.Id );
-            slotUI.UpdateSlot ( slot );
-        }
-    }
+    #endregion
+
+    #region Accessors
 
     public int GetItemCount ( string playerItemId )
     {
@@ -123,6 +128,8 @@ public class InventoryManager : MonoBehaviour
 
         OnSlotUpdated?.Invoke ( slotId );
     }
+
+    #endregion
 
     #region SlotUI Interactions
 
@@ -213,6 +220,12 @@ public class InventoryManager : MonoBehaviour
         // Check if the DRAG slot is not null/empty
         if ( !IsSlotSelected )
         {
+            return;
+        }
+
+        if ( droppedSlotId == DropZone.ID )
+        {
+            ClientSend.PlayerDropItem ( m_selectedSlotUI.Slot.Id, ( int ) eventData.button );
             return;
         }
 

@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using InventorySystem.Slots;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using InventorySystem.Slots;
-using System.Security.Permissions;
+using UnityEngine.UI;
 
 public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {

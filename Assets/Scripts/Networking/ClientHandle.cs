@@ -141,7 +141,6 @@ public class ClientHandle : MonoBehaviour
 
     public static void PlayerUpdateInventorySlot ( Packet _packet )
     {
-        int _playerId = _packet.ReadInt ();
         string _slotId = _packet.ReadString ();
         string _playerItemId = _packet.ReadString ();
         int _quantity = _packet.ReadInt ();
