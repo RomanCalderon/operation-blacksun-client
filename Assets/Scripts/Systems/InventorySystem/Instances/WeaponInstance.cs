@@ -153,7 +153,7 @@ public class WeaponInstance : PlayerItemInstance
 
         // Update look direction every frame
         m_lookDirection = m_aimListener.GetAimVector ();
-        PlayerInput.PlayerInputController.SetLookDirection ( m_lookDirection );
+        PlayerInput.PlayerInputController.SetGunDirection ( m_lookDirection );
     }
 
     public void UpdateAimController ()

@@ -55,6 +55,7 @@ namespace PlayerInput
         public static bool CrouchInput { get; private set; } = false;
         public static bool ShootInput { get; private set; } = false;
         public static bool Aiming { get; private set; } = false;
+        public static Vector3 GunDirection { get; private set; }
         public static Vector3 LookDirection { get; private set; }
         public static bool Interact { get; private set; } = false;
 
@@ -142,6 +143,11 @@ namespace PlayerInput
         public static void SetLookDirection ( Vector3 direction )
         {
             LookDirection = direction;
+        }
+
+        public static void SetGunDirection ( Vector3 direction )
+        {
+            GunDirection = direction;
         }
     }
 }

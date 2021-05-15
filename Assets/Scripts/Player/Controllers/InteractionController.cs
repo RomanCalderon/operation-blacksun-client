@@ -194,6 +194,9 @@ public class InteractionController : MonoBehaviour
         IInteractable target = null;
         float closest = CHECK_ANGLE;
 
+        // Set PlayerInput look direction
+        PlayerInput.PlayerInputController.SetLookDirection ( lookDirection );
+
         // Debug
         Debug.DrawRay ( headPosition, lookDirection * CHECK_RADIUS, Color.blue, Time.fixedDeltaTime );
 

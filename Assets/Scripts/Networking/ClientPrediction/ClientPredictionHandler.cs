@@ -210,6 +210,7 @@ public class ClientPredictionHandler : MonoBehaviour
             Crouch = PlayerInputController.CrouchInput,
             Shoot = PlayerInputController.ShootInput,
             Aiming = PlayerInputController.Aiming,
+            GunDirection = PlayerInputController.GunDirection,
             LookDirection = PlayerInputController.LookDirection,
             Interact = PlayerInputController.Interact,
             Rotation = m_rigidbody.rotation,
