@@ -48,6 +48,14 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
+    public bool CanShootWeapon
+    {
+        get
+        {
+            return CanUseWeapons && ActiveWeapon.BulletCount > 0;
+        }
+    }
+
     [Space]
     [Header ( "Primary" ), SerializeField]
     private GameObject m_primaryWeaponHolder = null;

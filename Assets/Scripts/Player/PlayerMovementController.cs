@@ -50,6 +50,8 @@ public class PlayerMovementController : MonoBehaviour
     // Controllers
     private Rigidbody m_rigidbody = null;
     private CapsuleCollider m_collider = null;
+    [SerializeField]
+    private WeaponsController m_weaponsController = null;
 
     // Movement
     /// <summary>
@@ -84,6 +86,7 @@ public class PlayerMovementController : MonoBehaviour
     {
         m_rigidbody = GetComponent<Rigidbody> ();
         m_collider = GetComponent<CapsuleCollider> ();
+        Debug.Assert ( m_weaponsController != null, "m_weaponsController is null." );
     }
 
     private void Start ()
@@ -133,7 +136,7 @@ public class PlayerMovementController : MonoBehaviour
         bool running = state.Run;
         bool crouching = state.Crouch;
         bool aiming = state.Aiming;
-        bool shooting = state.Shoot;
+        bool shooting = state.Shoot && m_weaponsController.CanShootWeapon;
 
         // Convert movement input to linear values
         float inputX = moveRight ? 1 : moveLeft ? -1 : 0;
