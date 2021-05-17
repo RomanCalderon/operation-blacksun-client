@@ -189,6 +189,14 @@ public class ClientHandle : MonoBehaviour
         ItemSpawnerManager.Instance.CreateItemSpawner ( _spawnerData );
     }
 
+    public static void SpawnItem ( Packet _packet )
+    {
+        int _spawnerDataLength = _packet.ReadInt ();
+        byte [] _spawnerData = _packet.ReadBytes ( _spawnerDataLength );
+
+        ItemSpawnerManager.Instance.SpawnItem ( _spawnerData );
+    }
+
     public static void DestroyItem ( Packet _packet )
     {
         int _spawnerId = _packet.ReadInt ();

@@ -23,7 +23,8 @@ public enum ServerPackets
     playAudioClip,
     hitmarker,
     createItemSpawner,
-    itemSpawned,
+    spawnItem,
+    destroyItem,
     networkedRigidbodyData
 }
 

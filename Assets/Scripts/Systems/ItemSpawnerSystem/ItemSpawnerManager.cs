@@ -20,4 +20,11 @@ public class ItemSpawnerManager : PersistentLazySingleton<ItemSpawnerManager>
         itemSpawner.Initialize ( spawnerData );
         ItemSpawners.Add ( spawnerData.SpawnerId, itemSpawner );
     }
+
+    public void SpawnItem ( byte [] spawnerData )
+    {
+        // TODO: Create an ItemSpawner with spawnerData
+        // and spawn PlayerItem with given quantity.
+        throw new System.NotImplementedException ();
+    }
 }
