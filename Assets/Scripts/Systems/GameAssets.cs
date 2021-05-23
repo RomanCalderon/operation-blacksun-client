@@ -23,6 +23,7 @@ public class GameAssets : MonoBehaviour
         public string Name;
         public PlayerItem PlayerItem;
         public GameObject Object;
+        public float ScaleMultiplier;
     }
 
     #endregion
@@ -74,6 +75,11 @@ public class GameAssets : MonoBehaviour
 
     #region Player Items
 
+    public PlayerItemData [] GetPlayerItemData ()
+    {
+        return m_playerItems;
+    }
+
     public PlayerItem GetPlayerItem ( string itemId )
     {
         if ( string.IsNullOrEmpty ( itemId ) )
@@ -83,13 +89,16 @@ public class GameAssets : MonoBehaviour
         return m_playerItems.FirstOrDefault ( i => i.PlayerItem.Id == itemId ).PlayerItem;
     }
 
-    public GameObject GetPlayerItemObject ( string itemId )
+    public GameObject GetPlayerItemObject ( string itemId, out float scale )
     {
+        scale = 1f;
         if ( string.IsNullOrEmpty ( itemId ) )
         {
             return null;
         }
-        return m_playerItems.FirstOrDefault ( i => i.PlayerItem.Id == itemId ).Object;
+        PlayerItemData itemData = m_playerItems.FirstOrDefault ( i => i.PlayerItem.Id == itemId );
+        scale = itemData.ScaleMultiplier;
+        return itemData.Object;
     }
 
     #endregion
@@ -101,6 +110,10 @@ public class GameAssets : MonoBehaviour
         for ( int i = 0; i < m_playerItems.Length; i++ )
         {
             m_playerItems [ i ].Name = m_playerItems [ i ].PlayerItem.ToString ();
+            if ( m_playerItems [ i ].ScaleMultiplier == 0 )
+            {
+                m_playerItems [ i ].ScaleMultiplier = 1f;
+            }
         }
     }
 

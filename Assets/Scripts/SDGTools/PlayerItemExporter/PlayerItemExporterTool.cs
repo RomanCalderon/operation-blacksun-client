@@ -177,13 +177,19 @@ public class PlayerItemExporterTool : EditorWindow
 
         EditorGUI.BeginDisabledGroup ( string.IsNullOrEmpty ( m_importFile ) );
 
-        // Import button
-        if ( GUILayout.Button ( $"Import", GUILayout.Height ( BUTTON_HEIGHT ) ) )
+        // Import from file button
+        if ( GUILayout.Button ( $"Import from file", GUILayout.Height ( BUTTON_HEIGHT ) ) )
         {
             ImportData ();
         }
 
         EditorGUI.EndDisabledGroup ();
+
+        // Import from Game Assets
+        if ( GUILayout.Button ( $"Import from Game Assets", GUILayout.Height ( BUTTON_HEIGHT ) ) )
+        {
+            ImportFromAssetDatabase ();
+        }
 
         GUILayout.EndVertical ();
 
@@ -288,6 +294,26 @@ public class PlayerItemExporterTool : EditorWindow
         return false;
     }
 
+    private void ImportFromAssetDatabase ()
+    {
+        GameAssets assetDatabase = Resources.Load<GameAssets> ( "GameAssets" );
+
+        if ( assetDatabase != null )
+        {
+            GameAssets.PlayerItemData [] playerItemData = assetDatabase.GetPlayerItemData ();
+
+            if ( playerItemData.Length > 0 )
+            {
+                m_boundsData.Clear ();
+                foreach ( GameAssets.PlayerItemData itemData in playerItemData )
+                {
+                    PlayerItemData convertedData = new PlayerItemData ( itemData.PlayerItem.Id, itemData.Object );
+                    GenerateBoundsData ( convertedData, itemData.ScaleMultiplier );
+                }
+            }
+        }
+    }
+
     #endregion
 
     #region Exporter
@@ -369,15 +395,48 @@ public class PlayerItemExporterTool : EditorWindow
             return;
         }
         // Get bounds for PlayerItem source
-        Bounds bounds = GetColliderBounds ( playerItemData.Source );
+        Bounds bounds = GetColliderBounds ( playerItemData.Source, 1f );
+        BoundsData boundsData = new BoundsData ( playerItemData.PlayerItemId, bounds.center, bounds.size );
 
         // Add bounds data to list
-        m_boundsData.Add ( new BoundsData ( playerItemData.PlayerItemId, bounds.center, bounds.size ) );
+        if ( m_boundsData.Exists ( d => d.Id == playerItemData.PlayerItemId ) )
+        {
+            int replaceIndex = m_boundsData.FindIndex ( d => d.Id == playerItemData.PlayerItemId );
+            m_boundsData [ replaceIndex ] = boundsData;
+        }
+        else
+        {
+            m_boundsData.Add ( boundsData );
+        }
     }
 
-    private Bounds GetColliderBounds ( GameObject assetModel )
+    private void GenerateBoundsData ( PlayerItemData playerItemData, float scaleMultiplier )
+    {
+        if ( playerItemData.Source == null )
+        {
+            Debug.LogWarning ( $"PlayerItemData [{playerItemData.PlayerItemId}] is missing Source Object reference. Skipping this item." );
+            return;
+        }
+        // Get bounds for PlayerItem source
+        Bounds bounds = GetColliderBounds ( playerItemData.Source, scaleMultiplier );
+        BoundsData boundsData = new BoundsData ( playerItemData.PlayerItemId, bounds.center, bounds.size );
+
+        // Add bounds data to list
+        if ( m_boundsData.Exists ( d => d.Id == playerItemData.PlayerItemId ) )
+        {
+            int replaceIndex = m_boundsData.FindIndex ( d => d.Id == playerItemData.PlayerItemId );
+            m_boundsData [ replaceIndex ] = boundsData;
+        }
+        else
+        {
+            m_boundsData.Add ( boundsData );
+        }
+    }
+
+    private Bounds GetColliderBounds ( GameObject assetModel, float scale )
     {
         GameObject assetInstance = Instantiate ( assetModel, Vector3.zero, Quaternion.identity );
+        assetInstance.transform.localScale *= scale;
 
         // Start with root object's bounds
         Bounds bounds = new Bounds ( Vector3.zero, Vector3.zero );
@@ -400,6 +459,9 @@ public class PlayerItemExporterTool : EditorWindow
                 bounds.Encapsulate ( childRenderer.bounds );
             }
         }
+
+        // Divide bounds size by assetModel scale
+        bounds.size /= assetModel.transform.localScale.x;
 
         // Destroy instance
         DestroyImmediate ( assetInstance );

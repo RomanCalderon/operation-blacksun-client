@@ -10,11 +10,27 @@ using PlayerInput;
 [RequireComponent ( typeof ( AimController ) )]
 public class WeaponsController : MonoBehaviour
 {
+    #region Models
+
     public enum Weapons
     {
         Primary,
         Secondary
     }
+
+    #endregion
+
+    #region Constants
+
+    /// <summary>
+    /// Reduces weapon switch delay duration by this value as a percentage
+    /// of the original switch delay duration (animation state length).
+    /// </summary>
+    const float WEAPON_SWITCH_DELAY_TRIM = 0.2f;
+
+    #endregion
+
+    #region Delegates
 
     public delegate void WeaponAnimatorHandler_Trigger ( string parameterName );
     public static WeaponAnimatorHandler_Trigger OnSetTrigger;
@@ -24,6 +40,10 @@ public class WeaponsController : MonoBehaviour
     public static WeaponAnimatorHandler_Float OnSetFloat;
     public delegate void WeaponSwitchHandler ();
     public static WeaponSwitchHandler OnSwitchWeapon;
+
+    #endregion
+
+    #region Members
 
     [SerializeField]
     private Player m_player = null;
@@ -39,7 +59,13 @@ public class WeaponsController : MonoBehaviour
             return ActiveWeaponSlot == Weapons.Primary ? m_primaryEquipped : m_secondaryEquipped;
         }
     }
-
+    public bool IsActiveWeaponEnabled
+    {
+        get
+        {
+            return ActiveWeapon != null && ActiveWeapon.gameObject.activeInHierarchy;
+        }
+    }
     public bool CanUseWeapons
     {
         get
@@ -47,7 +73,6 @@ public class WeaponsController : MonoBehaviour
             return !m_player.IsDead && ActiveWeapon != null;
         }
     }
-
     public bool CanShootWeapon
     {
         get
@@ -73,6 +98,10 @@ public class WeaponsController : MonoBehaviour
     [SerializeField]
     private Transform m_cameraTransform = null;
 
+    #endregion
+
+    #region Initializations
+
     private void OnEnable ()
     {
         AimController.OnAimStateUpdated += UpdateIdleSpeed;
@@ -80,7 +109,6 @@ public class WeaponsController : MonoBehaviour
         InventoryManager.OnSlotUpdated += EquipWeapon;
         InventoryManager.OnSlotUpdated += EquipAttachment;
 
-        WeaponStateBehaviour.OnStateEntered += SwitchWeapons;
         WeaponStateBehaviour.OnStateEntered += EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated += UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited += ExitedAnimatorState;
@@ -95,7 +123,6 @@ public class WeaponsController : MonoBehaviour
         InventoryManager.OnSlotUpdated -= EquipWeapon;
         InventoryManager.OnSlotUpdated -= EquipAttachment;
 
-        WeaponStateBehaviour.OnStateEntered -= SwitchWeapons;
         WeaponStateBehaviour.OnStateEntered -= EnteredAnimatorState;
         WeaponStateBehaviour.OnStateUpdated -= UpdatedAnimatorState;
         WeaponStateBehaviour.OnStateExited -= ExitedAnimatorState;
@@ -116,11 +143,13 @@ public class WeaponsController : MonoBehaviour
         m_secondaryWeaponHolder.SetActive ( false );
     }
 
+    #endregion
+
     // Update is called once per frame
     void Update ()
     {
         WeaponInteractions ();
-        WeaponSwitching ();
+        CheckWeaponSwitchInput ();
     }
 
     private void WeaponInteractions ()
@@ -159,7 +188,21 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
-    private void WeaponSwitching ()
+    public void SwitchToWeapon ( Weapons switchWeapon )
+    {
+        if ( IsActiveWeaponEnabled ) // Switching from secondary weapon
+        {
+            // Trigger weapon holster animation
+            OnSetTrigger?.Invoke ( "Holster" );
+        }
+        else
+        {
+            // Immediately activate switchWeapon
+            ActivateWeapon ( switchWeapon );
+        }
+    }
+
+    private void CheckWeaponSwitchInput ()
     {
         if ( m_player.IsDead || InventoryManager.Instance.IsDisplayed )
         {
@@ -169,32 +212,12 @@ public class WeaponsController : MonoBehaviour
         // Weapon switching - Primary
         if ( Input.GetKeyDown ( KeyCode.Alpha1 ) && ActiveWeaponSlot != Weapons.Primary )
         {
-            if ( m_activeWeaponIndex == 1 ) // Switching from secondary weapon
-            {
-                if ( m_secondaryEquipped != null ) // Play weapon holster animation to switch
-                {
-                    OnSetTrigger?.Invoke ( "Holster" );
-                }
-                else
-                {
-                    ActivateWeapon ( Weapons.Primary );
-                }
-            }
+            SwitchToWeapon ( Weapons.Primary );
         }
         // Weapon switching - Secondary
         if ( Input.GetKeyDown ( KeyCode.Alpha2 ) && ActiveWeaponSlot != Weapons.Secondary )
         {
-            if ( m_activeWeaponIndex == 0 ) // Switching from primary weapon
-            {
-                if ( m_primaryEquipped != null ) // Play weapon holster animation to switch
-                {
-                    OnSetTrigger?.Invoke ( "Holster" );
-                }
-                else
-                {
-                    ActivateWeapon ( Weapons.Secondary );
-                }
-            }
+            SwitchToWeapon ( Weapons.Secondary );
         }
     }
 
@@ -254,11 +277,8 @@ public class WeaponsController : MonoBehaviour
             case Ammunition.Calibers.AAC:
                 strength += 0.15f;
                 break;
-            case Ammunition.Calibers.G12:
+            case Ammunition.Calibers.GAUGE_12:
                 strength += UnityEngine.Random.Range ( 0.0f, 2.0f );
-                break;
-            case Ammunition.Calibers.Boar_75:
-                strength += UnityEngine.Random.Range ( 0.2f, 0.3f );
                 break;
             case Ammunition.Calibers.C3:
                 strength += UnityEngine.Random.Range ( 0.0f, 0.1f );
@@ -301,6 +321,7 @@ public class WeaponsController : MonoBehaviour
         if ( stateInfo.IsName ( "Holster" ) )
         {
             AimController.CanAim = false;
+            StartHolsterDelay ( stateInfo.length );
         }
     }
 
@@ -353,19 +374,17 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
-    #region Weapon switching
+    #region Weapon switch delay handler
 
-    private void SwitchWeapons ( AnimatorStateInfo stateInfo, int layerIndex )
+    private void StartHolsterDelay ( float delayLength )
     {
-        if ( stateInfo.IsName ( "Holster" ) )
+        if ( m_weaponSwitchCoroutine != null )
         {
-            if ( m_weaponSwitchCoroutine != null )
-            {
-                StopCoroutine ( m_weaponSwitchCoroutine );
-            }
-            m_weaponSwitchCoroutine = StartCoroutine ( SwitchWeaponsDelay ( stateInfo.length ) );
-            ClientSend.WeaponCancelReload ();
+            StopCoroutine ( m_weaponSwitchCoroutine );
         }
+        delayLength = ( ( 1 - WEAPON_SWITCH_DELAY_TRIM ) * delayLength );
+        m_weaponSwitchCoroutine = StartCoroutine ( SwitchWeaponsDelay ( delayLength ) );
+        ClientSend.WeaponCancelReload ();
     }
 
     private IEnumerator SwitchWeaponsDelay ( float delay )
@@ -423,57 +442,67 @@ public class WeaponsController : MonoBehaviour
         if ( slotId == "primary-weapon" )
         {
             // Get the Slot from the Inventory
-            Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
-            if ( slot == null )
+            Slot primaryWeaponSlot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
+            if ( primaryWeaponSlot == null )
             {
                 Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
                 return;
             }
-            if ( slot.PlayerItem == null ) // No weapon
+            if ( primaryWeaponSlot.PlayerItem == null ) // No weapon
             {
                 ClearWeapon ( Weapons.Primary );
                 return;
             }
 
-            WeaponInstance weapon = m_primaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
+            WeaponInstance weapon = m_primaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == primaryWeaponSlot.PlayerItem.Id );
             if ( weapon != null )
             {
                 ClearWeapon ( Weapons.Primary );
+
+                // Initialize weapon
                 m_primaryEquipped = weapon;
                 m_primaryEquipped.SetActive ( true );
                 m_primaryEquipped.Initialize ( m_player, m_aimController );
+
+                // Switch to equipped weapon
+                SwitchToWeapon ( Weapons.Primary );
             }
             else
             {
-                Debug.LogWarning ( $"Primary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exist in the list." );
+                Debug.LogWarning ( $"Primary weapon with PlayerItem Id [{primaryWeaponSlot.PlayerItem.Id}] does not exist in the list." );
             }
         }
         else if ( slotId == "secondary-weapon" )
         {
             // Get the Slot from the Inventory
-            Slot slot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
-            if ( slot == null )
+            Slot secondaryWeaponSlot = InventoryManager.Instance.Inventory.GetSlot ( slotId );
+            if ( secondaryWeaponSlot == null )
             {
                 Debug.LogWarning ( $"Slot with id [{slotId}] is missing." );
                 return;
             }
-            if ( slot.PlayerItem == null ) // No weapon
+            if ( secondaryWeaponSlot.PlayerItem == null ) // No weapon
             {
                 ClearWeapon ( Weapons.Secondary );
                 return;
             }
 
-            WeaponInstance weapon = m_secondaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == slot.PlayerItem.Id );
+            WeaponInstance weapon = m_secondaryWeapons.FirstOrDefault ( w => w.PlayerItem.Id == secondaryWeaponSlot.PlayerItem.Id );
             if ( weapon != null )
             {
                 ClearWeapon ( Weapons.Secondary );
+
+                // Initialize weapon
                 m_secondaryEquipped = weapon;
                 m_secondaryEquipped.SetActive ( true );
                 m_secondaryEquipped.Initialize ( m_player, m_aimController );
+
+                // Switch to equipped weapon
+                SwitchToWeapon ( Weapons.Secondary );
             }
             else
             {
-                Debug.LogWarning ( $"Secondary weapon with PlayerItem Id [{slot.PlayerItem.Id}] does not exist in the list." );
+                Debug.LogWarning ( $"Secondary weapon with PlayerItem Id [{secondaryWeaponSlot.PlayerItem.Id}] does not exist in the list." );
             }
         }
 

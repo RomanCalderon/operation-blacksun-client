@@ -34,8 +34,11 @@ public class PickupInstance : Interactable
         // Get PlayerItem from database
         m_playerItem = GameAssets.Instance.GetPlayerItem ( itemId );
         m_quantity = quantity;
-        GameObject itemObject = GameAssets.Instance.GetPlayerItemObject ( itemId );
-        Instantiate ( itemObject, m_container.position, m_container.rotation, m_container );
+        // Get item object as GameObject from database
+        GameObject itemObject = GameAssets.Instance.GetPlayerItemObject ( itemId, out float objectScale );
+        // Spawn object
+        GameObject objectInstance = Instantiate ( itemObject, m_container.position, m_container.rotation, m_container );
+        objectInstance.transform.localScale *= objectScale;
 
         // Initialize instance Bounds
         SetColliderBounds ();
@@ -48,9 +51,9 @@ public class PickupInstance : Interactable
 
     protected void SetColliderBounds ()
     {
-        var pos = transform.localPosition;
-        var rot = transform.localRotation;
-        var scale = transform.localScale;
+        Vector3 pos = transform.localPosition;
+        Quaternion rot = transform.localRotation;
+        Vector3 scale = transform.localScale;
 
         // Need to clear out transforms while encapsulating bounds
         transform.localPosition = Vector3.zero;
@@ -58,7 +61,7 @@ public class PickupInstance : Interactable
         transform.localScale = Vector3.one;
 
         // Start with root object's bounds
-        var bounds = new Bounds ( Vector3.zero, Vector3.zero );
+        Bounds bounds = new Bounds ( Vector3.zero, Vector3.zero );
         if ( transform.TryGetComponent<Renderer> ( out var mainRenderer ) )
         {
             // New Bounds() will include 0,0,0 which you may not want to Encapsulate
@@ -67,13 +70,15 @@ public class PickupInstance : Interactable
             bounds = mainRenderer.bounds;
         }
 
-        var descendants = GetComponentsInChildren<Transform> ();
+        Transform [] descendants = GetComponentsInChildren<Transform> ();
         foreach ( Transform desc in descendants )
         {
-            if ( desc.TryGetComponent<Renderer> ( out var childRenderer ) )
+            if ( desc.TryGetComponent ( out Renderer childRenderer ) )
             {
                 if ( bounds.extents == Vector3.zero )
+                {
                     bounds = childRenderer.bounds;
+                }
                 bounds.Encapsulate ( childRenderer.bounds );
             }
         }

@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: aac
   Name: AAC
+  Rarity: 0
   StackLimit: 256
-  Caliber: 3
+  Image: {fileID: 0}
+  Caliber: 1

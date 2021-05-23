@@ -18,4 +18,4 @@ MonoBehaviour:
   StackLimit: 1
   Image: {fileID: 0}
   AmmoCapacity: 30
-  CompatibleAmmoCaliber: 0
+  CompatibleAmmoCaliber: 3

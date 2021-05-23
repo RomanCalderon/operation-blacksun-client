@@ -97,7 +97,7 @@ public class NetworkedRigidbody : MonoBehaviour
             return;
         }
         transform.position = Vector3.MoveTowards ( transform.position, m_targetPosition, INTERP_POSITION_SPEED );
-        transform.eulerAngles = Vector3.RotateTowards ( transform.eulerAngles, m_targetRotation, deltaTime * m_maxRadianDelta, INTERP_ROTATION_SPEED );
+        transform.eulerAngles = m_targetRotation; //Vector3.RotateTowards ( transform.eulerAngles, m_targetRotation, deltaTime * m_maxRadianDelta, INTERP_ROTATION_SPEED );
     }
 
     #endregion

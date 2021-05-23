@@ -391,7 +391,6 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playAudioClip, ClientHandle.PlayAudioClip },
             { (int)ServerPackets.hitmarker, ClientHandle.Hitmarker },
             { (int)ServerPackets.createItemSpawner, ClientHandle.CreateItemSpawner },
-            { (int)ServerPackets.spawnItem, ClientHandle.SpawnItem },
             { (int)ServerPackets.destroyItem, ClientHandle.DestroyItem },
             { (int)ServerPackets.networkedRigidbodyData, ClientHandle.NetworkedRigidbodyData }
         };
