@@ -224,7 +224,6 @@ public class WeaponInstance : PlayerItemInstance
     public void EquipAttachment ( Sight sight )
     {
         Sight = sight;
-        Debug.Log ( $"Weapon [{PlayerItem}] - Sight equipped [{Sight}]" );
 
         // Update attachment instance
         m_attachmentsController.UpdateAttachment ( Sight );

@@ -59,7 +59,11 @@ public class WeaponsController : MonoBehaviour
             return ActiveWeaponSlot == Weapons.Primary ? m_primaryEquipped : m_secondaryEquipped;
         }
     }
-    public bool IsActiveWeaponEnabled
+
+    /// <summary>
+    /// True if active weapon is not null and active.
+    /// </summary>
+    public bool IsCurrentWeaponEnabled
     {
         get
         {
@@ -93,6 +97,7 @@ public class WeaponsController : MonoBehaviour
     private List<WeaponInstance> m_secondaryWeapons = new List<WeaponInstance> ();
     private WeaponInstance m_secondaryEquipped = null;
 
+    private bool m_initialWeaponsEquipped = false;
     private Coroutine m_weaponSwitchCoroutine = null;
 
     [SerializeField]
@@ -145,6 +150,8 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
+    #region Runtime
+
     // Update is called once per frame
     void Update ()
     {
@@ -188,20 +195,6 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
-    public void SwitchToWeapon ( Weapons switchWeapon )
-    {
-        if ( IsActiveWeaponEnabled ) // Switching from secondary weapon
-        {
-            // Trigger weapon holster animation
-            OnSetTrigger?.Invoke ( "Holster" );
-        }
-        else
-        {
-            // Immediately activate switchWeapon
-            ActivateWeapon ( switchWeapon );
-        }
-    }
-
     private void CheckWeaponSwitchInput ()
     {
         if ( m_player.IsDead || InventoryManager.Instance.IsDisplayed )
@@ -220,6 +213,22 @@ public class WeaponsController : MonoBehaviour
             SwitchToWeapon ( Weapons.Secondary );
         }
     }
+
+    #endregion
+
+    #region Accessors
+
+    public bool HasWeapon ( Weapons weapon )
+    {
+        return weapon switch
+        {
+            Weapons.Primary => m_primaryEquipped != null,
+            Weapons.Secondary => m_secondaryEquipped != null,
+            _ => false,
+        };
+    }
+
+    #endregion
 
     private void ReloadWeapon ()
     {
@@ -374,7 +383,26 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
-    #region Weapon switch delay handler
+    #region Weapon Switching & Delay Handler
+
+    public void SwitchToWeapon ( Weapons switchWeapon )
+    {
+        if ( ActiveWeaponSlot == switchWeapon )
+        {
+            return;
+        }
+
+        if ( IsCurrentWeaponEnabled ) // Switching from secondary weapon
+        {
+            // Trigger weapon holster animation
+            OnSetTrigger?.Invoke ( "Holster" );
+        }
+        else
+        {
+            // Immediately activate switchWeapon
+            ActivateWeapon ( switchWeapon );
+        }
+    }
 
     private void StartHolsterDelay ( float delayLength )
     {
@@ -497,8 +525,16 @@ public class WeaponsController : MonoBehaviour
                 m_secondaryEquipped.SetActive ( true );
                 m_secondaryEquipped.Initialize ( m_player, m_aimController );
 
-                // Switch to equipped weapon
-                SwitchToWeapon ( Weapons.Secondary );
+                // Check if initial weapons are equipped
+                if ( !m_initialWeaponsEquipped )
+                {
+                    m_initialWeaponsEquipped = HasWeapon ( Weapons.Primary ) && HasWeapon ( Weapons.Secondary );
+                }
+                else
+                {
+                    // Switch to equipped weapon
+                    SwitchToWeapon ( Weapons.Secondary );
+                }
             }
             else
             {
