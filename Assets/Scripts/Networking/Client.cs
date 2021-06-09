@@ -288,7 +288,6 @@ public class Client : MonoBehaviour
         /// <param name="_localPort">The port number to bind the UDP socket to.</param>
         public void Connect ( int _localPort )
         {
-            UnityEngine.Debug.Log ("UDP::Connect()");
             socket = new UdpClient ( _localPort );
 
             socket.Connect ( endPoint );

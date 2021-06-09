@@ -9,16 +9,19 @@ public class MotionSway : MonoBehaviour
     [SerializeField]
     private PlayerMovementController m_playerMovementController = null;
 
-    [Header ( "Values" )]
+    [Header ( "Sway Settings" )]
     public float SwayAmountX = 0.007f;
     public float SwayAmountY = 0.02f;
     public float MaxSwayAmount = 0.02f;
-    public float SwaySmooth = 16f;
-    [Space]
-    public float SmoothRotation = 8;
+    public float SwayDamp = 24f;
     public float TiltAngle = 1.5f;
 
-    private Vector3 m_default;
+    [Space, Header ( "Run/Walk Rotations" )]
+    public float RunTransitionSpeed = 4f;
+    public float WalkTransitionSpeed = 8f;
+
+    [Space]
+
     [SerializeField]
     private bool m_showGizmos = false;
     [SerializeField]
@@ -26,6 +29,7 @@ public class MotionSway : MonoBehaviour
     [SerializeField]
     private Vector3 m_runRotationOffset = Vector3.forward;
 
+    private Vector3 m_default;
     private bool m_isAiming = false;
 
 
@@ -89,15 +93,19 @@ public class MotionSway : MonoBehaviour
             !m_playerMovementController.IsSliding &&
             !m_isAiming;
         Vector3 final = new Vector3 ( m_default.x + factorX, m_default.y + factorY, m_default.z ) + ( useRunOffset ? m_runPositionOffset : Vector3.zero );
-        transform.localPosition = Vector3.Lerp ( transform.localPosition, final, deltaTime * SwaySmooth );
-
+        transform.localPosition = Vector3.Lerp ( transform.localPosition, final, deltaTime * SwayDamp );
+        
         // Rotation
         Quaternion target = Quaternion.Euler ( tiltAroundX, tiltAroundY, tiltAroundZ );
         if ( useRunOffset )
         {
             target *= Quaternion.LookRotation ( m_runRotationOffset, Vector3.up );
+            transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, deltaTime * RunTransitionSpeed );
         }
-        transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, deltaTime * SmoothRotation );
+        else
+        {
+            transform.localRotation = Quaternion.Slerp ( transform.localRotation, target, deltaTime * WalkTransitionSpeed );
+        }
     }
 
     private void AimUpdated ( bool state )
