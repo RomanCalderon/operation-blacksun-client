@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using EZCameraShake;
 using InventorySystem.PlayerItems;
+using Knife.Effects;
 
 
 public class WeaponInstance : PlayerItemInstance
@@ -35,6 +36,10 @@ public class WeaponInstance : PlayerItemInstance
     // Ammo
     public int BulletCount { get; private set; } = 0;
     private string m_ammoId;
+
+    [Header ( "FX" )]
+    [SerializeField]
+    private ParticleGroupPlayer m_muzzleFlashPlayer = null;
 
     #region Audio Properties
 
@@ -84,6 +89,8 @@ public class WeaponInstance : PlayerItemInstance
 
     #endregion
 
+    #region Reload Properties
+
     [Header ( "Reloading" )]
     [SerializeField]
     private float m_partialReloadTime = 0.5f;
@@ -92,6 +99,8 @@ public class WeaponInstance : PlayerItemInstance
     private bool m_isReloading = false;
     private bool m_isFullReload = false;
     private Coroutine m_reloadCoroutine = null;
+
+    #endregion
 
     private float m_fireCooldown = 0f;
 
@@ -285,7 +294,8 @@ public class WeaponInstance : PlayerItemInstance
             // Play gunshot Audioclip
             AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
-            // Perform gunshot
+            // Play muzzle flash
+            m_muzzleFlashPlayer.Play ();
 
             // Send shoot command to server
             ClientSend.WeaponShoot ( Client.instance.ServerTick, m_player.PositionLerpProgress );

@@ -12,28 +12,28 @@ namespace Knife.Effects
         /// <summary>
         /// Particle systems array.
         /// </summary>
-        [SerializeField] [Tooltip("Particle systems array")] private ParticleSystem[] particleSystems;
+        [SerializeField] [Tooltip ( "Particle systems array" )] private ParticleSystem [] particleSystems;
 
         /// <summary>
         /// Plays particle systems from particleSystems array.
         /// </summary>
-        public void Play()
+        public void Play ()
         {
-            foreach (var ps in particleSystems)
+            foreach ( ParticleSystem ps in particleSystems )
             {
-                ps.Play();
+                ps.Play ();
             }
         }
 
         /// <summary>
         /// Stops particle systems from particleSystems array.
         /// </summary>
-        public void Stop()
+        public void Stop ()
         {
-            foreach (var ps in particleSystems)
+            foreach ( ParticleSystem ps in particleSystems )
             {
-                ps.Clear();
-                ps.Stop();
+                ps.Clear ();
+                ps.Stop ();
             }
         }
     }
