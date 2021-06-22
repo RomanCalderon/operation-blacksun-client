@@ -9,6 +9,18 @@ using Knife.Effects;
 
 public class WeaponInstance : PlayerItemInstance
 {
+    #region Models
+
+    [System.Serializable]
+    public struct WeaponFX
+    {
+        public float Delay;
+        public ParticleGroupPlayer [] ParticleGroupPlayers;
+        public ParticleGroupEmitter [] ParticleGroupEmitters;
+    }
+
+    #endregion
+
     public delegate void AimSpeedHandler ( float aimSpeed );
     public static AimSpeedHandler OnUpdatedAimSpeed;
     public delegate void AimZoomHandler ( float zoomAmount );
@@ -37,15 +49,15 @@ public class WeaponInstance : PlayerItemInstance
     public int BulletCount { get; private set; } = 0;
     private string m_ammoId;
 
-    [Header ( "FX" )]
+    [Header ( "Weapon FX" )]
     [SerializeField]
-    private ParticleGroupPlayer [] m_particleGroupPlayers = null;
+    private WeaponFX m_shootFX;
     [SerializeField]
-    private ParticleGroupEmitter [] m_particleGroupEmitters = null;
+    private WeaponFX m_boltChargeFX;
 
     #region Audio Properties
 
-    [Header ( "Audio" )]
+    [ Header ( "Audio" )]
     [SerializeField]
     private AudioMixerGroup m_mixerGroup = null;
     [Space]
@@ -109,9 +121,12 @@ public class WeaponInstance : PlayerItemInstance
     private Vector3 m_lookDirection;
 
 
+    #region Initialization
+
     private void OnEnable ()
     {
         WeaponStateBehaviour.OnStateEntered += StartAudioClip;
+        WeaponStateBehaviour.OnStateEntered += WeaponStatePlayFX;
         WeaponStateBehaviour.OnStateExited += StopAudioClip;
         WeaponStateBehaviour.OnStateEntered += CancelReloadAnimation;
 
@@ -122,6 +137,7 @@ public class WeaponInstance : PlayerItemInstance
     private void OnDisable ()
     {
         WeaponStateBehaviour.OnStateEntered -= StartAudioClip;
+        WeaponStateBehaviour.OnStateEntered -= WeaponStatePlayFX;
         WeaponStateBehaviour.OnStateExited -= StopAudioClip;
         WeaponStateBehaviour.OnStateEntered -= CancelReloadAnimation;
 
@@ -150,6 +166,10 @@ public class WeaponInstance : PlayerItemInstance
         UpdateAimController ();
     }
 
+    #endregion
+
+    #region Runtime
+
     // Update is called once per frame
     void Update ()
     {
@@ -166,6 +186,8 @@ public class WeaponInstance : PlayerItemInstance
         m_lookDirection = m_aimListener.GetAimVector ();
         PlayerInput.PlayerInputController.SetGunDirection ( m_lookDirection );
     }
+
+    #endregion
 
     public void UpdateAimController ()
     {
@@ -296,8 +318,8 @@ public class WeaponInstance : PlayerItemInstance
             // Play gunshot Audioclip
             AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
-            // Play muzzle flash
-            PlayWeaponFX ();
+            // Play muzzle flash/bullet shell ejection fx
+            PlayShootFX ();
 
             // Send shoot command to server
             ClientSend.WeaponShoot ( Client.instance.ServerTick, m_player.PositionLerpProgress );
@@ -317,18 +339,6 @@ public class WeaponInstance : PlayerItemInstance
         else
         {
             DryFire ();
-        }
-    }
-
-    private void PlayWeaponFX ()
-    {
-        foreach ( ParticleGroupPlayer player in m_particleGroupPlayers )
-        {
-            player.Play ();
-        }
-        foreach ( ParticleGroupEmitter emitter in m_particleGroupEmitters )
-        {
-            emitter.Emit ( 1 );
         }
     }
 
@@ -447,6 +457,8 @@ public class WeaponInstance : PlayerItemInstance
 
     #region WeaponStateBehaviour Listeners
 
+    #region Audio
+
     private void StartAudioClip ( AnimatorStateInfo stateInfo, int layerIndex )
     {
         if ( stateInfo.IsName ( "Draw" ) )
@@ -495,6 +507,8 @@ public class WeaponInstance : PlayerItemInstance
         }
     }
 
+    #endregion
+
     private void CancelReloadAnimation ( AnimatorStateInfo stateInfo, int layerIndex )
     {
         if ( stateInfo.IsName ( "Holster" ) )
@@ -503,6 +517,43 @@ public class WeaponInstance : PlayerItemInstance
         }
     }
 
+    private void WeaponStatePlayFX ( AnimatorStateInfo stateInfo, int layerIndex )
+    {
+        if ( stateInfo.IsName ( "BoltCharge" ) )
+        {
+            StartCoroutine ( PlayBoltChargeFXDelayed () );
+        }
+    }
+
     #endregion
 
+    #region Weapon FX
+
+    private void PlayShootFX ()
+    {
+        foreach ( ParticleGroupPlayer player in m_shootFX.ParticleGroupPlayers )
+        {
+            player.Play ();
+        }
+        foreach ( ParticleGroupEmitter emitter in m_shootFX.ParticleGroupEmitters )
+        {
+            emitter.Emit ( 1 );
+        }
+    }
+
+    private IEnumerator PlayBoltChargeFXDelayed ()
+    {
+        yield return new WaitForSeconds ( m_boltChargeFX.Delay );
+
+        foreach ( ParticleGroupPlayer player in m_boltChargeFX.ParticleGroupPlayers )
+        {
+            player.Play ();
+        }
+        foreach ( ParticleGroupEmitter emitter in m_boltChargeFX.ParticleGroupEmitters )
+        {
+            emitter.Emit ( 1 );
+        }
+    }
+
+    #endregion
 }

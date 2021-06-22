@@ -195,10 +195,16 @@ MonoBehaviour:
   m_ironsightIndex: 1
   m_attachmentsController: {fileID: 1085850511057566399}
   m_aimListener: {fileID: 7697869007835537660}
-  m_particleGroupPlayers:
-  - {fileID: 1619717064149603257}
-  m_particleGroupEmitters:
-  - {fileID: 8018859884460521944}
+  m_shootFX:
+    Delay: 0
+    ParticleGroupPlayers:
+    - {fileID: 1619717064149603257}
+    ParticleGroupEmitters:
+    - {fileID: 8018859884460521944}
+  m_boltChargeFX:
+    Delay: 0
+    ParticleGroupPlayers: []
+    ParticleGroupEmitters: []
   m_mixerGroup: {fileID: -6911237811838272625, guid: fe16da451a7d375439bd116bf2b07e1a,
     type: 2}
   m_normalGunshotClip: gunshot-smg-45-standard
