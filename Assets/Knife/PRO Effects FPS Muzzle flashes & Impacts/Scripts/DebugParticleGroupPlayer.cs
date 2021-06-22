@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Knife.Effects;
 
-[RequireComponent(typeof(ParticleGroupPlayer))]
+[RequireComponent ( typeof ( ParticleGroupPlayer ) )]
 public class DebugParticleGroupPlayer : MonoBehaviour
 {
     [SerializeField]
@@ -18,12 +18,12 @@ public class DebugParticleGroupPlayer : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    private IEnumerator Start()
+    private IEnumerator Start ()
     {
-        while ( m_loop )
+        do
         {
             m_particleGroupPlayer.Play ();
             yield return new WaitForSeconds ( m_interval );
-        }
+        } while ( m_loop );
     }
 }

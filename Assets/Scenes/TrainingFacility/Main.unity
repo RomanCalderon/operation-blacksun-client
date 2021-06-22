@@ -135,6 +135,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MuzzleFlash2
       objectReference: {fileID: 0}
+    - target: {fileID: 146992, guid: 24bc114e4759e464eab5d9664127a034, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 446992, guid: 24bc114e4759e464eab5d9664127a034, type: 3}
       propertyPath: m_RootOrder
       value: 18
@@ -290,6 +294,10 @@ PrefabInstance:
     - target: {fileID: 153266, guid: 39b2a3d1ecfa5614b97e75a9b5561f21, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash3
+      objectReference: {fileID: 0}
+    - target: {fileID: 153266, guid: 39b2a3d1ecfa5614b97e75a9b5561f21, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 453266, guid: 39b2a3d1ecfa5614b97e75a9b5561f21, type: 3}
       propertyPath: m_RootOrder
@@ -5851,6 +5859,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MuzzleFlash9
       objectReference: {fileID: 0}
+    - target: {fileID: 136518, guid: 35277ee4b65d54d4199c4e0e48053745, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 436518, guid: 35277ee4b65d54d4199c4e0e48053745, type: 3}
       propertyPath: m_RootOrder
       value: 25
@@ -6006,6 +6018,10 @@ PrefabInstance:
     - target: {fileID: 183908, guid: fa6d29df930056640bf15fb9b6a54e4a, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash5
+      objectReference: {fileID: 0}
+    - target: {fileID: 183908, guid: fa6d29df930056640bf15fb9b6a54e4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 483908, guid: fa6d29df930056640bf15fb9b6a54e4a, type: 3}
       propertyPath: m_RootOrder
@@ -17364,6 +17380,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MuzzleFlash7
       objectReference: {fileID: 0}
+    - target: {fileID: 179846, guid: a7730127594a3ad46a512f70521a6446, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 479846, guid: a7730127594a3ad46a512f70521a6446, type: 3}
       propertyPath: m_RootOrder
       value: 23
@@ -17420,6 +17440,10 @@ PrefabInstance:
     - target: {fileID: 141106, guid: c69a6f3b834888c468f57ec885c39db3, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash8
+      objectReference: {fileID: 0}
+    - target: {fileID: 141106, guid: c69a6f3b834888c468f57ec885c39db3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 441106, guid: c69a6f3b834888c468f57ec885c39db3, type: 3}
       propertyPath: m_RootOrder
@@ -17653,6 +17677,10 @@ PrefabInstance:
     - target: {fileID: 110062, guid: 30902f8af10daa04cabd79e9ef258f08, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash6
+      objectReference: {fileID: 0}
+    - target: {fileID: 110062, guid: 30902f8af10daa04cabd79e9ef258f08, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 410062, guid: 30902f8af10daa04cabd79e9ef258f08, type: 3}
       propertyPath: m_RootOrder
@@ -23388,6 +23416,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MuzzleFlash4
       objectReference: {fileID: 0}
+    - target: {fileID: 160582, guid: 8ff371e17619a504b9822fc6a2facdb2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 460582, guid: 8ff371e17619a504b9822fc6a2facdb2, type: 3}
       propertyPath: m_RootOrder
       value: 20
@@ -23948,6 +23980,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MuzzleFlash1
       objectReference: {fileID: 0}
+    - target: {fileID: 124018, guid: 1f389bb139e76154582cf3c5e4f9214b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 424018, guid: 1f389bb139e76154582cf3c5e4f9214b, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -24139,6 +24175,10 @@ PrefabInstance:
     - target: {fileID: 161002, guid: 489aba68c9dfe9342accb1f3a0be4e5b, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash10
+      objectReference: {fileID: 0}
+    - target: {fileID: 161002, guid: 489aba68c9dfe9342accb1f3a0be4e5b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 461002, guid: 489aba68c9dfe9342accb1f3a0be4e5b, type: 3}
       propertyPath: m_RootOrder
