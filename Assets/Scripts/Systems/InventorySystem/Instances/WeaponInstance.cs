@@ -39,7 +39,9 @@ public class WeaponInstance : PlayerItemInstance
 
     [Header ( "FX" )]
     [SerializeField]
-    private ParticleGroupPlayer m_muzzleFlashPlayer = null;
+    private ParticleGroupPlayer [] m_particleGroupPlayers = null;
+    [SerializeField]
+    private ParticleGroupEmitter [] m_particleGroupEmitters = null;
 
     #region Audio Properties
 
@@ -295,7 +297,7 @@ public class WeaponInstance : PlayerItemInstance
             AudioManager.PlaySound ( m_normalGunshotClip, m_normalGunshotVolume, false, m_normalSpatialBlend, transform.position );
 
             // Play muzzle flash
-            m_muzzleFlashPlayer.Play ();
+            PlayWeaponFX ();
 
             // Send shoot command to server
             ClientSend.WeaponShoot ( Client.instance.ServerTick, m_player.PositionLerpProgress );
@@ -315,6 +317,18 @@ public class WeaponInstance : PlayerItemInstance
         else
         {
             DryFire ();
+        }
+    }
+
+    private void PlayWeaponFX ()
+    {
+        foreach ( ParticleGroupPlayer player in m_particleGroupPlayers )
+        {
+            player.Play ();
+        }
+        foreach ( ParticleGroupEmitter emitter in m_particleGroupEmitters )
+        {
+            emitter.Emit ( 1 );
         }
     }
 
