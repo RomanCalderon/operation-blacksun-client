@@ -82,4 +82,9 @@ public class CanvasGroupFader : MonoBehaviour
     {
         m_isActive = value;
     }
+
+    public void SetFade ( bool value )
+    {
+        m_fadeIn = value;
+    }
 }

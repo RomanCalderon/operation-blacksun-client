@@ -15,13 +15,13 @@ MonoBehaviour:
   enableDynamicUpdate: 1
   enableExtendedColorPicker: 1
   editorHints: 1
-  backgroundColorTint: {r: 0.627451, g: 0.88235295, b: 1, a: 1}
+  backgroundColorTint: {r: 0.3764706, g: 0.5294118, b: 0.6, a: 1}
   backgroundType: 1
   backgroundImage: {fileID: 21300000, guid: 59da25cc8872f164da4db6b05ad99d57, type: 3}
   backgroundVideo: {fileID: 32900000, guid: 488f8fa32c1a5f24cbac413b5e63b1f6, type: 3}
   backgroundPreserveAspect: 0
-  backgroundSpeed: 1.25
-  primaryColor: {r: 0.3882353, g: 0.7764706, b: 1, a: 1}
+  backgroundSpeed: 1.21
+  primaryColor: {r: 0.6313726, g: 0.77254903, b: 0.9607843, a: 1}
   secondaryColor: {r: 1, g: 1, b: 1, a: 1}
   primaryReversed: {r: 0.1764706, g: 0.1764706, b: 0.1764706, a: 1}
   negativeColor: {r: 1, g: 0.43137255, b: 0.39215687, a: 1}
@@ -31,9 +31,9 @@ MonoBehaviour:
   mediumFont: {fileID: 11400000, guid: b04f3173f946b754db673ac13842f4c1, type: 2}
   semiBoldFont: {fileID: 11400000, guid: 581c047ed60765249b12f37ff2895497, type: 2}
   boldFont: {fileID: 11400000, guid: 194c956b3d864664890e731c63fd4a02, type: 2}
-  gameLogo: {fileID: 21300000, guid: 6ac53f15ba5fce14596a41cdaff66b16, type: 3}
-  logoColor: {r: 0.3882353, g: 0.7764706, b: 1, a: 1}
+  gameLogo: {fileID: 21300000, guid: 6ff9dd1332e1f7c48a436b2588fc04d9, type: 3}
+  logoColor: {r: 1, g: 1, b: 1, a: 1}
   particleColor: {r: 0.3882353, g: 0.7764706, b: 1, a: 1}
-  backgroundMusic: {fileID: 8300000, guid: 7ac1670904bb1624b87dc52bc71f00bc, type: 3}
+  backgroundMusic: {fileID: 8300000, guid: 57ca427a21b243b4bb8d290d01533bf8, type: 3}
   hoverSound: {fileID: 8300000, guid: a6473f5264a14804e992a7a4a29cd744, type: 3}
   clickSound: {fileID: 8300000, guid: bfc5803fa8fa8924bbeaa34f4f689bb1, type: 3}
