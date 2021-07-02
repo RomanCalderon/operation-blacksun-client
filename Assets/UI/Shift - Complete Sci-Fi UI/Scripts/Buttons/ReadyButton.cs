@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
 
@@ -7,13 +8,20 @@ namespace Michsky.UI.Shift
 {
     public class ReadyButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [Header("Text")]
-        public bool useCustomText = false;
-        public string buttonTitle = "My Title";
+        [Header ( "Text" )]
+        public string buttonTitleNormal = "READY";
+        public string buttonTitleActiveHover = "CANCEL";
+        public string buttonTitleDisabled = "DISABLED";
+        private string buttonTitleActiveStatus;
 
-        [Header("Image")]
+        [Header ( "Image" )]
         public bool useCustomImage = false;
         public Sprite backgroundImage;
+
+        [Space, SerializeField]
+        private UnityEvent<bool> onReady;
+        [SerializeField]
+        private UnityEvent<bool> onReadyInverse;
 
         Button buttonComponent;
         TextMeshProUGUI titleText;
@@ -24,6 +32,15 @@ namespace Michsky.UI.Shift
         private void Awake ()
         {
             buttonComponent = GetComponent<Button> ();
+
+            titleText = gameObject.transform.Find ( "Content/Title" ).GetComponent<TextMeshProUGUI> ();
+            titleText.text = buttonTitleNormal;
+
+            if ( useCustomImage == false )
+            {
+                image1 = gameObject.transform.Find ( "Content/Background" ).GetComponent<Image> ();
+                image1.sprite = backgroundImage;
+            }
         }
 
         private void OnEnable ()
@@ -37,22 +54,39 @@ namespace Michsky.UI.Shift
             buttonComponent.onClick.RemoveListener ( OnButtonClick );
         }
 
-        void Start()
-        {
-            if (useCustomText == false)
-            {
-                titleText = gameObject.transform.Find("Content/Title").GetComponent<TextMeshProUGUI>();
-                titleText.text = buttonTitle;
-            }
+        #region Button Behaviour
 
-            if (useCustomImage == false)
+        public void UpdateButtonText ( string value )
+        {
+            if ( !string.IsNullOrEmpty ( value ) )
             {
-                image1 = gameObject.transform.Find("Content/Background").GetComponent<Image>();
-                image1.sprite = backgroundImage;
+                titleText.text = value;
             }
         }
 
-        #region Button Behaviour
+        public void UpdateButtonTextActive ( string value )
+        {
+            if ( !string.IsNullOrEmpty ( value ) )
+            {
+                titleText.text = buttonTitleActiveStatus = value;
+            }
+        }
+
+        public void SetButtonInteractable ( bool value )
+        {
+            buttonComponent.interactable = value;
+            buttonSelected = false;
+            UpdateButtonState ();
+
+            if ( value )
+            {
+                UpdateButtonText ( buttonTitleNormal );
+            }
+            else
+            {
+                UpdateButtonText ( buttonTitleDisabled );
+            }
+        }
 
         private void OnButtonClick ()
         {
@@ -68,31 +102,48 @@ namespace Michsky.UI.Shift
         /// </summary>
         private void UpdateButtonState ()
         {
+            onReady?.Invoke ( buttonSelected );
+            onReadyInverse?.Invoke ( !buttonSelected );
+
             if ( buttonSelected )
             {
-                Debug.Log ( "Ready button selected" );
                 buttonComponent.animator.Play ( "Pressed" );
+                UpdateButtonTextActive ( "SEARCHING" );
             }
             else
             {
-                Debug.Log ( "Ready button deselected" );
                 buttonComponent.animator.Play ( "Normal" );
+                titleText.text = buttonTitleNormal;
             }
         }
 
         public void OnPointerEnter ( PointerEventData eventData )
         {
-            if ( buttonComponent.interactable && !buttonSelected )
+            if ( buttonComponent.interactable )
             {
-                buttonComponent.animator.Play ( "Highlighted" );
+                if ( !buttonSelected )
+                {
+                    buttonComponent.animator.Play ( "Highlighted" );
+                }
+                else
+                {
+                    titleText.text = buttonTitleActiveHover;
+                }
             }
         }
 
         public void OnPointerExit ( PointerEventData eventData )
         {
-            if ( buttonComponent.interactable && !buttonSelected )
+            if ( buttonComponent.interactable )
             {
-                buttonComponent.animator.Play ( "Normal" );
+                if ( !buttonSelected )
+                {
+                    buttonComponent.animator.Play ( "Normal" );
+                }
+                else
+                {
+                    titleText.text = buttonTitleActiveStatus;
+                }
             }
         }
 
