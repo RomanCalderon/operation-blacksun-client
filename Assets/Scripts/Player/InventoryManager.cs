@@ -28,7 +28,7 @@ public class InventoryManager : MonoBehaviour
     private List<SlotUI> m_slotUI = new List<SlotUI> ();
     private SlotUI m_selectedSlotUI = null;
     public bool IsSlotSelected { get => m_selectedSlotUI != null; }
-    
+
     [SerializeField]
     private GameObject m_slotDragContentsPrefab = null;
     private SlotDragContents m_slotDragContentsInstance = null;
@@ -145,6 +145,20 @@ public class InventoryManager : MonoBehaviour
             return;
         }
         m_selectedSlotUI = slotUI;
+    }
+
+    public void OnSlotClicked ( SlotUI slotUI, PointerEventData eventData )
+    {
+        if ( eventData.dragging )
+        {
+            // Ignore direct click commands when slot item was dragged
+            return;
+        }
+        // Send click command to server
+        ClientSend.PlayerDropItem ( slotUI.Id, ( int ) eventData.button );
+        
+        // Clear selected SlotUI object
+        m_selectedSlotUI = null;
     }
 
     public void SlotBeginDrag ( PointerEventData eventData )

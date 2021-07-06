@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     public string Id = string.Empty;
     public Slot Slot { get; private set; } = null;
@@ -130,6 +130,14 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         if ( Slot != null && !Slot.IsEmpty () )
         {
             InventoryManager.Instance.OnSlotSelected ( this, eventData );
+        }
+    }
+
+    public void OnPointerUp ( PointerEventData eventData )
+    {
+        if ( Slot != null && !Slot.IsEmpty () )
+        {
+            InventoryManager.Instance.OnSlotClicked ( this, eventData );
         }
     }
 
