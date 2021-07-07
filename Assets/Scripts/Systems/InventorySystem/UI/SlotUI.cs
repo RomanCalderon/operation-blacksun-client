@@ -53,6 +53,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         if ( slot.IsEmpty () )
         {
             SetSlotColor ( m_vacantColor );
+            m_slotImage.fillCenter = false;
             m_contentImage.enabled = false;
             m_contentImage.sprite = null;
             m_contentNameText.text = string.Empty;
@@ -61,6 +62,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         else
         {
             SetSlotColor ( m_occupiedColor );
+            m_slotImage.fillCenter = true;
             m_contentImage.enabled = true;
             m_contentImage.sprite = slot.PlayerItem.Image;
             m_contentImage.color = Constants.RarityToColor ( slot.PlayerItem.Rarity );
