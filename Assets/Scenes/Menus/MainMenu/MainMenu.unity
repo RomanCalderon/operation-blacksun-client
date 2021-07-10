@@ -47794,7 +47794,7 @@ PrefabInstance:
     - target: {fileID: 114802102520354430, guid: 449daff6ead1df9439a51e268358b21a,
         type: 3}
       propertyPath: onReady.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114802102520354430, guid: 449daff6ead1df9439a51e268358b21a,
         type: 3}
@@ -47820,11 +47820,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onReadyInverse.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 29009975}
     - target: {fileID: 114802102520354430, guid: 449daff6ead1df9439a51e268358b21a,
         type: 3}
       propertyPath: onReadyInverse.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: set_interactable
       objectReference: {fileID: 0}
     - target: {fileID: 114802102520354430, guid: 449daff6ead1df9439a51e268358b21a,
         type: 3}
