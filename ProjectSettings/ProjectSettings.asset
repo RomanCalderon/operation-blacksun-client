@@ -714,7 +714,7 @@ PlayerSettings:
   cloudProjectId: db417460-2323-4c3a-98eb-6f63e15f6ca0
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: operation-blacksun-client-win
+  projectName: operation-blacksun-client
   organizationId: silver-dog-games
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
