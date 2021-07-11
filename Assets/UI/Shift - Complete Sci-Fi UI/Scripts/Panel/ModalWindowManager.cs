@@ -64,6 +64,12 @@ namespace Michsky.UI.Shift
             StartCoroutine("DisableWindow");
         }
 
+        public void SetTextValues ( string titleText,  string descriptionText )
+        {
+            this.titleText = titleText;
+            this.descriptionText = descriptionText;
+        }
+
         IEnumerator DisableWindow()
         {
             yield return new WaitForSeconds(0.5f);

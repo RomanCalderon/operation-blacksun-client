@@ -41,5 +41,11 @@ namespace Michsky.UI.Shift
                 image2.sprite = secondImage;
             }
         }
+
+        public void SetTextValues ( string titleText, string descriptionText )
+        {
+            this.titleText.text = buttonTitle = titleText;
+            this.descriptionText.text = buttonDescription = descriptionText;
+        }
     }
 }
