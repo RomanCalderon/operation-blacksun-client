@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Michsky.UI.Shift
 {
@@ -40,6 +41,7 @@ namespace Michsky.UI.Shift
             public string panelName;
             public GameObject panelObject;
             public GameObject buttonObject;
+            public UnityEvent onActive;
         }
 
         void OnEnable()
@@ -74,6 +76,7 @@ namespace Michsky.UI.Shift
                 if (i != currentPanelIndex)
                     panels[i].panelObject.SetActive(false);
             }
+            panels [ currentPanelIndex ].onActive?.Invoke ();
         }
 
         public void OpenFirstTab()
@@ -104,6 +107,7 @@ namespace Michsky.UI.Shift
                 currentPanelIndex = newPanelIndex;
                 nextPanel = panels[currentPanelIndex].panelObject;
                 nextPanel.SetActive(true);
+                panels [ currentPanelIndex ].onActive?.Invoke ();
 
                 currentPanelAnimator = currentPanel.GetComponent<Animator>();
                 nextPanelAnimator = nextPanel.GetComponent<Animator>();
@@ -135,6 +139,7 @@ namespace Michsky.UI.Shift
                 currentButton = panels[currentButtonIndex].buttonObject;
                 nextButton = panels[currentButtonIndex + 1].buttonObject;
                 currentPanel.gameObject.SetActive(true);
+                panels [ currentPanelIndex ].onActive?.Invoke ();
 
                 currentPanelAnimator = currentPanel.GetComponent<Animator>();
                 currentButtonAnimator = currentButton.GetComponent<Animator>();
@@ -164,6 +169,7 @@ namespace Michsky.UI.Shift
                 currentButton = panels[currentButtonIndex].buttonObject;
                 nextButton = panels[currentButtonIndex - 1].buttonObject;
                 currentPanel.gameObject.SetActive(true);
+                panels [ currentPanelIndex ].onActive?.Invoke ();
 
                 currentPanelAnimator = currentPanel.GetComponent<Animator>();
                 currentButtonAnimator = currentButton.GetComponent<Animator>();
