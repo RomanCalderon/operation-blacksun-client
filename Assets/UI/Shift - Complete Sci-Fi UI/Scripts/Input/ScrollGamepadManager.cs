@@ -7,6 +7,7 @@ namespace Michsky.UI.Shift
     {
         [Header("Settings")]
         public float changeValue = 0.05f;
+        public bool debugDisable = true;
         Scrollbar scrollbarObject;
 
         [Header("Input")]
@@ -21,6 +22,8 @@ namespace Michsky.UI.Shift
 
         void Update()
         {
+            if ( debugDisable ) return;
+
             if (scrollbarObject != null)
             {
                 float h = Input.GetAxis(inputAxis);

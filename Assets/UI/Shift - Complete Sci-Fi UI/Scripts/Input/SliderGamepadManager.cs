@@ -7,6 +7,7 @@ namespace Michsky.UI.Shift
     {
         [Header("Slider")]
         public float changeValue = 0.5f;
+        public bool debugDisable = true;
         Slider sliderObject;
 
         [Header("Input")]
@@ -20,6 +21,8 @@ namespace Michsky.UI.Shift
 
         void Update()
         {
+            if ( debugDisable ) return;
+
             if (sliderObject != null)
             {
                 float h = Input.GetAxis(horizontalAxis);
