@@ -79,30 +79,6 @@ public class UIManager : MonoBehaviour
     #region Button Callbacks
 
     /// <summary>
-    /// Attempts to connect to a game server with a specified IP adress.
-    /// </summary>
-    public void ConnectToServer ()
-    {
-        string serverIPAddress = m_serverIPField.text; //Client.instance.ip;
-        Match match = Regex.Match ( serverIPAddress, @"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b" );
-        if ( match.Success )
-        {
-            Debug.Log ( $"Valid IP address: {serverIPAddress}" );
-            serverIPAddress = match.Value;
-            PlayerPrefs.SetString ( USERNAME_PLAYERPREF, Username = m_usernameField.text );
-            PlayerPrefs.SetString ( SERVER_IP_PLAYERPREF, ServerIP = serverIPAddress );
-        }
-        else
-        {
-            Debug.LogError ( "Invalid IP address." );
-            return;
-        }
-
-        // Attempt to connect to the server
-        Client.instance.ConnectToServer ( serverIPAddress );
-    }
-
-    /// <summary>
     /// Spawns the player into the scene.
     /// </summary>
     public void SpawnPlayer ()
@@ -110,7 +86,7 @@ public class UIManager : MonoBehaviour
         // Hide player loadout/spawn view
         TransitionUIState ( States.NONE );
 
-        ClientSend.SpawnPlayer ( Username );
+        ClientSend.SpawnPlayer ( Client.instance.myUsername );
     }
 
     #endregion
@@ -155,7 +131,7 @@ public class UIManager : MonoBehaviour
                 m_serverConnectButtonText.text = SERVER_CONNECT_LABEL;
                 break;
             case States.SERVER_CONNECTING:
-                serverConnectView.SetActive ( true );
+                serverConnectView.SetActive ( false );
                 m_usernameField.interactable = false;
                 m_serverConnectButton.interactable = false;
                 m_serverConnectButtonText.text = SERVER_CONNECTING_LABEL;

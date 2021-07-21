@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WebServiceCommunications;
+using Payloads;
 
 [RequireComponent ( typeof ( WebServiceCommunication ) )]
 [RequireComponent ( typeof ( ServerBrowserView ) )]

@@ -11177,42 +11177,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 595646715}
   m_CullTransparentMesh: 0
---- !u!84 &603423113
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 3
-  m_Width: 2048
-  m_Height: 2048
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthFormat: 2
-  m_ColorFormat: 4
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 1
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &610985739 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 136518, guid: 35277ee4b65d54d4199c4e0e48053745,
@@ -23564,7 +23528,7 @@ MonoBehaviour:
     m_Center: {x: 0, y: 300, z: 0}
     m_Extent: {x: 500, y: 300, z: 500}
   RenderCamera: {fileID: 0}
-  CameraRenderTexture: {fileID: 603423113}
+  CameraRenderTexture: {fileID: 0}
   _isBusy: 0
 --- !u!4 &1658696388
 Transform:
@@ -23589,6 +23553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1664156214}
+  - component: {fileID: 1664156216}
   - component: {fileID: 1664156213}
   - component: {fileID: 1664156215}
   m_Layer: 0
@@ -23637,6 +23602,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3d935647b6aacc408697410932c2309, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1664156216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664156212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8ed22f95b293d4ead941373ad83624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!850595691 &1696162684

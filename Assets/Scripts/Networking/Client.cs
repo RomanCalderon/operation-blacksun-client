@@ -45,6 +45,7 @@ public class Client : MonoBehaviour
     public string ip { get; private set; } = LOCAL_IP_ADDRESS;
     public int port = 26950;
     public int myId { get; private set; } = 0;
+    public string myUsername { get; private set; } = string.Empty;
 
     public TCP tcp;
     public UDP udp;
@@ -113,9 +114,10 @@ public class Client : MonoBehaviour
     }
 
     /// <summary>Attempts to connect to the server.</summary>
-    public void ConnectToServer ( string ipAddress )
+    public void ConnectToServer ( string ip, ushort port )
     {
-        ip = ipAddress;
+        this.ip = ip;
+        this.port = port;
 
         tcp = new TCP ();
         udp = new UDP ();
@@ -401,6 +403,9 @@ public class Client : MonoBehaviour
     public void SetClientId ( int id )
     {
         myId = id;
+
+        // DEBUG
+        myUsername = "PLAYER " + myId;
     }
 
     #endregion
@@ -466,6 +471,8 @@ public class Client : MonoBehaviour
 
     #endregion
 
+    #region Disconnect
+
     /// <summary>Disconnects from the server and stops all network traffic.</summary>
     private void Disconnect ()
     {
@@ -481,4 +488,6 @@ public class Client : MonoBehaviour
             UnityEngine.Debug.Log ( "Disconnected from server." );
         }
     }
+
+    #endregion
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Payloads;
 
 /// <summary>
 /// Controller for loading and transitioning between scenes.

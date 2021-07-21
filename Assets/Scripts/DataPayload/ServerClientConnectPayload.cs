@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ServerClientConnectPayload : LazySingleton<ServerClientConnectPayload>
+namespace Payloads
 {
-    public string Ip { get; set; }
+    public class ServerClientConnectPayload : LazySingleton<ServerClientConnectPayload>
+    {
+        public string Ip { get; set; }
 
-    public ushort Port { get; set; }
+        public ushort Port { get; set; }
+    }
 }
