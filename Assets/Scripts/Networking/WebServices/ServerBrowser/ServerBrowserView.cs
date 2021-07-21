@@ -29,7 +29,7 @@ public class ServerBrowserView : MonoBehaviour
         ClearContainer ();
     }
 
-    public void LoadServerList ( ServerBrowser.GameServerCollection gameServerCollection, Action<string, ushort> connectCallback )
+    public void LoadServerList ( ServerBrowser.GameServerCollection gameServerCollection, Action<string, ushort, int> connectCallback )
     {
         ClearContainer ();
 
@@ -55,10 +55,10 @@ public class ServerBrowserView : MonoBehaviour
         }
     }
 
-    private void ServerButtonClicked ( ServerBrowser.GameServer gameServer, Action<string, ushort> connectCallback )
+    private void ServerButtonClicked ( ServerBrowser.GameServer gameServer, Action<string, ushort, int> connectCallback )
     {
         m_selectedServerModal.ModalWindowIn ();
-        m_connectButton.onClick.AddListener ( () => connectCallback?.Invoke ( gameServer.ip, gameServer.port ) );
+        m_connectButton.onClick.AddListener ( () => connectCallback?.Invoke ( gameServer.ip, gameServer.port, gameServer.clientSceneIndex ) );
         m_cancelButton.onClick.AddListener ( () => m_connectButton.onClick.RemoveAllListeners() );
     }
 

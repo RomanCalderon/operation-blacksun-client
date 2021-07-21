@@ -87,8 +87,16 @@ public class ServerBrowser : MonoBehaviour
         m_view.LoadServerList ( m_gameServerCollection, ConnectToServer );
     }
 
-    private void ConnectToServer ( string ip, ushort port )
+    private void ConnectToServer ( string ip, ushort port, int clientSceneIndex )
     {
         Debug.Log ( $"Connect to server: {ip}:{port}" );
+
+        TransitionToGameScene ( clientSceneIndex );
+    }
+
+    private void TransitionToGameScene ( int clientSceneIndex )
+    {
+        // Transition to game scene
+        SceneController.Instance.LoadScene ( clientSceneIndex );
     }
 }
