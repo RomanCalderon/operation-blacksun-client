@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class SceneControllerView : MonoBehaviour
 {
-    [Header ( "General" )]
     [SerializeField, Range ( 0.01f, 8f )]
     private float m_fadeInDuration = 0.1f, m_fadeOutDuration = 0.1f;
+    [SerializeField]
+    private float m_postFadeInDelay = 0.5f, m_postFadeOutDelay = 0.5f;
 
     [Header ( "View" )]
     [SerializeField]
@@ -29,6 +30,11 @@ public class SceneControllerView : MonoBehaviour
         StartCoroutine ( FadeOutEnum ( onFadeOut ) );
     }
 
+    public void ShowFade ( bool value )
+    {
+        m_canvasFader.gameObject.SetActive ( value );
+    }
+
     #region Coroutines
 
     private IEnumerator FadeInEnum ( Action onFadeIn )
@@ -41,6 +47,7 @@ public class SceneControllerView : MonoBehaviour
             m_canvasFader.alpha += Time.deltaTime / m_fadeInDuration;
             yield return null;
         }
+        yield return new WaitForSeconds ( m_postFadeInDelay );
         m_canvasFader.gameObject.SetActive ( false );
         onFadeIn?.Invoke ();
     }
@@ -55,6 +62,7 @@ public class SceneControllerView : MonoBehaviour
             m_canvasFader.alpha -= Time.deltaTime / m_fadeOutDuration;
             yield return null;
         }
+        yield return new WaitForSeconds ( m_postFadeOutDelay );
         m_canvasFader.gameObject.SetActive ( false );
         onFadeOut?.Invoke ();
     }

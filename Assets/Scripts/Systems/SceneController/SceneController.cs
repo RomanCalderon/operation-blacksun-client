@@ -93,7 +93,7 @@ public class SceneController : PersistentLazySingleton<SceneController>
 
     private void OnSceneLoaded ( Scene scene, LoadSceneMode mode )
     {
-        m_view.FadeOut ( null );
+        m_view.ShowFade ( false );
 
         // Keep track of the active scene index
         m_activeSceneIndex = SceneManager.GetActiveScene ().buildIndex;

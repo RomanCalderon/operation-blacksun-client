@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Menus/MainMenu/MainMenu.unity
     guid: 7ea10c49b9cb229488c41a096bb11b9f
   - enabled: 1
-    path: Assets/Scenes/SceneLoader/SceneLoader.unity
+    path: Assets/Scenes/Menus/SceneLoader/SceneLoader.unity
     guid: df86463a6a3ac4a44bebdac134532269
   - enabled: 1
     path: Assets/Scenes/TrainingFacility/Main.unity
