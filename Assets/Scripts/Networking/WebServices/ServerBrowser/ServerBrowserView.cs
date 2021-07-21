@@ -29,7 +29,7 @@ public class ServerBrowserView : MonoBehaviour
         ClearContainer ();
     }
 
-    public void LoadServerList ( ServerBrowser.GameServerCollection gameServerCollection, Action<string, short> connectCallback )
+    public void LoadServerList ( ServerBrowser.GameServerCollection gameServerCollection, Action<string, ushort> connectCallback )
     {
         ClearContainer ();
 
@@ -38,24 +38,24 @@ public class ServerBrowserView : MonoBehaviour
             Debug.LogError ( "GameServerCollection is null." );
             return;
         }
-        if ( gameServerCollection._embedded.gameServerList == null || gameServerCollection._embedded.gameServerList.Length == 0 )
+        if ( gameServerCollection.gameServerList == null || gameServerCollection.gameServerList.Length == 0 )
         {
             // No game servers
             return;
         }
 
-        foreach ( ServerBrowser.GameServer gameServer in gameServerCollection._embedded.gameServerList )
+        foreach ( ServerBrowser.GameServer gameServer in gameServerCollection.gameServerList )
         {
             ServerButton serverButton = Instantiate ( m_serverButtonPrefab, m_serverButtonContainer );
             string name = gameServer.name;
-            short playerCount = short.Parse ( gameServer.playerCount );
-            short maxPlayers = short.Parse ( gameServer.maxPlayers );
+            int playerCount = gameServer.playerCount;
+            int maxPlayers = gameServer.maxPlayers;
             serverButton.Initialize ( name, playerCount, maxPlayers );
             serverButton.button.onClick.AddListener ( () => ServerButtonClicked ( gameServer, connectCallback ) );
         }
     }
 
-    private void ServerButtonClicked ( ServerBrowser.GameServer gameServer, Action<string, short> connectCallback )
+    private void ServerButtonClicked ( ServerBrowser.GameServer gameServer, Action<string, ushort> connectCallback )
     {
         m_selectedServerModal.ModalWindowIn ();
         m_connectButton.onClick.AddListener ( () => connectCallback?.Invoke ( gameServer.ip, gameServer.port ) );

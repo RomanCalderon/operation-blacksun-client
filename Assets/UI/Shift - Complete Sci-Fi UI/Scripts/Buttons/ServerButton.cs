@@ -20,7 +20,7 @@ public class ServerButton : MonoBehaviour
         button = GetComponent<Button> ();
     }
 
-    public void Initialize ( string name, short playerCount, short maxPlayers )
+    public void Initialize ( string name, int playerCount, int maxPlayers )
     {
         m_titleText.text = name;
         m_playersText.text = playerCount + "/" + maxPlayers;

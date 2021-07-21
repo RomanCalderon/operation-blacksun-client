@@ -54,6 +54,7 @@ namespace WebServiceCommunications
         {
             Debug.Log ( $"GET uri={uri}" );
             UnityWebRequest request = new UnityWebRequest ( uri, "GET" );
+            request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey ();
             request.downloadHandler = new DownloadHandlerBuffer ();
             request.SetRequestHeader ( "Accept", "*/*" );
 
@@ -84,6 +85,7 @@ namespace WebServiceCommunications
         {
             Debug.Log ( $"POST uri={uri}\nrequest={requestJson}" );
             UnityWebRequest request = new UnityWebRequest ( uri, "POST" );
+            request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey ();
             byte [] bodyRaw = Encoding.UTF8.GetBytes ( requestJson );
             request.uploadHandler = new UploadHandlerRaw ( bodyRaw );
             request.downloadHandler = new DownloadHandlerBuffer ();
@@ -117,6 +119,7 @@ namespace WebServiceCommunications
         {
             Debug.Log ( $"PUT uri={uri}\nrequest={requestJson}" );
             UnityWebRequest request = new UnityWebRequest ( uri, "PUT" );
+            request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey ();
             byte [] bodyRaw = Encoding.UTF8.GetBytes ( requestJson );
             request.uploadHandler = new UploadHandlerRaw ( bodyRaw );
             request.downloadHandler = new DownloadHandlerBuffer ();
@@ -150,6 +153,7 @@ namespace WebServiceCommunications
         {
             Debug.Log ( $"DELETE uri={uri}" );
             UnityWebRequest request = new UnityWebRequest ( uri, "DELETE" );
+            request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey ();
 
             yield return request.SendWebRequest ();
 
