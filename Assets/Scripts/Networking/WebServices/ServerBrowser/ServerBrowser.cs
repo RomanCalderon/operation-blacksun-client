@@ -91,6 +91,10 @@ public class ServerBrowser : MonoBehaviour
     {
         Debug.Log ( $"Connect to server: {ip}:{port}" );
 
+        // Send ip and port to payload
+        ServerClientConnectPayload.Instance.Ip = ip;
+        ServerClientConnectPayload.Instance.Port = port;
+
         TransitionToGameScene ( clientSceneIndex );
     }
 

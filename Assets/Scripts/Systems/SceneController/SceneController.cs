@@ -22,8 +22,11 @@ public class SceneController : PersistentLazySingleton<SceneController>
 
     #endregion
 
+    // Properties
     public float SceneLoadProgress { get => m_sceneLoadOperation != null ? m_sceneLoadOperation.progress : 0; }
+    public ServerClientConnectPayload Payload = null;
 
+    // View
     private SceneControllerView m_view = null;
 
     [SerializeField]
@@ -31,6 +34,7 @@ public class SceneController : PersistentLazySingleton<SceneController>
 
     private int m_activeSceneIndex = 0;
     private AsyncOperation m_sceneLoadOperation = null;
+
 
     private void OnEnable ()
     {
@@ -78,11 +82,22 @@ public class SceneController : PersistentLazySingleton<SceneController>
             return;
         }
 
+        // Get all payload objects and parent to this controller
+        ProcessPayload ();
+
         // Store target scene index
         m_sceneLoadConfiguration.TargetScene = targetSceneIndex;
 
         // Start fade in
         m_view.FadeIn ( TransitionToLoader );
+    }
+
+    private void ProcessPayload ()
+    {
+        if ( Payload != null )
+        {
+            Payload.transform.parent = transform;
+        }
     }
 
     private void TransitionToLoader ()
