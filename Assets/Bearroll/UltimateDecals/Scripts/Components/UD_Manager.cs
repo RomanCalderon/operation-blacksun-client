@@ -20,6 +20,8 @@ namespace Bearroll.UltimateDecals {
 
 		public DeferredCullingManager deferredCullingManager { get; private set; }
 
+		public bool dontDestroyOnLoad = false;
+
 		public int maxPermanentMarks = 256;
 
 		public bool perDecalLightProbes = true;
@@ -57,7 +59,7 @@ namespace Bearroll.UltimateDecals {
 		}
 
 		void Awake() {
-			if (Application.isPlaying) {
+			if ( Application.isPlaying && dontDestroyOnLoad ) {
 				DontDestroyOnLoad(gameObject);
 			}
 		}
@@ -66,7 +68,7 @@ namespace Bearroll.UltimateDecals {
 
 			if (instance != null && instance != this) {
 				initError = UD_Error.SecondInstance;
-				enabled = false;
+				Destroy ( gameObject );
 				return;
 			}
 

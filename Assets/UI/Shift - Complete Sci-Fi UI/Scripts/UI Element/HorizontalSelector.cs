@@ -39,12 +39,15 @@ namespace Michsky.UI.Shift
             public UnityEvent onValueChanged = new UnityEvent();
         }
 
-        void Start()
+        private void Awake ()
         {
-            selectorAnimator = gameObject.GetComponent<Animator>();
-            label = transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            labeHelper = transform.Find("Text Helper").GetComponent<TextMeshProUGUI>();
+            selectorAnimator = gameObject.GetComponent<Animator> ();
+            label = transform.Find ( "Text" ).GetComponent<TextMeshProUGUI> ();
+            labeHelper = transform.Find ( "Text Helper" ).GetComponent<TextMeshProUGUI> ();
+        }
 
+        private void Start()
+        {
             if (saveValue == true)
             {
                 if (PlayerPrefs.HasKey(selectorTag + "HSelectorValue") == true)
