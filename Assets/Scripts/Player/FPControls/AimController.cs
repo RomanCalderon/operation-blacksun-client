@@ -18,7 +18,7 @@ public class AimController : MonoBehaviour
         }
         set
         {
-            if ( value == false && m_aimState == true )
+            if ( PauseMenuManager.Instance.Pause || ( value == false && m_aimState == true ) )
             {
                 AimState = false;
             }

@@ -71,9 +71,11 @@ public class InventoryManager : MonoBehaviour
 
     private void Update ()
     {
-        if ( IsInteractable )
+        if ( Input.GetKeyDown ( KeyCode.Tab ) )
         {
-            if ( Input.GetKeyDown ( KeyCode.Tab ) )
+            IsInteractable = !PauseMenuManager.Instance.Pause;
+
+            if ( IsInteractable )
             {
                 // Toggle display mode
                 IsDisplayed = !IsDisplayed;

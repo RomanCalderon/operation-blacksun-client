@@ -6,6 +6,14 @@ public class MotionSway : MonoBehaviour
 {
     private const float SWAY_STRENGTH = 0.2f;
 
+    public bool IsInteractable
+    {
+        get
+        {
+            return !PauseMenuManager.Instance.Pause && !InventoryManager.Instance.IsDisplayed && !m_isAiming;
+        }
+    }
+
     [SerializeField]
     private PlayerMovementController m_playerMovementController = null;
 
@@ -51,7 +59,7 @@ public class MotionSway : MonoBehaviour
     private void Update ()
     {
         float deltaTime = Time.deltaTime;
-        if ( !InventoryManager.Instance.IsDisplayed && !m_isAiming )
+        if ( IsInteractable )
         {
             UpdateSway ( Input.GetAxis ( "Mouse X" ), Input.GetAxis ( "Mouse Y" ), deltaTime );
         }

@@ -74,7 +74,10 @@ public class WeaponsController : MonoBehaviour
     {
         get
         {
-            return !m_player.IsDead && ActiveWeapon != null;
+            return !m_player.IsDead
+                && ActiveWeapon != null
+                && !InventoryManager.Instance.IsDisplayed
+                && !PauseMenuManager.Instance.Pause;
         }
     }
     public bool CanShootWeapon
@@ -161,7 +164,7 @@ public class WeaponsController : MonoBehaviour
 
     private void WeaponInteractions ()
     {
-        if ( !CanUseWeapons || InventoryManager.Instance.IsDisplayed )
+        if ( !CanUseWeapons )
         {
             return;
         }
@@ -197,7 +200,7 @@ public class WeaponsController : MonoBehaviour
 
     private void CheckWeaponSwitchInput ()
     {
-        if ( m_player.IsDead || InventoryManager.Instance.IsDisplayed )
+        if ( !CanUseWeapons )
         {
             return;
         }

@@ -63,7 +63,7 @@ public class InteractionController : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate ()
     {
-        if ( CanInteract = !InventoryManager.Instance.IsDisplayed )
+        if ( CanInteract = !InventoryManager.Instance.IsDisplayed || !PauseMenuManager.Instance.Pause )
         {
             LookForTarget ();
         }
