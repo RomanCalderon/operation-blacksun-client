@@ -70,6 +70,27 @@ public class SceneController : PersistentLazySingleton<SceneController>
     /// Immediately transitions application to loader scene to begin loading scene with <paramref name="targetSceneIndex"/>.
     /// </summary>
     /// <param name="targetSceneIndex"></param>
+    public void LoadScene ( string targetSceneName )
+    {
+        if ( string.IsNullOrEmpty ( targetSceneName ) )
+        {
+            Debug.LogError ( $"Failed to load scene. targetSceneName is null or empty." );
+            return;
+        }
+        Scene targetScene = SceneManager.GetSceneByName ( targetSceneName );
+        if ( targetScene == null || targetScene.buildIndex == -1 )
+        {
+            Debug.LogError ( $"Failed to load scene with name {targetSceneName}, build index {targetScene.buildIndex}. " +
+                $"Check if the scene is added to the Build Settings." );
+            return;
+        }
+        LoadScene ( targetScene.buildIndex );
+    }
+
+    /// <summary>
+    /// Immediately transitions application to loader scene to begin loading scene with <paramref name="targetSceneIndex"/>.
+    /// </summary>
+    /// <param name="targetSceneIndex"></param>
     public void LoadScene ( int targetSceneIndex )
     {
         if ( m_activeSceneIndex == targetSceneIndex )

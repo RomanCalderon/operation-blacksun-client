@@ -48,7 +48,7 @@ public class PersistentLazySingleton<T> : MonoBehaviour where T : MonoBehaviour
         }
         else if ( instance != this ) // This is the other instance and we should destroy it
         {
-            Destroy ( this );
+            Destroy ( gameObject );
         }
     }
 

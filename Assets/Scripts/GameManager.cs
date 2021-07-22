@@ -32,13 +32,35 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Adds a new PlayerManager to players for the new player that connected.
     /// </summary>
-    /// <param name="_id">The player's id.</param>
-    /// <param name="_username">The player's username.</param>
-    public void PlayerConnected ( int _id, string _username )
+    /// <param name="id">The player's id.</param>
+    /// <param name="username">The player's username.</param>
+    public void AddPlayer ( int id, string username )
     {
-        Debug.Log ( $"Player [{_username}][{_id}] has joined the server." );
-        PlayerManager _playerManager = new PlayerManager ( _id, _username );
-        players.Add ( _id, _playerManager );
+        if ( players.ContainsKey ( id ) )
+        {
+            RemovePlayer ( id );
+        }
+        Debug.Log ( $"[{username}][{id}] has joined the game." );
+
+        PlayerManager _playerManager = new PlayerManager ( id, username );
+        players.Add ( id, _playerManager );
+    }
+
+    public void RemovePlayer ( int id )
+    {
+        if ( !players.ContainsKey ( id ) )
+        {
+            Debug.LogError ( $"Dictionary does not contain player with id [{id}]" );
+            return;
+        }
+        if ( players [ id ].Player != null )
+        {
+            Destroy ( players [ id ].Player.gameObject );
+        }
+        if ( !players.Remove ( id ) )
+        {
+            Debug.LogError ( $"Error removing player [{id}] from the dictionary." );
+        }
     }
 
     /// <summary>Spawns a player.</summary>

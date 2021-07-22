@@ -31,7 +31,7 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt ();
         string _username = _packet.ReadString ();
 
-        GameManager.instance.PlayerConnected ( _id, _username );
+        GameManager.instance.AddPlayer ( _id, _username );
     }
 
     public static void Ping ( Packet _packet )
@@ -117,11 +117,7 @@ public class ClientHandle : MonoBehaviour
     {
         int _id = _packet.ReadInt ();
 
-        if ( GameManager.players [ _id ].Player != null )
-        {
-            Destroy ( GameManager.players [ _id ].Player.gameObject );
-        }
-        GameManager.players.Remove ( _id );
+        GameManager.instance.RemovePlayer ( _id );
     }
 
     public static void PlayerHealth ( Packet _packet )

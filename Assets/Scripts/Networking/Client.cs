@@ -474,7 +474,7 @@ public class Client : MonoBehaviour
     #region Disconnect
 
     /// <summary>Disconnects from the server and stops all network traffic.</summary>
-    private void Disconnect ()
+    public void Disconnect ()
     {
         if ( isConnected )
         {

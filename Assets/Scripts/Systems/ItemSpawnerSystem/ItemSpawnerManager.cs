@@ -1,13 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemSpawnerManager : PersistentLazySingleton<ItemSpawnerManager>
+public class ItemSpawnerManager : LazySingleton<ItemSpawnerManager>
 {
-    public static Dictionary<int, ItemSpawner> ItemSpawners = new Dictionary<int, ItemSpawner> ();
+    public static Dictionary<int, ItemSpawner> ItemSpawners = null;
 
     [SerializeField]
     private GameObject m_itemSpawnerPrefab = null;
 
+
+    protected override void Awake ()
+    {
+        base.Awake ();
+
+        ItemSpawners = new Dictionary<int, ItemSpawner> ();
+    }
 
     public void CreateItemSpawner ( byte [] data )
     {

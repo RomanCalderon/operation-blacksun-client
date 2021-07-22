@@ -15,11 +15,11 @@ public class LazySingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if ( singletonDestroyed ) // If the app is closing and we already destroyed the instance, don't create a new one
-            {
-                Debug.LogWarningFormat ( "[Singleton] Singleton was already destroyed by quiting game. Returning null" );
-                return null;
-            }
+            //if ( singletonDestroyed ) // If the app is closing and we already destroyed the instance, don't create a new one
+            //{
+            //    Debug.LogWarningFormat ( "[Singleton] Singleton was already destroyed by quiting game. Returning null" );
+            //    return null;
+            //}
 
             if ( !instance ) // If there is no object already, we should create new one
             {
@@ -38,13 +38,13 @@ public class LazySingleton<T> : MonoBehaviour where T : MonoBehaviour
     protected virtual void Awake ()
     {
         // If we don't have a reference to instance and we didn't destroy instance yet then this object will take control
-        if ( instance == null && !singletonDestroyed )
+        if ( instance == null /*&& !singletonDestroyed*/ )
         {
             instance = this as T;
         }
         else if ( instance != this ) // This is the other instance and we should destroy it
         {
-            Destroy ( this );
+            Destroy ( gameObject );
         }
     }
 
@@ -55,6 +55,7 @@ public class LazySingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         if ( instance != this ) // Skip if instance is other than this object
         {
+            Debug.Log ( $"skip OnDestroy [{instance.name}]" );
             return;
         }
 
