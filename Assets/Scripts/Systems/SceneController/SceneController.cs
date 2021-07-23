@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -140,6 +140,40 @@ public class SceneController : PersistentLazySingleton<SceneController>
             // Begin loading the target scene
             m_sceneLoadOperation = SceneManager.LoadSceneAsync ( m_sceneLoadConfiguration.TargetScene );
         }
+    }
+
+    #endregion
+
+    #region Screen Fading
+
+    public void FadeIn ()
+    {
+        m_view.FadeIn ( null );
+    }
+
+    public void FadeOut ()
+    {
+        m_view.FadeOut ( null );
+    }
+
+    public void FadeIn ( float fadeDuration )
+    {
+        m_view.FadeIn ( fadeDuration );
+    }
+
+    public void FadeOut ( float fadeDuration )
+    {
+        m_view.FadeOut ( fadeDuration );
+    }
+
+    public void FadeIn ( Action onFadeIn )
+    {
+        m_view.FadeIn ( onFadeIn );
+    }
+
+    public void FadeOut ( Action onFadeOut )
+    {
+        m_view.FadeOut ( onFadeOut );
     }
 
     #endregion

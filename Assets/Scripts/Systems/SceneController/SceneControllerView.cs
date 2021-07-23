@@ -20,14 +20,24 @@ public class SceneControllerView : MonoBehaviour
         m_canvasFader.gameObject.SetActive ( false );
     }
 
+    public void FadeIn ( float fadeDuration )
+    {
+        StartCoroutine ( FadeInEnum ( null, fadeDuration ) );
+    }
+
+    public void FadeOut ( float fadeDuration )
+    {
+        StartCoroutine ( FadeOutEnum ( null, fadeDuration ) );
+    }
+
     public void FadeIn ( Action onFadeIn )
     {
-        StartCoroutine ( FadeInEnum ( onFadeIn ) );
+        StartCoroutine ( FadeInEnum ( onFadeIn, m_fadeInDuration ) );
     }
 
     public void FadeOut ( Action onFadeOut )
     {
-        StartCoroutine ( FadeOutEnum ( onFadeOut ) );
+        StartCoroutine ( FadeOutEnum ( onFadeOut, m_fadeOutDuration ) );
     }
 
     public void ShowFade ( bool value )
@@ -37,14 +47,14 @@ public class SceneControllerView : MonoBehaviour
 
     #region Coroutines
 
-    private IEnumerator FadeInEnum ( Action onFadeIn )
+    private IEnumerator FadeInEnum ( Action onFadeIn, float fadeDuration )
     {
         m_canvasFader.alpha = 0f;
         m_canvasFader.gameObject.SetActive ( true );
 
         while ( m_canvasFader.alpha < 1f )
         {
-            m_canvasFader.alpha += Time.deltaTime / m_fadeInDuration;
+            m_canvasFader.alpha += Time.deltaTime / fadeDuration;
             yield return null;
         }
         yield return new WaitForSeconds ( m_postFadeInDelay );
@@ -52,14 +62,14 @@ public class SceneControllerView : MonoBehaviour
         onFadeIn?.Invoke ();
     }
 
-    private IEnumerator FadeOutEnum ( Action onFadeOut )
+    private IEnumerator FadeOutEnum ( Action onFadeOut, float fadeDuration )
     {
         m_canvasFader.alpha = 1f;
         m_canvasFader.gameObject.SetActive ( true );
 
         while ( m_canvasFader.alpha > 0f )
         {
-            m_canvasFader.alpha -= Time.deltaTime / m_fadeOutDuration;
+            m_canvasFader.alpha -= Time.deltaTime / fadeDuration;
             yield return null;
         }
         yield return new WaitForSeconds ( m_postFadeOutDelay );
