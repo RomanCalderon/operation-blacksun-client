@@ -129,7 +129,7 @@ namespace build_manager
             }
 
             // Build name preview
-            m_buildName = m_productName + "-" + m_buildVersion;
+            m_buildName = m_productName;
 
             // Build button
             if ( GUILayout.Button ( $"Save and Build\n[{m_buildName}]", GUILayout.Height ( 40 ) ) )
