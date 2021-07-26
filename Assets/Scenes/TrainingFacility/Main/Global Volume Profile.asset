@@ -138,7 +138,6 @@ MonoBehaviour:
   - {fileID: -5599211136414595913}
   - {fileID: 4669433239265482665}
   - {fileID: -1507213503385877886}
-  - {fileID: 8896057430077346000}
 --- !u!114 &2573591360464670453
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -155,7 +154,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   shadows:
     m_OverrideState: 1
-    m_Value: {r: 0.345, g: 0.345, b: 0.345, a: 1}
+    m_Value: {r: 0.36200002, g: 0.36200002, b: 0.36200002, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
@@ -195,12 +194,12 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.358
+    m_Value: 0.436
     min: 0
     max: 1
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.41
+    m_Value: 0.414
     min: 0.01
     max: 1
   rounded:
@@ -222,7 +221,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.02
+    m_Value: 0.028
     min: 0
     max: 1
 --- !u!114 &4669433239265482665
@@ -301,27 +300,3 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
     min: 0
---- !u!114 &8896057430077346000
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb60a22f311433c4c962b888d1393f88, type: 3}
-  m_Name: PaniniProjection
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  distance:
-    m_OverrideState: 1
-    m_Value: 0
-    min: 0
-    max: 1
-  cropToFit:
-    m_OverrideState: 1
-    m_Value: 1
-    min: 0
-    max: 1
