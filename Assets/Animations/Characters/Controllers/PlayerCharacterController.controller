@@ -142,7 +142,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: c223f0e128ee53d4aa25c3993c8c2a3f, type: 3}
     m_Threshold: 0.16000001
     m_Position: {x: 0, y: 1}
-    m_TimeScale: 1
+    m_TimeScale: 0.5
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
@@ -150,7 +150,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 1e643de6a02964746bdbdae5fe9d1f97, type: 3}
     m_Threshold: 0.32000002
     m_Position: {x: 1, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.5
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
@@ -158,7 +158,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 5ea7141f4c237964fbf14cf37af2c72a, type: 3}
     m_Threshold: 0.48000002
     m_Position: {x: 0, y: -1}
-    m_TimeScale: 1
+    m_TimeScale: 0.5
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
@@ -166,7 +166,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: a858f0dc8eeb9e549b55dd4b8a959438, type: 3}
     m_Threshold: 0.64000005
     m_Position: {x: -1, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.5
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
@@ -875,16 +875,16 @@ AnimatorState:
   - {fileID: -3158599008323511362}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
+  m_IKOnFeet: 1
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 8127808508783884494}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: MovementSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -1418,6 +1418,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
+  - m_Name: MovementSpeed
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Locomotion Layer
@@ -1438,7 +1444,7 @@ AnimatorController:
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
-    m_SyncedLayerIndex: -1
+    m_SyncedLayerIndex: 0
     m_DefaultWeight: 1
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
@@ -1765,19 +1771,19 @@ AnimatorState:
   - {fileID: 7426620191659393667}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
+  m_IKOnFeet: 1
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: -7932919850041672784}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: MovementSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: MovementSpeed
 --- !u!1107 &2597862601080451579
 AnimatorStateMachine:
   serializedVersion: 6
@@ -2457,7 +2463,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 9e047ee96ac1e1445a14464bccdbe541, type: 3}
     m_Threshold: 0.2
     m_Position: {x: 0, y: 1}
-    m_TimeScale: 1
+    m_TimeScale: 0.13
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
@@ -2465,7 +2471,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 97e6348dcda42d3449b92ad258749f31, type: 3}
     m_Threshold: 0.4
     m_Position: {x: 1, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.15
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
@@ -2473,7 +2479,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 5ea7141f4c237964fbf14cf37af2c72a, type: 3}
     m_Threshold: 0.6
     m_Position: {x: 0, y: -1}
-    m_TimeScale: 1
+    m_TimeScale: 0.3
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
@@ -2481,7 +2487,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 2c55dba2cb496a74392857714a526471, type: 3}
     m_Threshold: 0.8
     m_Position: {x: -1, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.15
     m_CycleOffset: 0
     m_DirectBlendParameter: MovementSpeed
     m_Mirror: 0
