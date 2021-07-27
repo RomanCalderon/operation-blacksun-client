@@ -10,6 +10,8 @@ public class PlayerModelController : MonoBehaviour
     private GameObject m_model = null;
     [SerializeField]
     private Animator m_animator = null;
+    [SerializeField]
+    private float m_minRunSpeed = 4.1f;
 
     [SerializeField]
     private float m_movementTransitionSpeed = 2.0f;
@@ -43,15 +45,13 @@ public class PlayerModelController : MonoBehaviour
             float smoothVerticalMovement = Mathf.Lerp ( currentVerticalMovement, m_targetMovementDirection.y, fixedDeltaTime * m_movementTransitionSpeed );
             m_animator.SetFloat ( "HorizontalMovement", smoothHorizontalMovement );
             m_animator.SetFloat ( "VerticalMovement", smoothVerticalMovement );
+            m_animator.SetFloat ( "MovementSpeed", m_movementSpeed );
 
             // Running
-            m_animator.SetBool ( "IsRunning", m_running );
+            m_animator.SetBool ( "IsRunning", m_running && m_movementSpeed >= m_minRunSpeed );
 
             // Crouching
             m_animator.SetBool ( "IsCrouching", m_crouching );
-            
-            // Crouching
-            m_animator.SetBool ( "IsProning", m_prone );
         }
     }
 
@@ -76,10 +76,5 @@ public class PlayerModelController : MonoBehaviour
     public void SetCrouch ( bool value )
     {
         m_crouching = value;
-    }
-
-    public void SetProne ( bool value )
-    {
-        m_prone = value;
     }
 }

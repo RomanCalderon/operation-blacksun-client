@@ -93,7 +93,11 @@ public class ServerBrowser : MonoBehaviour
         Debug.Log ( $"Connect to server: {ip}:{port}" );
 
         // Send ip and port to payload
+#if UNITY_EDITOR
+        ServerClientConnectPayload.Instance.Ip = "192.168.1.67";
+#else
         ServerClientConnectPayload.Instance.Ip = ip;
+#endif
         ServerClientConnectPayload.Instance.Port = port;
 
         TransitionToGameScene ( clientSceneIndex );
