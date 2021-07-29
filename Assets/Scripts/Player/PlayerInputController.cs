@@ -57,6 +57,7 @@ namespace PlayerInput
         public static bool Aiming { get; private set; } = false;
         public static Vector3 GunDirection { get; private set; }
         public static Vector3 LookDirection { get; private set; }
+        public static float CameraPitch { get; private set; }
         public static bool Interact { get; private set; } = false;
 
         // TODO: Update from KeybindManager
@@ -140,9 +141,10 @@ namespace PlayerInput
             Aiming = aimState;
         }
 
-        public static void SetLookDirection ( Vector3 direction )
+        public static void SetLookDirection ( Vector3 direction, float cameraPitch )
         {
             LookDirection = direction;
+            CameraPitch = cameraPitch;
         }
 
         public static void SetGunDirection ( Vector3 direction )

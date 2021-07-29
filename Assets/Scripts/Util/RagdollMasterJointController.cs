@@ -25,7 +25,7 @@ public class RagdollMasterJointController : MonoBehaviour
     {
         foreach ( RagdollJointController jointController in m_jointControllers )
         {
-            jointController.EnableFollowTarget ( state );
+            jointController.SetFollowTarget ( state );
         }
     }
 

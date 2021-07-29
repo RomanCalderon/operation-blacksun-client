@@ -91,11 +91,12 @@ public class ClientHandle : MonoBehaviour
         int moveInputX = _packet.ReadInt ();
         int moveInputY = _packet.ReadInt ();
         float moveSpeed = _packet.ReadFloat ();
+        float cameraPitch = _packet.ReadFloat ();
         bool _playerRun = _packet.ReadBool ();
         bool _playerCrouch = _packet.ReadBool ();
 
         // Used for visual effects
-        GameManager.players [ _id ].SetMovementValues ( moveInputX, moveInputY, moveSpeed, _playerRun, _playerCrouch );
+        GameManager.players [ _id ].SetMovementValues ( moveInputX, moveInputY, moveSpeed, cameraPitch, _playerRun, _playerCrouch );
     }
 
     public static void PlayerInputProcessed ( Packet _packet )

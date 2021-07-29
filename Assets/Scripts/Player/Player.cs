@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
         else
         {
             // Initialize animator states
-            SetMovementAnimationValues ( 0, 0, 0, false, false );
+            SetMovementAnimationValues ( 0, 0, 0f, 0f, false, false );
         }
     }
 
@@ -139,12 +139,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SetMovementAnimationValues ( int moveInputX, int moveInputY, float moveSpeed, bool runInput, bool crouchInput )
+    public void SetMovementAnimationValues ( int moveInputX, int moveInputY, float moveSpeed, float cameraPitch, bool runInput, bool crouchInput )
     {
         if ( Client.instance.myId != m_id )
         {
             // Eventually this will be executed for the local player as well
-            m_modelController.SetMovementVector ( moveInputX, moveInputY, moveSpeed );
+            m_modelController.SetAnimatorParams ( moveInputX, moveInputY, moveSpeed, cameraPitch );
             m_modelController.SetRun ( runInput );
             m_modelController.SetCrouch ( crouchInput );
         }
