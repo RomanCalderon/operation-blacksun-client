@@ -10,11 +10,21 @@ public class PlayerModelController : MonoBehaviour
     private const int WEAPONS_LAYER_INDEX = 1;
     private const float CHEST_CONSTRAINT_OFFSET_INTERP_MULTIPLIER = 38f;
 
+    // Animator Controller parameter references
+    private const string ANIMATOR_HORIZONTAL_MOVEMENT = "HorizontalMovement";
+    private const string ANIMATOR_VERTICAL_MOVEMENT = "VerticalMovement";
+    private const string ANIMATOR_MOVEMENT_SPEED = "MovementSpeed";
+    private const string ANIMATOR_IS_RUNNING = "IsRunning";
+    private const string ANIMATOR_IS_CROUCHING = "IsCrouching";
+    private const string ANIMATOR_TOGGLE_CROUCH = "ToggleCrouch";
+    private const string ANIMATOR_IS_GROUNDED = "IsGrounded";
+    private const string ANIMATOR_JUMP = "Jump";
+
     #endregion
 
     #region Members
 
-    [SerializeField]
+    [ SerializeField]
     private GameObject m_model = null;
     [SerializeField]
     private Animator m_animator = null;
@@ -36,6 +46,10 @@ public class PlayerModelController : MonoBehaviour
     private float m_crouchInterpDuration = 0.1f;
     [SerializeField, Tooltip ( "Chest IK Target Container rotation interpolation speed" )]
     private float m_chestIKRotationInterpSpeed = 16f;
+    [SerializeField, Tooltip ( "Maximum animation movement speed" )]
+    private float m_maxMoveSpeed = 10f;
+    [SerializeField, Tooltip ( "In-air movement speed" )]
+    private float m_jumpMovementSpeed = 1f;
 
     private Vector2 m_currentMovementDirection = Vector2.zero;
     private Vector2 m_targetMovementDirection = Vector2.zero;
@@ -43,6 +57,9 @@ public class PlayerModelController : MonoBehaviour
     private bool m_running = false;
     private bool m_crouchState = false;
     private bool m_prevCrouchState = false;
+    private bool m_jumpState = false;
+    private bool m_prevJumpState = false;
+    private bool m_isGrounded = false;
     private Vector3 m_modelCrouchOffset_Default;
     private Vector3 m_modelOffsetTarget;
 
@@ -68,6 +85,7 @@ public class PlayerModelController : MonoBehaviour
         Debug.Assert ( m_model != null, "Player model is null." );
 
         m_prevCrouchState = m_crouchState;
+        m_prevJumpState = m_jumpState;
         m_modelOffsetTarget = m_modelCrouchOffset_Default = m_model.transform.localPosition;
         m_chestConstraintOffset_Target = m_chestConstraintOffset_Default = m_chestConstraint.data.offset;
         m_chestIKTargetContainer_TargetPos = m_chestIKTargetContainer_Offset = m_chestIKTargetContainer.localPosition;
@@ -119,21 +137,32 @@ public class PlayerModelController : MonoBehaviour
 
             // X/Z movement
             m_currentMovementDirection = Vector3.Lerp ( m_currentMovementDirection, m_targetMovementDirection, fixedDeltaTime * m_movementTransitionSpeed );
-            m_animator.SetFloat ( "HorizontalMovement", m_currentMovementDirection.x );
-            m_animator.SetFloat ( "VerticalMovement", m_currentMovementDirection.y );
-            m_animator.SetFloat ( "MovementSpeed", m_movementSpeed );
+            m_animator.SetFloat ( ANIMATOR_HORIZONTAL_MOVEMENT, m_currentMovementDirection.x );
+            m_animator.SetFloat ( ANIMATOR_VERTICAL_MOVEMENT, m_currentMovementDirection.y );
+            m_animator.SetFloat ( ANIMATOR_MOVEMENT_SPEED, m_movementSpeed );
 
             // Running
-            m_animator.SetBool ( "IsRunning", m_running && m_movementSpeed >= m_minRunSpeed );
+            m_animator.SetBool ( ANIMATOR_IS_RUNNING, m_running && m_movementSpeed >= m_minRunSpeed );
 
             // Crouching
-            // Set animator IsCrouching param
-            m_animator.SetBool ( "IsCrouching", m_crouchState );
+            m_animator.SetBool ( ANIMATOR_IS_CROUCHING, m_crouchState );
             // Trigger ToggleCrouch animator param on new crouch state
             if ( m_prevCrouchState != m_crouchState )
             {
-                m_animator.SetTrigger ( "ToggleCrouch" );
+                m_animator.SetTrigger ( ANIMATOR_TOGGLE_CROUCH );
                 m_prevCrouchState = m_crouchState;
+            }
+
+            // Jumping
+            m_animator.SetBool ( ANIMATOR_IS_GROUNDED, m_isGrounded );
+            // Trigger Jump animator param on jump
+            if ( m_prevJumpState != m_jumpState )
+            {
+                m_prevJumpState = m_jumpState;
+                if ( m_jumpState )
+                {
+                    m_animator.SetTrigger ( ANIMATOR_JUMP );
+                }
             }
         }
     }
@@ -150,8 +179,9 @@ public class PlayerModelController : MonoBehaviour
     public void SetAnimatorParams ( int moveInputX, int moveInputY, float moveSpeed, float cameraPitch )
     {
         m_targetMovementDirection = new Vector2 ( moveInputX, moveInputY );
-        // Clamp movement speed param to [1,moveSpeed] to maintain normalized speed for idle animations
-        m_movementSpeed = Mathf.Max ( 1f, moveSpeed );
+        // Clamp movement speed param to [1,maxMovementSpeed] to maintain normalized speed animation states
+        float maxMovementSpeed = m_isGrounded ? m_maxMoveSpeed : m_jumpMovementSpeed;
+        m_movementSpeed = Mathf.Clamp ( moveSpeed, 1f, maxMovementSpeed );
         m_chestIKTargetContainer_TargetRot = Quaternion.Euler ( Vector3.right * cameraPitch );
     }
 
@@ -176,8 +206,15 @@ public class PlayerModelController : MonoBehaviour
         m_chestIKTargetContainer_TargetPos = value ? m_chestIKTargetContainer_Offset + ( m_crouchTargetHeight * Vector3.down ) : m_chestIKTargetContainer_Offset;
     }
 
+
+    public void SetJump ( bool jumpInput, bool isGrounded )
+    {
+        m_isGrounded = isGrounded;
+        m_jumpState = jumpInput;
+    }
+
     #endregion
-    
+
     #region Debug
 
     private void OnDrawGizmos ()

@@ -3520,7 +3520,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7956112244427946853}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Chest IK Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4037,7 +4037,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353378497548445520}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8262647542795407169}
@@ -14200,7 +14200,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7034608205012255466}
   - component: {fileID: 6419459775408830177}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Chest Rig Layer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17056,12 +17056,14 @@ MonoBehaviour:
   m_model: {fileID: 1353378497548445520}
   m_animator: {fileID: 3402165009153064973}
   m_minRunSpeed: 4.1
-  m_movementTransitionSpeed: 2
+  m_movementTransitionSpeed: 6
   m_crouchTargetHeight: 0.5
   m_modelCrouchOffset: 0.1
   m_chestConstraintCrouchOffset: {x: 0, y: 0, z: 20}
   m_crouchInterpDuration: 0.1
   m_chestIKRotationInterpSpeed: 16
+  m_maxMoveSpeed: 10
+  m_jumpMovementSpeed: 1
   m_chestConstraint: {fileID: 7442102355984166307}
   m_chestIKTargetContainer: {fileID: 4836288557147728548}
 --- !u!114 &8601942361080516154
@@ -27890,7 +27892,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5711628816150871762}
   - component: {fileID: 7442102355984166307}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Chest IK Constrait
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29447,7 +29449,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8887679445224928090}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7697400819256125309}
@@ -30199,7 +30201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4836288557147728548}
   - component: {fileID: 952744364978801143}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Chest IK Target Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30958,7 +30960,7 @@ PrefabInstance:
     - target: {fileID: 114828056020566616, guid: 16a4283f69b22db45844ef47cb062f7d,
         type: 3}
       propertyPath: m_Size
-      value: 0.5603808
+      value: 0.5604376
       objectReference: {fileID: 0}
     - target: {fileID: 114828056020566616, guid: 16a4283f69b22db45844ef47cb062f7d,
         type: 3}
@@ -36233,12 +36235,12 @@ PrefabInstance:
     - target: {fileID: 114828056020566616, guid: 16a4283f69b22db45844ef47cb062f7d,
         type: 3}
       propertyPath: m_Size
-      value: 0.7668864
+      value: 0.7669641
       objectReference: {fileID: 0}
     - target: {fileID: 114828056020566616, guid: 16a4283f69b22db45844ef47cb062f7d,
         type: 3}
       propertyPath: m_Value
-      value: 1.0000029
+      value: 1.0000026
       objectReference: {fileID: 0}
     - target: {fileID: 224515931986710638, guid: 16a4283f69b22db45844ef47cb062f7d,
         type: 3}
@@ -37584,7 +37586,7 @@ PrefabInstance:
     - target: {fileID: 224962817517893130, guid: 7ea731f501442984589dad30e8f89c28,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 953.2957
+      value: 953.13116
       objectReference: {fileID: 0}
     - target: {fileID: 224962817517893130, guid: 7ea731f501442984589dad30e8f89c28,
         type: 3}
@@ -45810,7 +45812,7 @@ PrefabInstance:
     - target: {fileID: 224962817517893130, guid: 7ea731f501442984589dad30e8f89c28,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1141.1357
+      value: 1140.9712
       objectReference: {fileID: 0}
     - target: {fileID: 224962817517893130, guid: 7ea731f501442984589dad30e8f89c28,
         type: 3}
@@ -60847,7 +60849,7 @@ PrefabInstance:
     - target: {fileID: 224962817517893130, guid: 7ea731f501442984589dad30e8f89c28,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1328.9757
+      value: 1328.8112
       objectReference: {fileID: 0}
     - target: {fileID: 224962817517893130, guid: 7ea731f501442984589dad30e8f89c28,
         type: 3}
