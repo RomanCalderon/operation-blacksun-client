@@ -78,6 +78,12 @@ public class UIManager : MonoBehaviour
 
     #region Button Callbacks
 
+    // DEBUG
+    public void DebugConnect ()
+    {
+        Client.instance.ConnectToServer ( m_serverIPField.text, 26950 );
+    }
+
     /// <summary>
     /// Spawns the player into the scene.
     /// </summary>
