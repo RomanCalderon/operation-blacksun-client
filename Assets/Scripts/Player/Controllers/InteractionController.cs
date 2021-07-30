@@ -190,15 +190,16 @@ public class InteractionController : MonoBehaviour
     {
         Collider [] allInteractables = Physics.OverlapSphere ( transform.position, CHECK_RADIUS, m_interactableMask );
         Vector3 lookDirection = m_lookTransform.forward;
+        float cameraPitch = m_lookTransform.localEulerAngles.x;
         Vector3 headPosition = m_lookTransform.position;
         IInteractable target = null;
         float closest = CHECK_ANGLE;
 
         // Set PlayerInput look direction
-        PlayerInput.PlayerInputController.SetLookDirection ( lookDirection );
+        PlayerInputController.SetLookDirection ( lookDirection, cameraPitch );
 
         // Debug
-        Debug.DrawRay ( headPosition, lookDirection * CHECK_RADIUS, Color.blue, Time.fixedDeltaTime );
+        Debug.DrawRay ( headPosition, lookDirection * CHECK_RADIUS, Color.red, Time.fixedDeltaTime );
 
         // Find closest Interactable
         foreach ( Collider collider in allInteractables )
