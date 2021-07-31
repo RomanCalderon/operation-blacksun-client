@@ -332,6 +332,7 @@ GameObject:
   - component: {fileID: 7515963182471330232}
   - component: {fileID: 603185599144885685}
   - component: {fileID: 7868740214820277074}
+  - component: {fileID: 1294841046775969320}
   m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
@@ -410,8 +411,81 @@ MonoBehaviour:
   m_chestConstraintCrouchOffset: {x: 0, y: 0, z: 25}
   m_crouchInterpDuration: 0.1
   m_chestIKRotationInterpSpeed: 16
+  m_maxMoveSpeed: 10
+  m_jumpMovementSpeed: 1
   m_chestConstraint: {fileID: 2615558723851646373}
   m_chestIKTargetContainer: {fileID: 2343351669664293554}
+--- !u!114 &1294841046775969320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4819394724728440032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a5fc50cb592fe4f95457eb6d66e520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: 56310874aada6b44e9cd4a16534de92c, type: 2}
+  Prefabs:
+    RadarPrefab: {fileID: 0}
+    CompassBarPrefab: {fileID: 0}
+    IndicatorPrefab: {fileID: 0}
+    MinimapPrefab: {fileID: 0}
+  hideInRadar: 0
+  ignoreRadarRadius: 0
+  ignoreRadarScaling: 0
+  ignoreRadarFading: 0
+  rotateWithGameObject: 1
+  useRadarHeightSystem: 1
+  hideInCompassBar: 0
+  ignoreCompassBarRadius: 0
+  useCompassBarDistanceText: 1
+  compassBarDistanceTextFormat: '{0}m'
+  showIndicator: 1
+  showOffscreenIndicator: 1
+  ignoreIndicatorRadius: 1
+  ignoreIndicatorHideDistance: 0
+  ignoreIndicatorScaling: 0
+  ignoreIndicatorFading: 0
+  useIndicatorDistanceText: 1
+  showOffscreenIndicatorDistance: 0
+  indicatorOnscreenDistanceTextFormat: '{0}m'
+  indicatorOffscreenDistanceTextFormat: '{0}'
+  hideInMinimap: 0
+  ignoreMinimapRadius: 0
+  ignoreMinimapScaling: 0
+  ignoreMinimapFading: 0
+  rotateWithGameObjectMM: 1
+  useMinimapHeightSystem: 1
+  OnElementReady:
+    m_PersistentCalls:
+      m_Calls: []
+  OnElementUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAppear:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDisappear:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterRadius:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaveRadius:
+    m_PersistentCalls:
+      m_Calls: []
+  IsActive: 1
+  Radar: {fileID: 0}
+  CompassBar: {fileID: 0}
+  Indicator: {fileID: 0}
+  Minimap: {fileID: 0}
+  IsInRadarRadius: 0
+  IsInCompassBarRadius: 0
+  IsInIndicatorRadius: 0
+  IsInMinimapRadius: 0
 --- !u!1 &5529601624295525325
 GameObject:
   m_ObjectHideFlags: 0
@@ -1240,9 +1314,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5444134993379813087}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1319689736153041706 stripped
+--- !u!4 &2882236860950578722 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 6475341992876109301, guid: 5b672715c7a3e8649b1bf4d6e539037a,
+  m_CorrespondingSourceObject: {fileID: 7814502684447367421, guid: 5b672715c7a3e8649b1bf4d6e539037a,
     type: 3}
   m_PrefabInstance: {fileID: 5444134993379813087}
   m_PrefabAsset: {fileID: 0}
@@ -1282,9 +1356,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5444134993379813087}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2882236860950578722 stripped
+--- !u!4 &1319689736153041706 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7814502684447367421, guid: 5b672715c7a3e8649b1bf4d6e539037a,
+  m_CorrespondingSourceObject: {fileID: 6475341992876109301, guid: 5b672715c7a3e8649b1bf4d6e539037a,
     type: 3}
   m_PrefabInstance: {fileID: 5444134993379813087}
   m_PrefabAsset: {fileID: 0}
@@ -1372,6 +1446,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7374302549511432552, guid: a2aa33c627fca3640b88706e9329a1a0,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -41.432865
+      objectReference: {fileID: 0}
+    - target: {fileID: 7374302549511432552, guid: a2aa33c627fca3640b88706e9329a1a0,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: -1.8381044
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2aa33c627fca3640b88706e9329a1a0, type: 3}

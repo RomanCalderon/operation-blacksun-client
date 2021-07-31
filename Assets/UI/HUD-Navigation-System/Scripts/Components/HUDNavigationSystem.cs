@@ -169,19 +169,7 @@ namespace SickscoreGames.HUDNavigationSystem
 
 		protected virtual void Start ()
 		{
-			// assign references
-			if (_HUDNavigationCanvas == null) {
-				_HUDNavigationCanvas = HUDNavigationCanvas.Instance;
-
-				// check if HUDNavigationCanvas exists
-				if (_HUDNavigationCanvas == null) {
-					Debug.LogError ("HUDNavigationCanvas not found in scene!");
-					this.enabled = false;
-					return;
-				}
-			}
-
-			// enable the system
+			// disable the system
 			EnableSystem(isEnabled);
 
 			// init all components
@@ -212,26 +200,37 @@ namespace SickscoreGames.HUDNavigationSystem
 			// enable/disable system
 			isEnabled = value;
 
+			if ( isEnabled )
+            {
+				// assign references
+				if ( _HUDNavigationCanvas == null )
+				{
+					_HUDNavigationCanvas = HUDNavigationCanvas.Instance;
+
+					// check if HUDNavigationCanvas exists
+					if ( _HUDNavigationCanvas == null )
+					{
+						Debug.LogError ( "HUDNavigationCanvas not found in scene!" );
+						this.enabled = false;
+						return;
+					}
+				}
+			}
+
 			// enable/disable HNS canvas if value has changed
 			if (_HUDNavigationCanvas != null && isEnabled != _HUDNavigationCanvas.isEnabled)
 				_HUDNavigationCanvas.EnableCanvas (isEnabled);
 
 			// try to automatically assign the player camera and transform if possible
 			if (PlayerCamera == null) {
-				HNSPlayerCamera hnsCamera = GameObject.FindObjectOfType<HNSPlayerCamera> ();
+				HNSPlayerCamera hnsCamera = FindObjectOfType<HNSPlayerCamera> ();
 				if (hnsCamera != null)
 					PlayerCamera = hnsCamera.GetComponent<Camera> ();
-				else
-					PlayerCamera = Camera.main;
-				if (PlayerCamera == null)
-					Debug.LogError("[HUDNavigationSystem] Player camera unassigned. Assign camera to resume system!");
 			}
 			if (PlayerController == null) {
-				HNSPlayerController hnsTransform = GameObject.FindObjectOfType<HNSPlayerController> ();
+				HNSPlayerController hnsTransform = FindObjectOfType<HNSPlayerController> ();
 				if (hnsTransform != null)
 					PlayerController = hnsTransform.gameObject.transform;
-				if (PlayerController == null)
-					Debug.LogError("[HUDNavigationSystem] Player transform unassigned. Assign transform to resume system!");
 			}
 
 			// refresh references

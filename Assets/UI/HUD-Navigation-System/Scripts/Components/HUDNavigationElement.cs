@@ -88,13 +88,22 @@ namespace SickscoreGames.HUDNavigationSystem
 		protected bool _isInitialized = false;
 		#endregion
 
+		#region Initialization
 
-		#region Main Methods
+		protected virtual void OnEnable ()
+		{
+			if ( !_isInitialized )
+				return;
+
+			Initialize ();
+		}
+
 		protected virtual void Start ()
 		{
 			// disable, if navigation system is missing
-			if (HUDNavigationSystem.Instance == null) {
-				Debug.LogError ("HUDNavigationSystem not found in scene!");
+			if ( HUDNavigationSystem.Instance == null )
+			{
+				Debug.LogError ( "HUDNavigationSystem not found in scene!" );
 				this.enabled = false;
 				return;
 			}
@@ -106,56 +115,25 @@ namespace SickscoreGames.HUDNavigationSystem
 			Initialize ();
 		}
 
-
-		protected virtual void OnEnable ()
+		public void Initialize ()
 		{
-			if (!_isInitialized)
-				return;
-			
-			Initialize ();
-		}
-
-
-		protected virtual void OnDisable ()
-		{
-			// remove element from the navigation system
-			if (HUDNavigationSystem.Instance != null)
-				HUDNavigationSystem.Instance.RemoveNavigationElement (this);
-
-			// destroy all marker references
-			if (Radar != null)
-				Destroy (Radar.gameObject);
-			if (CompassBar != null)
-				Destroy (CompassBar.gameObject);
-			if (Indicator != null)
-				Destroy (Indicator.gameObject);
-			if (Minimap != null)
-				Destroy (Minimap.gameObject);
-		}
-
-
-		protected virtual void Refresh ()
-		{
-			this.enabled = false;
-
-			// reset markers
-			Radar = null;
-			CompassBar = null;
-			Indicator = null;
-			Minimap = null;
-
 			// create marker references
 			CreateMarkerReferences ();
 
-			this.enabled = true;
+			// add element to the navigation system
+			if ( HUDNavigationSystem.Instance != null )
+				HUDNavigationSystem.Instance.AddNavigationElement ( this );
+
+			// set as initialized
+			_isInitialized = true;
+
+			// invoke events
+			OnElementReady.Invoke ( this );
 		}
-		#endregion
 
-
-		#region Utility Methods
-		protected virtual void InitializeSettings ()
+        protected virtual void InitializeSettings ()
 		{
-			if (Settings == null)
+			if ( Settings == null )
 				return;
 
 			// misc
@@ -196,23 +174,46 @@ namespace SickscoreGames.HUDNavigationSystem
 			this.useMinimapHeightSystem = Settings.useMinimapHeightSystem;
 		}
 
+		#endregion
 
-		protected virtual void Initialize ()
+		#region Main Methods
+
+		protected virtual void Refresh ()
 		{
+			this.enabled = false;
+
+			// reset markers
+			Radar = null;
+			CompassBar = null;
+			Indicator = null;
+			Minimap = null;
+
 			// create marker references
 			CreateMarkerReferences ();
 
-			// add element to the navigation system
-			if (HUDNavigationSystem.Instance != null)
-				HUDNavigationSystem.Instance.AddNavigationElement (this);
-
-			// set as initialized
-			_isInitialized = true;
-
-			// invoke events
-			OnElementReady.Invoke (this);
+			this.enabled = true;
 		}
 
+		protected virtual void OnDisable ()
+		{
+			// remove element from the navigation system
+			if ( HUDNavigationSystem.Instance != null )
+				HUDNavigationSystem.Instance.RemoveNavigationElement ( this );
+
+			// destroy all marker references
+			if ( Radar != null )
+				Destroy ( Radar.gameObject );
+			if ( CompassBar != null )
+				Destroy ( CompassBar.gameObject );
+			if ( Indicator != null )
+				Destroy ( Indicator.gameObject );
+			if ( Minimap != null )
+				Destroy ( Minimap.gameObject );
+		}
+
+		#endregion
+
+		#region Utility Methods
 
 		protected virtual void CreateMarkerReferences ()
 		{
@@ -281,9 +282,9 @@ namespace SickscoreGames.HUDNavigationSystem
 			// assign minimap prefab
 			Minimap = minimapGO.GetComponent<HNSMinimapPrefab> ();
 		}
+
 		#endregion
 	}
-
 
 	#region Subclasses
 	[System.Serializable]

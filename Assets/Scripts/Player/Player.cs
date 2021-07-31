@@ -1,14 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PlayerInput;
+using SickscoreGames.HUDNavigationSystem;
 
-//[RequireComponent ( typeof ( ClientPredictionHandler ) )]
-//[RequireComponent ( typeof ( PlayerMovementController ) )]
-//[RequireComponent ( typeof ( PlayerInputController ) )]
-//[RequireComponent ( typeof ( PlayerModelController ) )]
-//[RequireComponent ( typeof ( InventoryManager ) )]
-//[RequireComponent ( typeof ( HitmarkerController ) )]
 public class Player : MonoBehaviour
 {
     public delegate void PlayerDeathHandler ();
@@ -67,6 +61,14 @@ public class Player : MonoBehaviour
     {
         Debug.Assert ( m_ragdollController != null, "Ragdoll controller is null." );
         Debug.Assert ( m_ragdollParent != null, "Ragdoll parent is null." );
+
+        if ( Client.instance.myId == m_id )
+        {
+            // Initialize HUD Navigation System
+            HUDNavigationSystem.Instance.ChangePlayerCamera ( m_playerCamera );
+            HUDNavigationSystem.Instance.ChangePlayerController ( transform );
+            HUDNavigationSystem.Instance.EnableSystem ( true );
+        }
     }
 
     private void Update ()
