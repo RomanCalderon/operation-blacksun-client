@@ -12,10 +12,14 @@ public class ClientPredictionHandler : MonoBehaviour
     // State caching
     private const uint STATE_CACHE_SIZE = 1024;
     // Correction tolerance
-    private const float CORRECTION_TOLERANCE = 0.001f;
-    private const float CORRECTION_LERP_RATE = 0.4f;
+    private const float CORRECTION_TOLERANCE = 0.0015f; // 0.001f
+    private const float CORRECTION_LERP_RATE = 0.45f; // 0.5f
     // Minimum position snapping distance
     private const float SNAP_THRESHOLD = 4f;
+
+    // DEBUG
+    public float CorrectionTolerance { get; set; }
+    public float CorrectionLerpRate { get; set; }
 
     private PlayerMovementController m_playerMovementController = null;
     private Rigidbody m_rigidbody = null;
@@ -30,10 +34,16 @@ public class ClientPredictionHandler : MonoBehaviour
     private uint m_lastCorrectedFrame;
     private Vector3 m_clientPositionError;
 
+    #region Initialization
+
     private void Awake ()
     {
         m_playerMovementController = GetComponent<PlayerMovementController> ();
         m_rigidbody = GetComponent<Rigidbody> ();
+
+        // DEBUG
+        CorrectionTolerance = CORRECTION_TOLERANCE;
+        CorrectionLerpRate = CORRECTION_LERP_RATE;
     }
 
     // Start is called before the first frame update
@@ -41,6 +51,10 @@ public class ClientPredictionHandler : MonoBehaviour
     {
         InputState = new ClientInputState ();
     }
+
+    #endregion
+
+    #region Runtime
 
     private void Update ()
     {
@@ -80,6 +94,10 @@ public class ClientPredictionHandler : MonoBehaviour
         // Increment client simulation frame
         m_simulationFrame++;
     }
+
+    #endregion
+
+    #region Main Methods
 
     public void OnServerSimulationStateReceived ( byte [] simulationState )
     {
@@ -126,10 +144,10 @@ public class ClientPredictionHandler : MonoBehaviour
         }
 
         // Find the difference between the vector's values
-        Vector3 positionError = cachedSimulationState.Position - m_serverSimulationState.Position;
+        Vector3 positionError = m_serverSimulationState.Position - cachedSimulationState.Position;
 
         // A correction is necessary.
-        if ( positionError.sqrMagnitude > CORRECTION_TOLERANCE )
+        if ( positionError.sqrMagnitude > CorrectionTolerance/*CORRECTION_TOLERANCE*/ )
         {
             // Capture the current predicted pos for smoothing
             Vector3 previousPosition = m_rigidbody.position + m_clientPositionError;
@@ -186,14 +204,17 @@ public class ClientPredictionHandler : MonoBehaviour
             }
 
             // Player position correction smoothing
-            m_clientPositionError *= CORRECTION_LERP_RATE;
-            transform.position = m_rigidbody.position + m_clientPositionError;
+            m_clientPositionError *= CorrectionLerpRate/*CORRECTION_LERP_RATE*/;
+            //transform.position = m_rigidbody.position + m_clientPositionError;
+            m_rigidbody.MovePosition ( m_rigidbody.position + m_clientPositionError );
         }
 
         // Once we're complete, update the lastCorrectedFrame to match
         // NOTE: Set this even if there's no correction to be made
         m_lastCorrectedFrame = m_serverSimulationState.SimulationFrame;
     }
+
+    #endregion
 
     #region Util
 
@@ -223,8 +244,8 @@ public class ClientPredictionHandler : MonoBehaviour
     {
         return new SimulationState
         {
-            Position = transform.position,
-            Rotation = transform.rotation,
+            Position = m_rigidbody.position/*transform.position*/,
+            Rotation = m_rigidbody.rotation/*transform.rotation*/,
             Velocity = m_playerMovementController.Velocity,
             SimulationFrame = inputState != null ? inputState.SimulationFrame : 0,
             DeltaTime = inputState != null ? inputState.DeltaTime : Time.deltaTime
