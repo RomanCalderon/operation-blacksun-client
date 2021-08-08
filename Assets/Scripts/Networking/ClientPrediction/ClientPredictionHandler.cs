@@ -216,6 +216,22 @@ public class ClientPredictionHandler : MonoBehaviour
 
     #endregion
 
+    #region DebugCommands
+
+    [DebugCommand ( "set_correction_tolerance", "sets correction tolerance for cph position error correction threshold", "set_correction_tolerance <tolerance>" )]
+    public void SetCorrectionTolerance ( float value )
+    {
+        CorrectionTolerance = value;
+    }
+
+    [DebugCommand ( "set_correction_lerp_rate", "sets correction interpolation rate for cph position correction", "set_correction_lerp_rate <rate>" )]
+    public void SetCorrectionLerpRate ( float value )
+    {
+        CorrectionLerpRate = value;
+    }
+
+    #endregion
+
     #region Util
 
     private ClientInputState SampleInputs ()
