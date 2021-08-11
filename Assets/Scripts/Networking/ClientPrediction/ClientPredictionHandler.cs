@@ -10,29 +10,24 @@ using PlayerInput;
 public class ClientPredictionHandler : MonoBehaviour
 {
     // State caching
-    private const uint STATE_CACHE_SIZE = 1024;
-    // Correction tolerance
-    private const float CORRECTION_TOLERANCE = 0.0015f; // 0.001f
-    private const float CORRECTION_LERP_RATE = 0.45f; // 0.5f
+    private const uint BUFFER_SIZE = 1024;
     // Minimum position snapping distance
     private const float SNAP_THRESHOLD = 4f;
 
-    // DEBUG
-    public float CorrectionTolerance { get; set; }
-    public float CorrectionLerpRate { get; set; }
-
+    // Components
     private PlayerMovementController m_playerMovementController = null;
     private Rigidbody m_rigidbody = null;
 
     // Input
     public static ClientInputState InputState { get; private set; } = null;
 
+    // Prediction/reconciliation
     private uint m_simulationFrame = 0;
-    private SimulationState [] m_simulationStateCache = new SimulationState [ STATE_CACHE_SIZE ];
-    private ClientInputState [] m_inputStateCache = new ClientInputState [ STATE_CACHE_SIZE ];
+    private readonly SimulationState [] m_simulationStateBuffer = new SimulationState [ BUFFER_SIZE ];
+    private readonly ClientInputState [] m_clientInputBuffer = new ClientInputState [ BUFFER_SIZE ];
     private SimulationState m_serverSimulationState;
     private uint m_lastCorrectedFrame;
-    private Vector3 m_clientPositionError;
+    private Vector3 m_clientPositionError = Vector3.zero;
 
     #region Initialization
 
@@ -40,10 +35,6 @@ public class ClientPredictionHandler : MonoBehaviour
     {
         m_playerMovementController = GetComponent<PlayerMovementController> ();
         m_rigidbody = GetComponent<Rigidbody> ();
-
-        // DEBUG
-        CorrectionTolerance = CORRECTION_TOLERANCE;
-        CorrectionLerpRate = CORRECTION_LERP_RATE;
     }
 
     // Start is called before the first frame update
@@ -58,41 +49,121 @@ public class ClientPredictionHandler : MonoBehaviour
 
     private void Update ()
     {
-        // Capture input
+        // Capture client input state
         InputState = SampleInputs ();
     }
 
     private void FixedUpdate ()
     {
-        // Set the InputState's simulation frame
-        InputState.SimulationFrame = m_simulationFrame;
-        InputState.ServerTick = Client.instance.ServerTick;
-
         // Send player input to the server as byte array to be processed
         byte [] inputBytes = StateToBytes ( InputState );
         ClientSend.PlayerInput ( inputBytes );
 
-        // Reconciliate if there's a message from the server
-        if ( m_serverSimulationState != null )
-        {
-            Reconciliate ();
-        }
+        // Set current input and simulation states to buffer
+        uint bufferIndex = m_simulationFrame % BUFFER_SIZE;
+        m_clientInputBuffer [ bufferIndex ] = InputState;
+        m_simulationStateBuffer [ bufferIndex ] = CurrentSimulationState ( InputState );
 
-        // Process the input on the local client
+        // Apply the input on the local client
         m_playerMovementController.ProcessInputs ( InputState );
 
         // Simulate physics
         Physics.Simulate ( Time.fixedDeltaTime );
 
-        // Get the current simulation state
-        SimulationState simulationState = CurrentSimulationState ( InputState );
-        // Determine the cache index based on on modulus operator
-        uint cacheIndex = m_simulationFrame % STATE_CACHE_SIZE;
-        m_simulationStateCache [ cacheIndex ] = simulationState;
-        m_inputStateCache [ cacheIndex ] = InputState;
-
         // Increment client simulation frame
-        m_simulationFrame++;
+        ++m_simulationFrame;
+
+        // Reconciliate if there's a message from the server
+        if ( HasAvailableStateMessage () )
+        {
+            Reconciliate ();
+        }
+    }
+
+    private void Reconciliate ()
+    {
+        SimulationState serverState = GetServerState ();
+
+        // Sanity check, don't reconciliate for old states
+        if ( serverState.SimulationFrame <= m_lastCorrectedFrame ) return;
+
+        // Determine the cache index 
+        uint bufferIndex = serverState.SimulationFrame % BUFFER_SIZE;
+
+        // Obtain the cached input and simulation states
+        ClientInputState cachedInputState = m_clientInputBuffer [ bufferIndex ];
+        SimulationState cachedSimulationState = m_simulationStateBuffer [ bufferIndex ];
+
+        // If there's missing cache data for either input or simulation,
+        // snap the player's position to match the server
+        if ( cachedInputState == null || cachedSimulationState == null )
+        {
+            Debug.Assert ( cachedInputState != null, "cachedInputState == null" );
+            Debug.Assert ( cachedSimulationState != null, "cachedSimulationState == null" );
+
+            m_rigidbody.position = serverState.Position;
+            m_playerMovementController.SetVelocty ( serverState.Velocity );
+
+            // Set the last corrected frame to equal the server's frame
+            m_lastCorrectedFrame = serverState.SimulationFrame;
+            return;
+        }
+
+        // Find the difference between the vector's values
+        Vector3 positionError = cachedSimulationState.Position - serverState.Position;
+
+        // A correction is required
+        if ( positionError.sqrMagnitude > 0.0000001f ) //CorrectionTolerance
+        {
+            // Capture the current predicted pos for smoothing
+            Vector3 previousPosition = m_rigidbody.position;
+
+            // Set the player's position and velocity to match the server's state
+            m_rigidbody.position = serverState.Position;
+            m_rigidbody.velocity = serverState.Velocity;
+
+            // Declare the rewindFrame as we're about to resimulate our cached inputs
+            uint rewindFrame = serverState.SimulationFrame + 1;
+
+            // Loop through and apply cached inputs until we're 
+            // caught up to our current simulation frame
+            while ( rewindFrame < m_simulationFrame )
+            {
+                // Determine the cache index 
+                bufferIndex = rewindFrame % BUFFER_SIZE;
+
+                // Replace the simulationStateBuffer index with the new value
+                SimulationState rewoundSimulationState = CurrentSimulationState ();
+                rewoundSimulationState.SimulationFrame = rewindFrame;
+                m_simulationStateBuffer [ bufferIndex ] = rewoundSimulationState;
+
+                // If there's no state to simulate, for whatever reason, 
+                // increment the rewindFrame and continue
+                if ( m_clientInputBuffer [ bufferIndex ] == null || m_simulationStateBuffer [ bufferIndex ] == null )
+                {
+                    Debug.Assert ( m_clientInputBuffer [ bufferIndex ] != null, $"m_inputStateCache [ {bufferIndex} ] == null" );
+                    Debug.Assert ( m_simulationStateBuffer [ bufferIndex ] != null, $"m_simulationStateCache [ {bufferIndex} ] == null" );
+                    ++rewindFrame;
+                    continue;
+                }
+
+                // Apply cached input
+                m_playerMovementController.ProcessInputs ( m_clientInputBuffer [ bufferIndex ] );
+
+                // Simulate physics
+                Physics.Simulate ( Time.fixedDeltaTime );
+
+                // Increase the amount of frames that we've rewound
+                ++rewindFrame;
+            }
+
+            // Player smoothing after correcting a misprediction
+            PredictionCorrectionSmoothing ( previousPosition );
+        }
+
+        // Once we're complete, update the lastCorrectedFrame to match
+        // NOTE: Set this even if there's no correction to be made
+        m_lastCorrectedFrame = serverState.SimulationFrame;
     }
 
     #endregion
@@ -101,117 +172,59 @@ public class ClientPredictionHandler : MonoBehaviour
 
     public void OnServerSimulationStateReceived ( byte [] simulationState )
     {
+        if ( simulationState == null ) return;
+
         SimulationState message = BytesToState ( simulationState );
 
-        // Update client with last received server tick
-        Client.instance.ServerTick = message.ServerTick;
-
-        if ( m_serverSimulationState == null )
+        if ( message != null )
         {
-            m_serverSimulationState = message;
-            return;
-        }
+            // Update client with last received server tick
+            Client.instance.ServerTick = message.ServerTick;
 
-        // Only register newer SimulationStates
-        if ( m_serverSimulationState?.SimulationFrame < message.SimulationFrame )
-        {
-            m_serverSimulationState = message;
+            if ( m_serverSimulationState == null )
+            {
+                m_serverSimulationState = message;
+            }
+            // Only register newer SimulationStates
+            else if ( m_serverSimulationState.SimulationFrame < message.SimulationFrame )
+            {
+                m_serverSimulationState = message;
+            }
         }
     }
 
-    private void Reconciliate ()
+    public bool HasAvailableStateMessage ()
     {
-        // Sanity check, don't reconciliate for old states
-        if ( m_serverSimulationState.SimulationFrame <= m_lastCorrectedFrame ) return;
+        return m_serverSimulationState != null;
+    }
 
-        // Determine the cache index 
-        uint cacheIndex = m_serverSimulationState.SimulationFrame % STATE_CACHE_SIZE;
+    private SimulationState GetServerState ()
+    {
+        return m_serverSimulationState;
+    }
 
-        // Obtain the cached input and simulation states
-        ClientInputState cachedInputState = m_inputStateCache [ cacheIndex ];
-        SimulationState cachedSimulationState = m_simulationStateCache [ cacheIndex ];
-
-        // If there's missing cache data for either input or simulation 
-        // snap the player's position to match the server
-        if ( cachedInputState == null || cachedSimulationState == null )
+    private void PredictionCorrectionSmoothing ( Vector3 previousPosition )
+    {
+        // If client is more than snap threshold, snap
+        if ( ( previousPosition - m_rigidbody.position ).sqrMagnitude >= SNAP_THRESHOLD )
         {
-            m_rigidbody.position = m_serverSimulationState.Position;
-            m_playerMovementController.SetVelocty ( m_serverSimulationState.Velocity );
-
-            // Set the last corrected frame to equal the server's frame
-            m_lastCorrectedFrame = m_serverSimulationState.SimulationFrame;
-            return;
+            m_clientPositionError = Vector3.zero;
         }
-
-        // Find the difference between the vector's values
-        Vector3 positionError = m_serverSimulationState.Position - cachedSimulationState.Position;
-
-        // A correction is necessary.
-        if ( positionError.sqrMagnitude > CorrectionTolerance/*CORRECTION_TOLERANCE*/ )
+        else
         {
-            // Capture the current predicted pos for smoothing
-            Vector3 previousPosition = m_rigidbody.position + m_clientPositionError;
-
-            // Set the player's position and velocity to match the server's state
-            m_rigidbody.position = m_serverSimulationState.Position;
-            m_playerMovementController.SetVelocty ( m_serverSimulationState.Velocity );
-
-            // Declare the rewindFrame as we're about to resimulate our cached inputs
-            uint rewindFrame = m_serverSimulationState.SimulationFrame;
-
-            // Loop through and apply cached inputs until we're 
-            // caught up to our current simulation frame
-            while ( rewindFrame < m_simulationFrame )
-            {
-                // Determine the cache index 
-                uint rewindCacheIndex = rewindFrame % STATE_CACHE_SIZE;
-
-                // Obtain the cached input and simulation states
-                ClientInputState rewindCachedInputState = m_inputStateCache [ rewindCacheIndex ];
-                SimulationState rewindCachedSimulationState = m_simulationStateCache [ rewindCacheIndex ];
-
-                // If there's no state to simulate, for whatever reason, 
-                // increment the rewindFrame and continue
-                if ( rewindCachedInputState == null || rewindCachedSimulationState == null )
-                {
-                    rewindFrame++;
-                    continue;
-                }
-
-                // Process the cached inputs
-                m_playerMovementController.ProcessInputs ( rewindCachedInputState );
-
-                // Simulate physics
-                Physics.Simulate ( Time.fixedDeltaTime );
-
-                // Replace the simulationStateCache index with the new value
-                SimulationState rewoundSimulationState = CurrentSimulationState ();
-                rewoundSimulationState.SimulationFrame = rewindFrame;
-                m_simulationStateCache [ rewindCacheIndex ] = rewoundSimulationState;
-
-                // Increase the amount of frames that we've rewound
-                rewindFrame++;
-            }
-
-            // If client is more than snap threshold, snap
-            if ( ( previousPosition - m_rigidbody.position ).sqrMagnitude >= SNAP_THRESHOLD )
-            {
-                m_clientPositionError = Vector3.zero;
-            }
-            else
-            {
-                m_clientPositionError = previousPosition - m_rigidbody.position;
-            }
-
-            // Player position correction smoothing
-            m_clientPositionError *= CorrectionLerpRate/*CORRECTION_LERP_RATE*/;
-            //transform.position = m_rigidbody.position + m_clientPositionError;
-            m_rigidbody.MovePosition ( m_rigidbody.position + m_clientPositionError );
+            m_clientPositionError = m_rigidbody.position - previousPosition;
         }
-
-        // Once we're complete, update the lastCorrectedFrame to match
-        // NOTE: Set this even if there's no correction to be made
-        m_lastCorrectedFrame = m_serverSimulationState.SimulationFrame;
+/*
+        // Calculate a force that attempts to reach target velocity
+        Vector3 velocity = m_rigidbody.velocity;
+        Vector3 smoothTargetVelocity = Vector3.Lerp ( velocity, m_clientPositionError, fixedDeltaTime );
+        //float smoothTargetVelocityX = Mathf.Lerp ( velocity.x, m_clientPositionError.x, fixedDeltaTime );
+        //float smoothTargetVelocityZ = Mathf.Lerp ( velocity.z, m_clientPositionError.z, fixedDeltaTime );
+        Vector3 velocityChange = ( smoothTargetVelocity/*new Vector3 ( smoothTargetVelocityX, 0, smoothTargetVelocityZ )*//* - velocity );
+        //velocityChange.y = 0;
+*/
+        // Apply correction force
+        m_rigidbody.AddForce ( m_clientPositionError, ForceMode.Force );
     }
 
     #endregion
@@ -236,7 +249,9 @@ public class ClientPredictionHandler : MonoBehaviour
             CameraPitch = PlayerInputController.CameraPitch,
             Interact = PlayerInputController.Interact,
             Rotation = m_rigidbody.rotation,
-            DeltaTime = Time.deltaTime
+            SimulationFrame = m_simulationFrame,
+            ServerTick = Client.instance.ServerTick,
+            DeltaTime = Time.deltaTime,
         };
     }
 
@@ -244,8 +259,8 @@ public class ClientPredictionHandler : MonoBehaviour
     {
         return new SimulationState
         {
-            Position = m_rigidbody.position/*transform.position*/,
-            Rotation = m_rigidbody.rotation/*transform.rotation*/,
+            Position = m_rigidbody.position,
+            Rotation = m_rigidbody.rotation,
             Velocity = m_playerMovementController.Velocity,
             SimulationFrame = inputState != null ? inputState.SimulationFrame : 0,
             DeltaTime = inputState != null ? inputState.DeltaTime : Time.deltaTime

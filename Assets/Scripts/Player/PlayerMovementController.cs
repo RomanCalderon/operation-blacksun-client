@@ -150,8 +150,8 @@ public class PlayerMovementController : MonoBehaviour
 
         // Calculate a force that attempts to reach target velocity
         Vector3 velocity = m_rigidbody.velocity;
-        float smoothTargetVelocityX = Mathf.Lerp ( velocity.x, targetVelocity.x, Time.fixedDeltaTime * 16f );
-        float smoothTargetVelocityZ = Mathf.Lerp ( velocity.z, targetVelocity.z, Time.fixedDeltaTime * 16f );
+        float smoothTargetVelocityX = Mathf.Lerp ( velocity.x, targetVelocity.x, Time.fixedDeltaTime * 8f );
+        float smoothTargetVelocityZ = Mathf.Lerp ( velocity.z, targetVelocity.z, Time.fixedDeltaTime * 8f );
         Vector3 velocityChange = ( new Vector3 ( smoothTargetVelocityX, 0, smoothTargetVelocityZ ) - velocity );
         velocityChange = Vector3.ClampMagnitude ( velocityChange, MAX_VELOCITY_CHANGE );
         velocityChange.y = 0;
