@@ -334,7 +334,9 @@ public class WeaponInstance : PlayerItemInstance
                 WeaponsController.OnSetTrigger?.Invoke ( "Shoot" );
                 WeaponsController.OnSetTrigger?.Invoke ( "BoltCharge" );
             }
-            CameraRecoil ();
+
+            // Camera recoil
+            m_player.WeaponsController.FireWeapon ();
         }
         else
         {
@@ -350,7 +352,7 @@ public class WeaponInstance : PlayerItemInstance
         {
             recoilStrength *= 1f - Stock.RecoilReductionModifier;
         }
-        m_cameraController.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
+        //m_cameraController.AddRecoil ( recoilStrength, recoilStrength * Random.Range ( -aspect, aspect ) );
 
         // Camera shake
         CameraShaker.Instance.ShakeOnce ( recoilStrength * 0.045f, 4f, 0.01f, 0.16f );

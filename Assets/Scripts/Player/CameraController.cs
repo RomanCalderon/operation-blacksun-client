@@ -143,11 +143,11 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public void AddRecoil ( float verticalRecoil, float horizontalRecoil )
+    /*public void AddRecoil ( float verticalRecoil, float horizontalRecoil )
     {
         m_verticalHeadTiltTarget += verticalRecoil;
         m_horizontalHeadTiltTarget += horizontalRecoil;
-    }
+    }*/
 
     public void UpdateMovementChanges ( bool crouch, float deltaTime )
     {

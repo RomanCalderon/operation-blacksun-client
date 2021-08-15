@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Linq;
 using InventorySystem.Slots;
 using InventorySystem.PlayerItems;
@@ -108,11 +109,17 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
+    #region Events
+
+    public UnityEvent onFireWeapon;
+
+    #endregion
+
     #region Initializations
 
     private void OnEnable ()
     {
-        AimController.OnAimStateUpdated += UpdateIdleSpeed;
+        //AimController.OnAimStateUpdated += UpdateIdleSpeed;
 
         InventoryManager.OnSlotUpdated += EquipWeapon;
         InventoryManager.OnSlotUpdated += EquipAttachment;
@@ -126,7 +133,7 @@ public class WeaponsController : MonoBehaviour
 
     private void OnDisable ()
     {
-        AimController.OnAimStateUpdated -= UpdateIdleSpeed;
+        //AimController.OnAimStateUpdated -= UpdateIdleSpeed;
 
         InventoryManager.OnSlotUpdated -= EquipWeapon;
         InventoryManager.OnSlotUpdated -= EquipAttachment;
@@ -233,6 +240,13 @@ public class WeaponsController : MonoBehaviour
 
     #endregion
 
+    #region Weapon Actions
+
+    public void FireWeapon ()
+    {
+        onFireWeapon?.Invoke ();
+    }
+
     private void ReloadWeapon ()
     {
         if ( ActiveWeapon != null )
@@ -243,6 +257,7 @@ public class WeaponsController : MonoBehaviour
             ClientSend.WeaponReload ();
         }
     }
+
 
     /// <summary>
     /// Uses <paramref name="weaponClass"/> and <paramref name="caliber"/>
@@ -304,6 +319,8 @@ public class WeaponsController : MonoBehaviour
 
         return strength;
     }
+
+    #endregion
 
     #region AnimatorState handlers
 
@@ -375,7 +392,7 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
-    private void UpdateIdleSpeed ( bool aimState )
+    public void UpdateIdleSpeed ( bool aimState )
     {
         OnSetFloat?.Invoke ( "IdleSpeed", aimState ? 0f : 1f );
         if ( aimState && ActiveWeapon )

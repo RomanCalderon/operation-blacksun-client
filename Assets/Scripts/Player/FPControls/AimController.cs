@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using PlayerInput;
 
 public class AimController : MonoBehaviour
@@ -45,6 +46,22 @@ public class AimController : MonoBehaviour
     }
     private static bool m_aimState = false;
 
+    public UnityEvent<bool> onAimStateChanged;
+    
+    #region Initialization
+
+    private void OnEnable ()
+    {
+        OnAimStateUpdated += InvokeAimStateChanged;
+    }
+
+    private void OnDisable ()
+    {
+        OnAimStateUpdated -= InvokeAimStateChanged;
+    }
+
+    #endregion
+
     public void UpdateAimSpeed ( float aimSpeed )
     {
         OnAimSpeedUpdated?.Invoke ( aimSpeed );
@@ -53,5 +70,10 @@ public class AimController : MonoBehaviour
     public void UpdateAimFOV ( float aimFOV )
     {
         OnTargetFOVUpdated?.Invoke ( aimFOV );
+    }
+
+    private void InvokeAimStateChanged ( bool state )
+    {
+        onAimStateChanged?.Invoke ( state );
     }
 }
