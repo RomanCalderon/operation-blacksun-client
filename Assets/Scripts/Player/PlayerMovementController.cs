@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using PlayerInput;
 
 [RequireComponent ( typeof ( Rigidbody ) )]
@@ -30,6 +31,7 @@ public class PlayerMovementController : MonoBehaviour
     private const float CROUCH_POSITION_MODIFIER = 0.5f;
     private const float CROUCH_SMOOTH_TIME = 2.5f;
     private const float SLIDE_SPEED_BOOST = 2f;
+    private const float MIN_MOVE_SPEED = 0.1f;
     private const float MIN_SLIDE_SPEED = 3f;
 
     private const float MAX_VELOCITY_CHANGE = 10f;
@@ -66,6 +68,10 @@ public class PlayerMovementController : MonoBehaviour
     private bool m_jumpCheck = false;
     [SerializeField]
     private LayerMask m_groundMask;
+    // Holds previous frame movement state
+    private bool m_prevMovementState = false;
+    private bool m_prevRunState = false;
+    private bool m_prevWalkState = false;
 
     // Crouching
     private float m_crouchCurrVelocity;
@@ -81,6 +87,17 @@ public class PlayerMovementController : MonoBehaviour
 
     #endregion
 
+    [Space]
+    #region Events
+
+    public UnityEvent onStartedRunning;
+    public UnityEvent onStartedWalking;
+    public UnityEvent onStartedMoving;
+    public UnityEvent onStoppedMoving;
+
+    #endregion
+
+    #region Initialization
 
     private void Awake ()
     {
@@ -96,6 +113,8 @@ public class PlayerMovementController : MonoBehaviour
         m_rigidbody.useGravity = false;
         m_rigidbody.freezeRotation = true;
     }
+
+    #endregion
 
     public void SetVelocty ( Vector3 newVelocity )
     {
@@ -191,6 +210,9 @@ public class PlayerMovementController : MonoBehaviour
 
         // Prevents rigidbody from sticking to walls
         FinalCollisionCheck ();
+
+        // Post-process inputs
+        PostProcessInputs ();
     }
 
     private bool SlideControl ( Vector3 velocity, bool crouchInput )
@@ -307,6 +329,33 @@ public class PlayerMovementController : MonoBehaviour
         m_collider.height = Mathf.SmoothDamp ( m_collider.height, height, ref m_crouchCurrVelocity, CROUCH_SMOOTH_TIME * deltaTime );
         // Fix vertical position
         m_collider.center += new Vector3 ( 0f, ( m_collider.height - lastHeight ) * CROUCH_POSITION_MODIFIER, 0f );
+    }
+
+    private void PostProcessInputs ()
+    {
+        bool isMoving = Velocity.sqrMagnitude > MIN_MOVE_SPEED;
+        bool isWalking = isMoving && !IsRunning;
+        if ( isMoving != m_prevMovementState )
+        {
+            if ( isMoving )
+                onStartedMoving?.Invoke ();
+            else
+                onStoppedMoving?.Invoke ();
+            m_prevMovementState = isMoving;
+        }
+
+        if ( m_prevRunState != IsRunning )
+        {
+            if ( IsRunning )
+                onStartedRunning?.Invoke ();
+            m_prevRunState = IsRunning;
+        }
+        if ( m_prevWalkState != isWalking )
+        {
+            if ( isWalking )
+                onStartedWalking?.Invoke ();
+            m_prevWalkState = isWalking;
+        }
     }
 
     #endregion

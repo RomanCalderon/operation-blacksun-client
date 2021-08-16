@@ -47,7 +47,9 @@ public class AimController : MonoBehaviour
     private static bool m_aimState = false;
 
     public UnityEvent<bool> onAimStateChanged;
-    
+    public UnityEvent onAimTrue;
+    public UnityEvent onAimFalse;
+
     #region Initialization
 
     private void OnEnable ()
@@ -75,5 +77,9 @@ public class AimController : MonoBehaviour
     private void InvokeAimStateChanged ( bool state )
     {
         onAimStateChanged?.Invoke ( state );
+        if ( state )
+            onAimTrue?.Invoke ();
+        else
+            onAimFalse?.Invoke ();
     }
 }

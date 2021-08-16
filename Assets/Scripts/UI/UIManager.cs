@@ -78,9 +78,10 @@ public class UIManager : MonoBehaviour
 
     #region Button Callbacks
 
-    // DEBUG
+    // Debug Connect button
     public void DebugConnect ()
     {
+        PlayerPrefs.SetString ( SERVER_IP_PLAYERPREF, m_serverIPField.text );
         Client.instance.ConnectToServer ( m_serverIPField.text, 26950 );
     }
 
