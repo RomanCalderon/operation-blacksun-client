@@ -1,11 +1,18 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AimListener : MonoBehaviour
 {
+    #region Constants
+
     private const float ADS_POSITION_SPEED = 18f;
     private const float ADS_ROTATION_SPEED = 80;
     private const float AIM_OUT_SPEED_RATIO = 0.75f;
+
+    #endregion
+
+    #region Members
 
     [SerializeField]
     private Transform m_ADSPoint = null;
@@ -29,6 +36,14 @@ public class AimListener : MonoBehaviour
     private Quaternion m_targetRotation = Quaternion.identity;
     private Coroutine m_weaponAimCoroutine = null;
 
+    public UnityEvent<bool> onAimStateChanged;
+    public UnityEvent onAimTrue;
+    public UnityEvent onAimFalse;
+
+    #endregion
+
+    #region Initialization
+
     private void Awake ()
     {
         m_originalPosition = m_model.localPosition;
@@ -47,6 +62,8 @@ public class AimListener : MonoBehaviour
     {
         AimController.OnAimStateUpdated -= AimUpdate;
     }
+
+    #endregion
 
     // Update is called once per frame
     private void Update ()
@@ -116,12 +133,16 @@ public class AimListener : MonoBehaviour
 
     private void AimUpdate ( bool aimState )
     {
+        onAimStateChanged?.Invoke ( aimState );
+
         if ( aimState )
         {
+            onAimTrue?.Invoke ();
             StartAim ();
         }
         else
         {
+            onAimFalse?.Invoke ();
             StopAim ();
         }
     }
